@@ -2,6 +2,8 @@ part of 'workspace_cubit.dart';
 
 enum WorkspaceStatus2 { initial, loading, success, failure }
 
+const Object _workspaceUnset = Object();
+
 final class WorkspaceState extends Equatable {
   final WorkspaceStatus2 status;
   final List<WorkspaceEntity> workspaces;
@@ -19,13 +21,15 @@ final class WorkspaceState extends Equatable {
     WorkspaceStatus2? status,
     List<WorkspaceEntity>? workspaces,
     String? activeFilter,
-    String? errorMessage,
+    Object? errorMessage = _workspaceUnset,
   }) {
     return WorkspaceState(
       status: status ?? this.status,
       workspaces: workspaces ?? this.workspaces,
       activeFilter: activeFilter ?? this.activeFilter,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: identical(errorMessage, _workspaceUnset)
+          ? this.errorMessage
+          : errorMessage as String?,
     );
   }
 
