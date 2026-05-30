@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../common/widgets/sizeboxs/Sizer.dart';
 import '../../../../../core/constants/app_sizes.dart';
@@ -9,142 +8,180 @@ import '../../../domain/entity/buddy_session_entity.dart';
 
 class BuddySessionCard extends StatelessWidget {
   final BuddySessionEntity session;
+  final VoidCallback onTap;
   final VoidCallback onJoin;
 
   const BuddySessionCard({
     super.key,
     required this.session,
+    required this.onTap,
     required this.onJoin,
   });
 
   @override
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
+    final isFull = session.sessionStatus == BuddySessionStatus.full;
 
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: AppSizes.padding,
-        vertical: AppSizes.sm * 0.6,
-      ),
-      decoration: BoxDecoration(
-        color: ColorRes.white,
-        borderRadius: BorderRadius.circular(AppSizes.borderRadiusXLg),
-        boxShadow: [
-          BoxShadow(
-            color: ColorRes.anisNavy.withOpacity(0.07),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-          BoxShadow(
-            color: ColorRes.anisNavy.withOpacity(0.03),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(AppSizes.spaceBetweenIcon),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // ── Top row: avatar + info + join button ──────────────
-            Row(
-              children: [
-                // Avatar with availability dot
-                BuddyAvatarWithDot(
-                  initials: session.buddyInitials,
-                  colorKey: session.avatarColorKey,
-                  availability: session.availability,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: AppSizes.padding,
+          vertical: AppSizes.xs + 2,
+        ),
+        decoration: BoxDecoration(
+          color: ColorRes.white,
+          borderRadius: BorderRadius.circular(AppSizes.borderRadiusXLg),
+          boxShadow: [
+            BoxShadow(
+              color: ColorRes.anisNavy.withOpacity(0.07),
+              blurRadius: AppSizes.md,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(AppSizes.spaceBetweenIcon),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // ── Top row: avatar + info + join ───────────────────
+              Row(
+                children: [
+                  BuddyAvatarWithDot(
+                    initials: session.buddyInitials,
+                    colorKey: session.avatarColorKey,
+                    availability: session.availability,
+                  ),
+                  const Sizer(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          session.buddyName,
+                          textAlign: TextAlign.start,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: tt.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: ColorRes.anisTextDark,
+                          ),
+                        ),
+                        const Sizer(height: 2),
+                        Row(
+                          children: [
+                            _AvailabilityDot(availability: session.availability),
+                            const Sizer(width: 4),
+                            Text(
+                              _availabilityLabel(session.availability),
+                              style: tt.bodySmall?.copyWith(
+                                color: _availabilityColor(session.availability),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const Sizer(width: 6),
+                            Container(
+                              width: AppSizes.xs - 1,
+                              height: AppSizes.xs - 1,
+                              decoration: const BoxDecoration(
+                                color: ColorRes.anisHintText,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const Sizer(width: 6),
+                            Flexible(
+                              child: Text(
+                                session.university,
+                                textAlign: TextAlign.start,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: tt.bodySmall?.copyWith(
+                                  color: ColorRes.anisTextMuted,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Sizer(width: 8),
+                  _JoinButton(onTap: onJoin, isFull: isFull, tt: tt),
+                ],
+              ),
+
+              const Sizer(height: 12),
+
+              // Topic
+              Text(
+                session.topic,
+                textAlign: TextAlign.start,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: tt.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: ColorRes.anisNavy,
                 ),
-                const Sizer(width: 12),
-                // Name + university + availability label
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        session.buddyName,
+              ),
+
+              const Sizer(height: 12),
+
+              // Divider
+              Container(height: 1, color: ColorRes.accent.withOpacity(0.5)),
+              const Sizer(height: 10),
+
+              // ── Bottom row ───────────────────────────────────────
+              Row(
+                children: [
+                  _IconLabel(
+                    icon: Icons.menu_book_outlined,
+                    label: session.subject,
+                  ),
+                  const Spacer(),
+                  // capacity
+                  _IconLabel(
+                    icon: Icons.people_outline_rounded,
+                    label: '${session.memberCount}/${session.maxCapacity}',
+                    color: isFull ? ColorRes.anisBusyAmber : ColorRes.anisGreen,
+                  ),
+                  const Sizer(width: 10),
+                  _IconLabel(
+                    icon: Icons.schedule_rounded,
+                    label: session.timeLabel,
+                    color: session.isOnline
+                        ? ColorRes.anisGreen
+                        : ColorRes.anisTextMuted,
+                  ),
+                ],
+              ),
+
+              // Gift hint
+              if (session.gift != null) ...[
+                const Sizer(height: 8),
+                Row(
+                  children: [
+                    Icon(Icons.card_giftcard_rounded,
+                        size: AppSizes.iconXs, color: ColorRes.anisGreen),
+                    const Sizer(width: 5),
+                    Flexible(
+                      child: Text(
+                        session.gift!,
                         textAlign: TextAlign.start,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: tt.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: ColorRes.anisTextDark,
+                        style: tt.bodySmall?.copyWith(
+                          color: ColorRes.anisGreen,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const Sizer(height: 2),
-                      Row(
-                        children: [
-                          _AvailabilityDot(availability: session.availability),
-                          const Sizer(width: 4),
-                          Text(
-                            _availabilityLabel(session.availability),
-                            style: tt.bodySmall?.copyWith(
-                              color: _availabilityColor(session.availability),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 11,
-                            ),
-                          ),
-                          const Sizer(width: 6),
-                          Container(
-                            width: 3.r,
-                            height: 3.r,
-                            decoration: const BoxDecoration(
-                              color: ColorRes.anisHintText,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const Sizer(width: 6),
-                          Flexible(
-                            child: Text(
-                              session.university,
-                              textAlign: TextAlign.start,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: tt.bodySmall?.copyWith(
-                                color: ColorRes.anisTextMuted,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const Sizer(width: 10),
-                // Join button — outlined style
-                _JoinButton(onTap: onJoin, tt: tt),
-              ],
-            ),
-
-            const Sizer(height: 14),
-
-            // ── Divider ────────────────────────────────────────────
-            Container(
-              height: 1,
-              color: ColorRes.accent.withOpacity(0.5),
-            ),
-
-            const Sizer(height: 12),
-
-            // ── Bottom row: subject + time ─────────────────────────
-            Row(
-              children: [
-                _IconLabel(
-                  icon: Icons.menu_book_outlined,
-                  label: session.subject,
-                ),
-                const Spacer(),
-                _IconLabel(
-                  icon: Icons.schedule_rounded,
-                  label: session.timeLabel,
-                  color: session.isOnline
-                      ? ColorRes.anisGreen
-                      : ColorRes.anisTextMuted,
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -173,32 +210,38 @@ class BuddySessionCard extends StatelessWidget {
   }
 }
 
-// ── Join button — outlined ────────────────────────────────────────────────────
+// ── Join button ───────────────────────────────────────────────────────────────
 
 class _JoinButton extends StatelessWidget {
   final VoidCallback onTap;
+  final bool isFull;
   final TextTheme tt;
-  const _JoinButton({required this.onTap, required this.tt});
+  const _JoinButton({required this.onTap, required this.isFull, required this.tt});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isFull ? null : onTap,
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: AppSizes.md,
           vertical: AppSizes.xs + 2,
         ),
         decoration: BoxDecoration(
-          color: ColorRes.white,
+          color: isFull
+              ? ColorRes.anisChipBg
+              : ColorRes.white,
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusXLg),
-          border: Border.all(color: ColorRes.anisGreen, width: 1.5),
+          border: Border.all(
+            color: isFull ? ColorRes.anisHintText : ColorRes.anisGreen,
+            width: 1.5,
+          ),
         ),
         child: Text(
-          S.current.joinSession,
+          isFull ? S.current.sessionFull : S.current.joinSession,
           style: tt.bodySmall?.copyWith(
             fontWeight: FontWeight.w700,
-            color: ColorRes.anisGreen,
+            color: isFull ? ColorRes.anisHintText : ColorRes.anisGreen,
           ),
         ),
       ),
@@ -222,59 +265,50 @@ class BuddyAvatarWithDot extends StatelessWidget {
 
   Color _avatarBg() {
     switch (colorKey) {
-      case 'red':
-        return ColorRes.anisAvatarD;
-      case 'blue':
-        return ColorRes.anisAvatarA;
-      case 'purple':
-        return ColorRes.anisAvatarC;
-      case 'green':
-        return ColorRes.anisAvatarA;
-      case 'orange':
-        return ColorRes.anisAvatarB;
-      default:
-        return ColorRes.anisAvatarB;
+      case 'red':    return ColorRes.anisAvatarD;
+      case 'blue':   return ColorRes.anisAvatarA;
+      case 'purple': return ColorRes.anisAvatarC;
+      case 'green':  return ColorRes.anisAvatarA;
+      case 'orange': return ColorRes.anisAvatarB;
+      default:       return ColorRes.anisAvatarB;
     }
   }
 
   Color _dotColor() {
     switch (availability) {
-      case BuddyAvailability.online:
-        return ColorRes.anisOnlineGreen;
-      case BuddyAvailability.busy:
-        return ColorRes.anisBusyAmber;
-      case BuddyAvailability.offline:
-        return ColorRes.anisHintText;
+      case BuddyAvailability.online:  return ColorRes.anisOnlineGreen;
+      case BuddyAvailability.busy:    return ColorRes.anisBusyAmber;
+      case BuddyAvailability.offline: return ColorRes.anisHintText;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final avatarSize = AppSizes.iconXLarge + AppSizes.sm;
+    final dotSize = AppSizes.iconXs + 1;
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
-          width: 46.r,
-          height: 46.r,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _avatarBg(),
-          ),
+          width: avatarSize,
+          height: avatarSize,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: _avatarBg()),
           alignment: Alignment.center,
           child: Text(
             initials,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: ColorRes.anisGreen,
-                ),
+              fontWeight: FontWeight.w700,
+              color: ColorRes.anisGreen,
+            ),
           ),
         ),
         Positioned(
           bottom: 0,
           left: 0,
           child: Container(
-            width: 13.r,
-            height: 13.r,
+            width: dotSize,
+            height: dotSize,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: _dotColor(),
@@ -287,7 +321,7 @@ class BuddyAvatarWithDot extends StatelessWidget {
   }
 }
 
-// ── Small inline dot ─────────────────────────────────────────────────────────
+// ── Small inline dot ──────────────────────────────────────────────────────────
 
 class _AvailabilityDot extends StatelessWidget {
   final BuddyAvailability availability;
@@ -295,20 +329,17 @@ class _AvailabilityDot extends StatelessWidget {
 
   Color _color() {
     switch (availability) {
-      case BuddyAvailability.online:
-        return ColorRes.anisOnlineGreen;
-      case BuddyAvailability.busy:
-        return ColorRes.anisBusyAmber;
-      case BuddyAvailability.offline:
-        return ColorRes.anisHintText;
+      case BuddyAvailability.online:  return ColorRes.anisOnlineGreen;
+      case BuddyAvailability.busy:    return ColorRes.anisBusyAmber;
+      case BuddyAvailability.offline: return ColorRes.anisHintText;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 7.r,
-      height: 7.r,
+      width: AppSizes.xs + 3,
+      height: AppSizes.xs + 3,
       decoration: BoxDecoration(shape: BoxShape.circle, color: _color()),
     );
   }
@@ -320,7 +351,6 @@ class _IconLabel extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
-
   const _IconLabel({
     required this.icon,
     required this.label,

@@ -6930,6 +6930,146 @@ class S {
     );
   }
 
+  String get sessionOpen {
+    return Intl.message('Open', name: 'sessionOpen', desc: '', args: []);
+  }
+
+  String get sessionFounder {
+    return Intl.message('Session Host', name: 'sessionFounder', desc: '', args: []);
+  }
+
+  String get sessionDescription {
+    return Intl.message('About This Session', name: 'sessionDescription', desc: '', args: []);
+  }
+
+  String get sessionTime {
+    return Intl.message('Session Time', name: 'sessionTime', desc: '', args: []);
+  }
+
+  String get sessionDate {
+    return Intl.message('Date', name: 'sessionDate', desc: '', args: []);
+  }
+
+  String get sessionPlace {
+    return Intl.message('Location', name: 'sessionPlace', desc: '', args: []);
+  }
+
+  String get sessionMembers {
+    return Intl.message('Members', name: 'sessionMembers', desc: '', args: []);
+  }
+
+  String get sessionRules {
+    return Intl.message('Attendance Rules', name: 'sessionRules', desc: '', args: []);
+  }
+
+  String get sessionGift {
+    return Intl.message('Host Gift', name: 'sessionGift', desc: '', args: []);
+  }
+
+  String get sessionJoined {
+    return Intl.message('You joined the session!', name: 'sessionJoined', desc: '', args: []);
+  }
+
+  String get createSession {
+    return Intl.message('Create Session', name: 'createSession', desc: '', args: []);
+  }
+
+  String get createSessionTitle {
+    return Intl.message('New Session', name: 'createSessionTitle', desc: '', args: []);
+  }
+
+  String get createSessionBasicInfo {
+    return Intl.message('Session Info', name: 'createSessionBasicInfo', desc: '', args: []);
+  }
+
+  String get createSessionTopic {
+    return Intl.message('Session Title', name: 'createSessionTopic', desc: '', args: []);
+  }
+
+  String get createSessionTopicHint {
+    return Intl.message('e.g. Physics Review', name: 'createSessionTopicHint', desc: '', args: []);
+  }
+
+  String get createSessionSubject {
+    return Intl.message('Subject', name: 'createSessionSubject', desc: '', args: []);
+  }
+
+  String get createSessionSubjectHint {
+    return Intl.message('e.g. Modern Physics', name: 'createSessionSubjectHint', desc: '', args: []);
+  }
+
+  String get createSessionDescription {
+    return Intl.message('Description', name: 'createSessionDescription', desc: '', args: []);
+  }
+
+  String get createSessionDescHint {
+    return Intl.message('Describe the session goal and what you\'ll cover', name: 'createSessionDescHint', desc: '', args: []);
+  }
+
+  String get createSessionSchedule {
+    return Intl.message('Schedule & Capacity', name: 'createSessionSchedule', desc: '', args: []);
+  }
+
+  String get createSessionCapacity {
+    return Intl.message('Max Participants', name: 'createSessionCapacity', desc: '', args: []);
+  }
+
+  String get createSessionPersons {
+    return Intl.message('persons', name: 'createSessionPersons', desc: '', args: []);
+  }
+
+  String get createSessionAddRule {
+    return Intl.message('Add Attendance Rule', name: 'createSessionAddRule', desc: '', args: []);
+  }
+
+  String get createSessionRuleHint {
+    return Intl.message('e.g. Bring your textbook', name: 'createSessionRuleHint', desc: '', args: []);
+  }
+
+  String get createSessionGiftLabel {
+    return Intl.message('Gift for Participants (optional)', name: 'createSessionGiftLabel', desc: '', args: []);
+  }
+
+  String get createSessionGiftHint {
+    return Intl.message('e.g. ☕ Free coffee for everyone', name: 'createSessionGiftHint', desc: '', args: []);
+  }
+
+  String get createSessionSubmit {
+    return Intl.message('Publish Session', name: 'createSessionSubmit', desc: '', args: []);
+  }
+
+  String get memberRating {
+    return Intl.message('Rating', name: 'memberRating', desc: '', args: []);
+  }
+
+  String get memberInterests {
+    return Intl.message('Interests', name: 'memberInterests', desc: '', args: []);
+  }
+
+  String get selectWorkspace {
+    return Intl.message('Choose Location', name: 'selectWorkspace', desc: '', args: []);
+  }
+
+  String get selectWorkspaceHint {
+    return Intl.message('Please select a workspace location', name: 'selectWorkspaceHint', desc: '', args: []);
+  }
+
+  String get fieldRequired {
+    return Intl.message('This field is required', name: 'fieldRequired', desc: '', args: []);
+  }
+
+  String get openSpot {
+    return Intl.message('Open Spot', name: 'openSpot', desc: '', args: []);
+  }
+
+  String get sessionTabOverview {
+    return Intl.message('Overview', name: 'sessionTabOverview', desc: '', args: []);
+  }
+
+  String get sessionTabPeople {
+    return Intl.message('People & Place', name: 'sessionTabPeople', desc: '', args: []);
+  }
+
   /// `Session Duration`
   String get sessionDuration {
     return Intl.message(

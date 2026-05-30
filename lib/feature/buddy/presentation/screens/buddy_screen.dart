@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../common/custom_ui.dart';
@@ -21,6 +20,7 @@ class BuddyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorRes.white,
+      floatingActionButton: _CreateSessionFab(),
       body: SafeArea(
         child: RefreshIndicator(
           color: ColorRes.anisGreen,
@@ -28,20 +28,17 @@ class BuddyScreen extends StatelessWidget {
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-              // ── Page title ───────────────────────────────────────────────
+              // ── Page title ──────────────────────────────────────────────
               SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
-                    AppSizes.padding,
-                    AppSizes.md,
-                    AppSizes.padding,
-                    AppSizes.sm,
+                    AppSizes.padding, AppSizes.md, AppSizes.padding, AppSizes.sm,
                   ),
                   child: _PageTitle(),
                 ),
               ),
 
-              // ── Search fields ────────────────────────────────────────────
+              // ── Search fields ───────────────────────────────────────────
               SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.only(bottom: AppSizes.sm),
@@ -54,7 +51,7 @@ class BuddyScreen extends StatelessWidget {
                 ),
               ),
 
-              // ── Filter chips ─────────────────────────────────────────────
+              // ── Filter chips ────────────────────────────────────────────
               SliverToBoxAdapter(
                 child: BlocBuilder<BuddyCubit, BuddyState>(
                   buildWhen: (p, c) => p.activeChip != c.activeChip,
@@ -66,7 +63,7 @@ class BuddyScreen extends StatelessWidget {
                 ),
               ),
 
-              // ── Divider ──────────────────────────────────────────────────
+              // ── Divider ─────────────────────────────────────────────────
               SliverToBoxAdapter(
                 child: Container(
                   height: 1,
@@ -75,7 +72,7 @@ class BuddyScreen extends StatelessWidget {
                 ),
               ),
 
-              // ── Results ───────────────────────────────────────────────────
+              // ── Results ─────────────────────────────────────────────────
               BlocBuilder<BuddyCubit, BuddyState>(
                 builder: (context, state) {
                   if (state.status == BuddyStatus.failure) {
@@ -83,8 +80,7 @@ class BuddyScreen extends StatelessWidget {
                       child: CustomUI.anisErrorState(
                         context: context,
                         message: state.errorMessage ?? '',
-                        onRetry: () =>
-                            context.read<BuddyCubit>().loadSessions(),
+                        onRetry: () => context.read<BuddyCubit>().loadSessions(),
                       ),
                     );
                   }
@@ -101,6 +97,7 @@ class BuddyScreen extends StatelessWidget {
                             enabled: true,
                             child: BuddySessionCard(
                               session: _skeletonSession(i),
+                              onTap: () {},
                               onJoin: () {},
                             ),
                           ),
@@ -130,7 +127,12 @@ class BuddyScreen extends StatelessWidget {
                         delegate: SliverChildBuilderDelegate(
                           (_, i) => BuddySessionCard(
                             session: state.sessions[i],
-                            onJoin: () => _onJoin(context, state.sessions[i]),
+                            onTap: () => context
+                                .read<BuddyCubit>()
+                                .openSessionDetails(context, state.sessions[i]),
+                            onJoin: () => context
+                                .read<BuddyCubit>()
+                                .joinSession(context, state.sessions[i]),
                           ),
                           childCount: state.sessions.length,
                         ),
@@ -140,27 +142,11 @@ class BuddyScreen extends StatelessWidget {
                 },
               ),
 
-              const SliverToBoxAdapter(child: Sizer(height: 24)),
+              // Extra padding for FAB
+              const SliverToBoxAdapter(child: Sizer(height: 80)),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  void _onJoin(BuildContext context, BuddySessionEntity session) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '${S.current.joinSession} — ${session.buddyName}',
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: ColorRes.white),
-        ),
-        backgroundColor: ColorRes.anisGreen,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -170,20 +156,49 @@ class BuddyScreen extends StatelessWidget {
     const inits = ['ر.ع', 'م.ح', 'ن.إ'];
     const unis = ['███████████████', '████████████', '█████████████'];
     const keys = ['blue', 'red', 'purple'];
+    final now = DateTime.now();
     return BuddySessionEntity(
       id: 'sk_$i',
       buddyName: names[i % 3],
       buddyInitials: inits[i % 3],
       avatarColorKey: keys[i % 3],
       university: unis[i % 3],
-      subject: '████████████',
-      timeLabel: '██████',
       availability: BuddyAvailability.online,
+      topic: '████████████████',
+      subject: '████████████',
+      description: '████████████████████████████',
+      startTime: now,
+      timeLabel: '██████',
+      workspaceId: '',
+      workspaceName: '██████████',
+      workspaceAddress: '█████████████',
     );
   }
 }
 
-// ─── Page title ───────────────────────────────────────────────────────────────
+// ── FAB ────────────────────────────────────────────────────────────────────────
+
+class _CreateSessionFab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton.extended(
+      onPressed: () => context.read<BuddyCubit>().openCreateSession(context),
+      backgroundColor: ColorRes.anisGreen,
+      foregroundColor: ColorRes.white,
+      elevation: 4,
+      icon: const Icon(Icons.add_rounded),
+      label: Text(
+        S.current.createSession,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.w700,
+          color: ColorRes.white,
+        ),
+      ),
+    );
+  }
+}
+
+// ── Page title ─────────────────────────────────────────────────────────────────
 
 class _PageTitle extends StatelessWidget {
   @override
@@ -204,16 +219,14 @@ class _PageTitle extends StatelessWidget {
         Text(
           S.current.buddyScreenSubtitle,
           textAlign: TextAlign.start,
-          style: tt.bodySmall?.copyWith(
-            color: ColorRes.anisHintText,
-          ),
+          style: tt.bodySmall?.copyWith(color: ColorRes.anisHintText),
         ),
       ],
     );
   }
 }
 
-// ─── Results count row ───────────────────────────────────────────────────────
+// ── Results count ──────────────────────────────────────────────────────────────
 
 class _ResultsCountRow extends StatelessWidget {
   final int count;
@@ -223,23 +236,15 @@ class _ResultsCountRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        AppSizes.padding,
-        AppSizes.md,
-        AppSizes.padding,
-        AppSizes.xs,
+        AppSizes.padding, AppSizes.md, AppSizes.padding, AppSizes.xs,
       ),
-      child: Row(
-        children: [
-          Text(
-            S.current.resultsCount(count),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: ColorRes.anisTextMuted,
-                ),
-          ),
-        ],
+      child: Text(
+        S.current.resultsCount(count),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          fontWeight: FontWeight.w600,
+          color: ColorRes.anisTextMuted,
+        ),
       ),
     );
   }
 }
-

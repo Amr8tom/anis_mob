@@ -25,7 +25,10 @@ class BuddyServiceLocator {
 
     // ── Cubit ─────────────────────────────────────────────────────────────────
     serviceLocator.registerFactory<BuddyCubit>(
-      () => BuddyCubit(getBuddySessionsUseCase: serviceLocator()),
+      () => BuddyCubit(
+        getBuddySessionsUseCase: serviceLocator(),
+        buddyRepository: serviceLocator(),
+      ),
     );
   }
 }

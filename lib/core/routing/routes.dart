@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:anis/core/routing/route_names.dart';
 
+import '../../feature/buddy/domain/entity/buddy_session_entity.dart';
+import '../../feature/buddy/presentation/controller/buddy_cubit.dart';
+import '../../feature/buddy/presentation/screens/create_session_screen.dart';
+import '../../feature/buddy/presentation/screens/session_details_screen.dart';
 import '../../feature/navigation/presentation/screens/navigation_menu_screen.dart';
 import '../../feature/profile/presentation/screens/plans_screen.dart';
 import '../../feature/workspaces/domain/entity/workspace_entity.dart';
 import '../../feature/workspaces/presentation/screens/workspace_details_screen.dart';
 import '../../feature/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../feature/terms_conditions/presentation/terms_conditions_screen.dart';
+import '../service_locator/service_locator.dart';
 
 class RouteGenerator {
   /// generate Route
@@ -220,6 +226,31 @@ class RouteGenerator {
       //     settings: settings,
       //   );
       //
+      /// Session details
+      case DRoutesName.sessionDetailsRoute:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final session = args?['session'] as BuddySessionEntity?;
+        if (session == null) return unDefinedRoute();
+        return PageTransition(
+          child: BlocProvider(
+            create: (_) => serviceLocator<BuddyCubit>(),
+            child: SessionDetailsScreen(session: session),
+          ),
+          type: PageTransitionType.rightToLeft,
+          settings: settings,
+        );
+
+      /// Create new session
+      case DRoutesName.createSessionRoute:
+        return PageTransition(
+          child: BlocProvider(
+            create: (_) => serviceLocator<BuddyCubit>(),
+            child: const CreateSessionScreen(),
+          ),
+          type: PageTransitionType.rightToLeft,
+          settings: settings,
+        );
+
       /// Plans comparison screen
       case DRoutesName.plansRoute:
         final args = settings.arguments as Map<String, dynamic>?;

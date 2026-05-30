@@ -48,6 +48,10 @@ class DRoutesName {
   static const String navigationMenuRoute = 'navigation-menu-route';
   static const String notificationsRoute = 'notifications-route';
   static const String workspaceDetailsRoute = 'workspace-details-route';
+
+  /// Buddy sessions
+  static const String sessionDetailsRoute = 'session-details-route';
+  static const String createSessionRoute = 'create-session-route';
   static const String chooseNewRequestNewService = 'Request-New-Service-route';
   static const String requestCreateDetails =
       'Request-create-details-Service-route';
