@@ -7293,6 +7293,51 @@ class S {
   String get changeLanguage {
     return Intl.message('Change Language', name: 'changeLanguage', desc: '', args: []);
   }
+
+  /// `Sessions`
+  String get sessionsTab {
+    return Intl.message('Sessions', name: 'sessionsTab', desc: '', args: []);
+  }
+
+  /// `Info`
+  String get infoTab {
+    return Intl.message('Info', name: 'infoTab', desc: '', args: []);
+  }
+
+  /// `Live Now`
+  String get liveNow {
+    return Intl.message('Live Now', name: 'liveNow', desc: '', args: []);
+  }
+
+  /// `Upcoming`
+  String get upcomingSessions {
+    return Intl.message('Upcoming', name: 'upcomingSessions', desc: '', args: []);
+  }
+
+  /// `Amenities`
+  String get amenities {
+    return Intl.message('Amenities', name: 'amenities', desc: '', args: []);
+  }
+
+  /// `Open in Maps`
+  String get openInMaps {
+    return Intl.message('Open in Maps', name: 'openInMaps', desc: '', args: []);
+  }
+
+  /// `No sessions in this workspace`
+  String get noSessionsInWorkspace {
+    return Intl.message('No sessions in this workspace', name: 'noSessionsInWorkspace', desc: '', args: []);
+  }
+
+  /// `Be the first to start a study session here!`
+  String get beFirstToStartSession {
+    return Intl.message('Be the first to start a study session here!', name: 'beFirstToStartSession', desc: '', args: []);
+  }
+
+  /// `Drinks`
+  String get drinksMenu {
+    return Intl.message('Drinks', name: 'drinksMenu', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

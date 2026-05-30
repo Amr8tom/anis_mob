@@ -1,5 +1,6 @@
 import '../../domain/entity/workspace_drink_entity.dart';
 import '../../../../core/constants/asset_resoures.dart';
+import '../../../../feature/home/domain/entity/study_session_entity.dart';
 import '../../domain/entity/workspace_entity.dart';
 import '../model/workspace_model.dart';
 
@@ -35,6 +36,41 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
       openTime: '8:00 ص',
       closeTime: '11:00 م',
       amenities: ['wifi', 'ac', 'quiet'],
+      sessions: const [
+        StudySessionEntity(
+          id: 'ss_001',
+          title: 'الفيزياء — الفصل 4',
+          university: 'جامعة القاهرة',
+          timeLabel: '2:00 م',
+          tagLabel: 'فيز',
+          tagColorKey: 'blue',
+          status: SessionStatus.inProgress,
+          participantCount: 6,
+          maxParticipants: 10,
+        ),
+        StudySessionEntity(
+          id: 'ss_002',
+          title: 'الرياضيات — التفاضل والتكامل',
+          university: 'جامعة عين شمس',
+          timeLabel: '4:00 م',
+          tagLabel: 'رياض',
+          tagColorKey: 'green',
+          status: SessionStatus.upcoming,
+          participantCount: 3,
+          maxParticipants: 8,
+        ),
+        StudySessionEntity(
+          id: 'ss_003',
+          title: 'الكيمياء العضوية',
+          university: 'جامعة القاهرة',
+          timeLabel: '6:30 م',
+          tagLabel: 'كيم',
+          tagColorKey: 'pink',
+          status: SessionStatus.upcoming,
+          participantCount: 1,
+          maxParticipants: 6,
+        ),
+      ],
     ),
     WorkspaceModel(
       id: 'ws_002',
@@ -58,6 +94,19 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
       openTime: '9:00 ص',
       closeTime: '10:00 م',
       amenities: ['wifi', 'coffee', 'printing'],
+      sessions: const [
+        StudySessionEntity(
+          id: 'ss_004',
+          title: 'برمجة الذكاء الاصطناعي',
+          university: 'جامعة النيل',
+          timeLabel: '3:00 م',
+          tagLabel: 'AI',
+          tagColorKey: 'yellow',
+          status: SessionStatus.inProgress,
+          participantCount: 5,
+          maxParticipants: 5,
+        ),
+      ],
     ),
     WorkspaceModel(
       id: 'ws_003',

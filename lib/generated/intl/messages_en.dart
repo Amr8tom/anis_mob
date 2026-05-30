@@ -1516,5 +1516,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "writetitleHere": MessageLookupByLibrary.simpleMessage("write title here"),
     "yes": MessageLookupByLibrary.simpleMessage("Yes"),
     "youHave": MessageLookupByLibrary.simpleMessage("you have : "),
+    "sessionsTab": MessageLookupByLibrary.simpleMessage("Sessions"),
+    "infoTab": MessageLookupByLibrary.simpleMessage("Info"),
+    "liveNow": MessageLookupByLibrary.simpleMessage("Live Now"),
+    "upcomingSessions": MessageLookupByLibrary.simpleMessage("Upcoming"),
+    "amenities": MessageLookupByLibrary.simpleMessage("Amenities"),
+    "openInMaps": MessageLookupByLibrary.simpleMessage("Open in Maps"),
+    "noSessionsInWorkspace": MessageLookupByLibrary.simpleMessage("No sessions in this workspace"),
+    "beFirstToStartSession": MessageLookupByLibrary.simpleMessage("Be the first to start a study session here!"),
+    "drinksMenu": MessageLookupByLibrary.simpleMessage("Drinks"),
   };
 }

@@ -17,5 +17,6 @@ class WorkspaceModel extends WorkspaceEntity {
     required super.openTime,
     required super.closeTime,
     required super.amenities,
+    super.sessions,
   });
 }

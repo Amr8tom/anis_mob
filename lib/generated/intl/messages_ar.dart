@@ -1446,5 +1446,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "yes": MessageLookupByLibrary.simpleMessage("نعم"),
     "youHave": MessageLookupByLibrary.simpleMessage("  لديــك "),
+    "sessionsTab": MessageLookupByLibrary.simpleMessage("الجلسات"),
+    "infoTab": MessageLookupByLibrary.simpleMessage("المعلومات"),
+    "liveNow": MessageLookupByLibrary.simpleMessage("يدرس الآن"),
+    "upcomingSessions": MessageLookupByLibrary.simpleMessage("قادمة"),
+    "amenities": MessageLookupByLibrary.simpleMessage("المرافق"),
+    "openInMaps": MessageLookupByLibrary.simpleMessage("فتح في الخريطة"),
+    "noSessionsInWorkspace": MessageLookupByLibrary.simpleMessage("لا توجد جلسات في هذه المساحة"),
+    "beFirstToStartSession": MessageLookupByLibrary.simpleMessage("كن أول من يبدأ جلسة دراسية هنا!"),
+    "drinksMenu": MessageLookupByLibrary.simpleMessage("المشروبات"),
   };
 }

@@ -16,7 +16,7 @@ class WorkspaceDetailsTabs extends StatelessWidget {
         vertical: AppSizes.sm,
       ),
       decoration: BoxDecoration(
-        color: ColorRes.accent.withValues(alpha: 0.35),
+        color: ColorRes.anisChipBg,
         borderRadius: BorderRadius.circular(AppSizes.borderRadiusXLg),
       ),
       child: TabBar(
@@ -26,16 +26,33 @@ class WorkspaceDetailsTabs extends StatelessWidget {
           color: ColorRes.anisGreen,
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusXLg),
         ),
+        indicatorSize: TabBarIndicatorSize.tab,
+        dividerColor: Colors.transparent,
         tabs: [
-          Tab(text: S.current.gallery),
-          Tab(text: S.current.price),
+          Tab(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.groups_2_outlined, size: 16),
+                SizedBox(width: AppSizes.xs),
+                Text(S.current.sessionsTab),
+              ],
+            ),
+          ),
+          Tab(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.info_outline_rounded, size: 16),
+                SizedBox(width: AppSizes.xs),
+                Text(S.current.infoTab),
+              ],
+            ),
+          ),
         ],
-        labelStyle: tt.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
-        unselectedLabelStyle:
-            tt.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+        labelStyle: tt.bodySmall?.copyWith(fontWeight: FontWeight.w700),
+        unselectedLabelStyle: tt.bodySmall?.copyWith(fontWeight: FontWeight.w600),
       ),
     );
   }
 }
-
-

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../home/domain/entity/study_session_entity.dart';
 import 'workspace_drink_entity.dart';
 
 enum WorkspaceStatus { open, busy, full, closed }
@@ -25,6 +26,8 @@ class WorkspaceEntity extends Equatable {
   final String closeTime;
   /// Amenity icon keys: 'wifi' | 'ac' | 'coffee' | 'printing' | 'quiet'
   final List<String> amenities;
+  /// Sessions currently happening or upcoming in this workspace
+  final List<StudySessionEntity> sessions;
 
   const WorkspaceEntity({
     required this.id,
@@ -42,6 +45,7 @@ class WorkspaceEntity extends Equatable {
     required this.openTime,
     required this.closeTime,
     required this.amenities,
+    this.sessions = const [],
   });
 
   /// 0.0 – 1.0 fill fraction
@@ -54,6 +58,6 @@ class WorkspaceEntity extends Equatable {
   List<Object?> get props => [
         id, name, address, currentOccupancy, capacity,
             description, latitude, longitude, galleryImages, drinks,
-            status, distanceKm, openTime, closeTime, amenities,
+            status, distanceKm, openTime, closeTime, amenities, sessions,
       ];
 }
