@@ -41,16 +41,13 @@ class TodaySessionsSection extends StatelessWidget {
         children: [
           // ── Section header ──────────────────────────────────
           Row(
-            textDirection: TextDirection.rtl,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Title + count badge
               Row(
-                textDirection: TextDirection.rtl,
                 children: [
                   Text(
                     S.current.todaysSessions,
-                    textDirection: TextDirection.rtl,
                     style: tt.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w800,
                       color: ColorRes.anisNavy,

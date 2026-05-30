@@ -98,8 +98,7 @@ class _SearchField extends StatelessWidget {
       child: TextField(
         controller: controller,
         onChanged: onChanged,
-        textAlign: TextAlign.right,
-        textDirection: TextDirection.rtl,
+        textAlign: TextAlign.start,
         style: tt.bodyMedium?.copyWith(color: ColorRes.anisTextDark),
         decoration: InputDecoration(
           hintText: hint,

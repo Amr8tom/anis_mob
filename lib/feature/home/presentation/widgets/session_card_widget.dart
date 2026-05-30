@@ -76,7 +76,6 @@ class SessionCardWidget extends StatelessWidget {
             vertical: AppSizes.sm + 2,
           ),
           child: Row(
-            textDirection: TextDirection.rtl,
             children: [
               // ── Tag avatar ────────────────────────────────────
               Container(
@@ -100,11 +99,10 @@ class SessionCardWidget extends StatelessWidget {
               // ── Title + sub-info ──────────────────────────────
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       session.title,
-                      textDirection: TextDirection.rtl,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: tt.bodyMedium?.copyWith(
@@ -114,7 +112,6 @@ class SessionCardWidget extends StatelessWidget {
                     ),
                     const Sizer(height: 4),
                     Row(
-                      textDirection: TextDirection.rtl,
                       children: [
                         // Time
                         _MetaChip(

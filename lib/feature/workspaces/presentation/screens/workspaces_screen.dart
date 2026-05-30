@@ -74,7 +74,6 @@ class WorkspacesScreen extends StatelessWidget {
       SnackBar(
         content: Text(
           '${S.current.scanToCheckIn} — ${w.name}',
-          textDirection: TextDirection.rtl,
           style: Theme.of(context)
               .textTheme
               .bodyMedium

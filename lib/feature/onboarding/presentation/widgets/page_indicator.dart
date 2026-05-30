@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_sizes.dart';
-import '../../../../generated/l10n.dart';
 
 class PageIndicator extends StatelessWidget {
   final int currentPage;
@@ -14,22 +13,19 @@ class PageIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr ,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          totalPages,
-          (index) => Container(
-            margin: EdgeInsets.symmetric(horizontal: AppSizes.xs),
-            width: currentPage == index ? AppSizes.xl * 1.5 : AppSizes.xs,
-            height: AppSizes.xs,
-            decoration: BoxDecoration(
-              color: currentPage == index
-                  ? const Color(0xFF2C2C2C)
-                  : const Color(0xFFE0E0E0),
-              borderRadius: BorderRadius.circular(AppSizes.xs / 2),
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        totalPages,
+        (index) => Container(
+          margin: EdgeInsets.symmetric(horizontal: AppSizes.xs),
+          width: currentPage == index ? AppSizes.xl * 1.5 : AppSizes.xs,
+          height: AppSizes.xs,
+          decoration: BoxDecoration(
+            color: currentPage == index
+                ? const Color(0xFF2C2C2C)
+                : const Color(0xFFE0E0E0),
+            borderRadius: BorderRadius.circular(AppSizes.xs / 2),
           ),
         ),
       ),

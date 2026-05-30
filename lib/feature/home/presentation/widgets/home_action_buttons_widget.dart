@@ -29,7 +29,6 @@ class HomeActionButtonsWidget extends StatelessWidget {
         AppSizes.xs,
       ),
       child: Row(
-        textDirection: TextDirection.rtl,
         children: [
           Expanded(
             child: HomeActionButton(
@@ -90,7 +89,6 @@ class HomeActionButton extends StatelessWidget {
           ],
         ),
         child: Row(
-          textDirection: TextDirection.rtl,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: fgColor, size: AppSizes.iconMd),

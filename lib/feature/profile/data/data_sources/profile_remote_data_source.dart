@@ -18,7 +18,6 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       university: 'جامعة القاهرة',
       subscriptionType: 'gold',
       subscriptionDaysRemaining: 18,
-      walletBalance: 1250.0,
       totalStudyHours: 142,
       streakDays: 14,
       totalSessions: 37,
@@ -27,6 +26,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         ProfileBadge(id: 'b2', label: '100 ساعة', iconKey: 'hours'),
         ProfileBadge(id: 'b3', label: 'أفضل طالب', iconKey: 'top'),
       ],
+      avatarPath: null,
     );
   }
 }

@@ -6759,6 +6759,102 @@ class S {
     );
   }
 
+  String get choosePlanTitle {
+    return Intl.message('Choose Your Plan', name: 'choosePlanTitle', desc: '', args: []);
+  }
+
+  String get choosePlanSubtitle {
+    return Intl.message('Join thousands of students and achieve your study goals', name: 'choosePlanSubtitle', desc: '', args: []);
+  }
+
+  String get planFreeTitle {
+    return Intl.message('Free', name: 'planFreeTitle', desc: '', args: []);
+  }
+
+  String get planSilverTitle {
+    return Intl.message('Silver', name: 'planSilverTitle', desc: '', args: []);
+  }
+
+  String get planGoldTitle {
+    return Intl.message('Gold', name: 'planGoldTitle', desc: '', args: []);
+  }
+
+  String get planPriceFree {
+    return Intl.message('Free', name: 'planPriceFree', desc: '', args: []);
+  }
+
+  String get planPriceSilver {
+    return Intl.message('49 EGP / month', name: 'planPriceSilver', desc: '', args: []);
+  }
+
+  String get planPriceGold {
+    return Intl.message('99 EGP / month', name: 'planPriceGold', desc: '', args: []);
+  }
+
+  String get planMostPopular {
+    return Intl.message('Most Popular', name: 'planMostPopular', desc: '', args: []);
+  }
+
+  String get planBestValue {
+    return Intl.message('Best Value', name: 'planBestValue', desc: '', args: []);
+  }
+
+  String get planFeatureWorkspaces {
+    return Intl.message('Limited workspaces', name: 'planFeatureWorkspaces', desc: '', args: []);
+  }
+
+  String get planFeatureWorkspacesUnlimited {
+    return Intl.message('Unlimited workspaces', name: 'planFeatureWorkspacesUnlimited', desc: '', args: []);
+  }
+
+  String get planFeatureSessions2 {
+    return Intl.message('2 sessions / day', name: 'planFeatureSessions2', desc: '', args: []);
+  }
+
+  String get planFeatureSessions10 {
+    return Intl.message('10 sessions / day', name: 'planFeatureSessions10', desc: '', args: []);
+  }
+
+  String get planFeatureSessionsUnlimited {
+    return Intl.message('Unlimited sessions', name: 'planFeatureSessionsUnlimited', desc: '', args: []);
+  }
+
+  String get planFeatureBuddies {
+    return Intl.message('Find study buddies', name: 'planFeatureBuddies', desc: '', args: []);
+  }
+
+  String get planFeatureAnalytics {
+    return Intl.message('Advanced analytics', name: 'planFeatureAnalytics', desc: '', args: []);
+  }
+
+  String get planFeaturePriority {
+    return Intl.message('Priority support', name: 'planFeaturePriority', desc: '', args: []);
+  }
+
+  String get planFeatureAds {
+    return Intl.message('Contains ads', name: 'planFeatureAds', desc: '', args: []);
+  }
+
+  String get planFeatureNoAds {
+    return Intl.message('Ad-free experience', name: 'planFeatureNoAds', desc: '', args: []);
+  }
+
+  String get planCtaFree {
+    return Intl.message('Start for Free', name: 'planCtaFree', desc: '', args: []);
+  }
+
+  String get planCtaSilver {
+    return Intl.message('Get Silver', name: 'planCtaSilver', desc: '', args: []);
+  }
+
+  String get planCtaGold {
+    return Intl.message('Get Gold', name: 'planCtaGold', desc: '', args: []);
+  }
+
+  String get planCurrentBadge {
+    return Intl.message('Current Plan', name: 'planCurrentBadge', desc: '', args: []);
+  }
+
   /// `Gold Plan`
   String get goldSubscription {
     return Intl.message(

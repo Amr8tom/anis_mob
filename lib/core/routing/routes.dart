@@ -3,6 +3,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:anis/core/routing/route_names.dart';
 
 import '../../feature/navigation/presentation/screens/navigation_menu_screen.dart';
+import '../../feature/profile/presentation/screens/plans_screen.dart';
 import '../../feature/workspaces/domain/entity/workspace_entity.dart';
 import '../../feature/workspaces/presentation/screens/workspace_details_screen.dart';
 import '../../feature/onboarding/presentation/screens/onboarding_screen.dart';
@@ -219,6 +220,16 @@ class RouteGenerator {
       //     settings: settings,
       //   );
       //
+      /// Plans comparison screen
+      case DRoutesName.plansRoute:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final currentPlan = args?['currentPlan'] as String? ?? 'free';
+        return PageTransition(
+          child: PlansScreen(currentPlan: currentPlan),
+          type: PageTransitionType.rightToLeft,
+          settings: settings,
+        );
+
       /// terms and conditions Route
       case DRoutesName.termsAndConditionRoute:
         return PageTransition(

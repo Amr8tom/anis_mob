@@ -21,11 +21,11 @@ class ProfileEntity extends Equatable {
   final String university;
   final String subscriptionType; // 'free' | 'silver' | 'gold'
   final int subscriptionDaysRemaining;
-  final double walletBalance;
   final int totalStudyHours;
   final int streakDays;
   final int totalSessions;
   final List<ProfileBadge> badges;
+  final String? avatarPath; // local file path for picked photo
 
   const ProfileEntity({
     required this.id,
@@ -34,17 +34,17 @@ class ProfileEntity extends Equatable {
     required this.university,
     required this.subscriptionType,
     required this.subscriptionDaysRemaining,
-    required this.walletBalance,
     required this.totalStudyHours,
     required this.streakDays,
     required this.totalSessions,
     required this.badges,
+    this.avatarPath,
   });
 
   @override
   List<Object?> get props => [
         id, name, initials, university, subscriptionType,
-        subscriptionDaysRemaining, walletBalance,
-        totalStudyHours, streakDays, totalSessions, badges,
+        subscriptionDaysRemaining,
+        totalStudyHours, streakDays, totalSessions, badges, avatarPath,
       ];
 }

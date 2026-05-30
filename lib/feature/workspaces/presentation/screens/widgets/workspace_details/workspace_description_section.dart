@@ -16,11 +16,11 @@ class WorkspaceDescriptionSection extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: AppSizes.padding),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             S.current.description,
-            textAlign: TextAlign.end,
+            textAlign: TextAlign.start,
             style: tt.titleMedium?.copyWith(
               color: ColorRes.anisNavy,
               fontWeight: FontWeight.w700,
@@ -29,7 +29,7 @@ class WorkspaceDescriptionSection extends StatelessWidget {
           const Sizer(height: 8),
           Text(
             description.isEmpty ? S.current.noData : description,
-            textAlign: TextAlign.end,
+            textAlign: TextAlign.start,
             style: tt.bodyMedium?.copyWith(
               color: ColorRes.anisTextMuted,
               height: 1.6,

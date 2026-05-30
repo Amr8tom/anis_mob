@@ -28,7 +28,6 @@ class WorkspaceDrinkCard extends StatelessWidget {
         ],
       ),
       child: Row(
-        textDirection: TextDirection.rtl,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
@@ -48,11 +47,11 @@ class WorkspaceDrinkCard extends StatelessWidget {
           const Sizer(width: 12),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   drink.name,
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.start,
                   style: tt.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: ColorRes.anisNavy,

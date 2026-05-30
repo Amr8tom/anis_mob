@@ -49,7 +49,6 @@ class BuddySessionCard extends StatelessWidget {
           children: [
             // ── Top row: avatar + info + join button ──────────────
             Row(
-              textDirection: TextDirection.rtl,
               children: [
                 // Avatar with availability dot
                 BuddyAvatarWithDot(
@@ -61,11 +60,11 @@ class BuddySessionCard extends StatelessWidget {
                 // Name + university + availability label
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         session.buddyName,
-                        textAlign: TextAlign.right,
+                        textAlign: TextAlign.start,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: tt.bodyMedium?.copyWith(
@@ -75,7 +74,6 @@ class BuddySessionCard extends StatelessWidget {
                       ),
                       const Sizer(height: 2),
                       Row(
-                        textDirection: TextDirection.rtl,
                         children: [
                           _AvailabilityDot(availability: session.availability),
                           const Sizer(width: 4),
@@ -100,7 +98,7 @@ class BuddySessionCard extends StatelessWidget {
                           Flexible(
                             child: Text(
                               session.university,
-                              textAlign: TextAlign.right,
+                              textAlign: TextAlign.start,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: tt.bodySmall?.copyWith(
@@ -131,7 +129,6 @@ class BuddySessionCard extends StatelessWidget {
 
             // ── Bottom row: subject + time ─────────────────────────
             Row(
-              textDirection: TextDirection.rtl,
               children: [
                 _IconLabel(
                   icon: Icons.menu_book_outlined,
@@ -333,7 +330,6 @@ class _IconLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      textDirection: TextDirection.rtl,
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: AppSizes.iconXs, color: color),

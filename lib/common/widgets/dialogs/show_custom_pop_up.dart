@@ -9,9 +9,7 @@ void showOTPPopUp({required BuildContext context, required String email}) {
     barrierDismissible: false,
     builder: (BuildContext context) {
       return Dialog(
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: Container(
+        child: Container(
             padding: EdgeInsets.symmetric(horizontal: AppSizes.padding / 3),
             decoration: BoxDecoration(
               color: ColorRes.white,
@@ -84,7 +82,6 @@ void showOTPPopUp({required BuildContext context, required String email}) {
                 ),
               ],
             ),
-          ),
         ),
       );
     },

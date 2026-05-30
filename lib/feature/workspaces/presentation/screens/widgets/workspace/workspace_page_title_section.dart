@@ -20,11 +20,11 @@ class WorkspacePageTitleSection extends StatelessWidget {
           AppSizes.sm,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               S.current.workspacesTab,
-              textAlign: TextAlign.end,
+              textAlign: TextAlign.start,
               style: tt.headlineMedium?.copyWith(
                 fontWeight: FontWeight.w800,
                 color: ColorRes.anisNavy,
@@ -33,7 +33,7 @@ class WorkspacePageTitleSection extends StatelessWidget {
             const Sizer(height: 4),
             Text(
               S.current.workspacesSubtitle,
-              textAlign: TextAlign.end,
+              textAlign: TextAlign.start,
               style: tt.bodySmall?.copyWith(color: ColorRes.anisHintText),
             ),
           ],

@@ -32,7 +32,6 @@ class BuddyFilterChips extends StatelessWidget {
       ),
       child: Row(
         // RTL: "الكل" (All) on the right as the first chip
-        textDirection: TextDirection.rtl,
         children: chips.map((chip) {
           final isActive = chip.key == activeChip;
           return GestureDetector(

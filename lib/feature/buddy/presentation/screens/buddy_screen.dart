@@ -153,7 +153,6 @@ class BuddyScreen extends StatelessWidget {
       SnackBar(
         content: Text(
           '${S.current.joinSession} — ${session.buddyName}',
-          textDirection: TextDirection.rtl,
           style: Theme.of(context)
               .textTheme
               .bodyMedium
@@ -191,11 +190,11 @@ class _PageTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           S.current.findBuddy,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
           style: tt.headlineMedium?.copyWith(
             fontWeight: FontWeight.w800,
             color: ColorRes.anisNavy,
@@ -204,7 +203,7 @@ class _PageTitle extends StatelessWidget {
         const Sizer(height: 4),
         Text(
           S.current.buddyScreenSubtitle,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
           style: tt.bodySmall?.copyWith(
             color: ColorRes.anisHintText,
           ),
@@ -230,7 +229,6 @@ class _ResultsCountRow extends StatelessWidget {
         AppSizes.xs,
       ),
       child: Row(
-        textDirection: TextDirection.rtl,
         children: [
           Text(
             S.current.resultsCount(count),

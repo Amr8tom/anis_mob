@@ -9,7 +9,6 @@ import 'package:anis/core/device/device_utility.dart';
 import 'package:anis/core/extentions/navigation_extension.dart';
 import 'package:anis/core/routing/route_names.dart';
 import '../../../../core/constants/colors.dart';
-import '../../../../generated/l10n.dart';
 import '../controllers/navigation_cubit.dart';
 
 PreferredSizeWidget customAppBar({
@@ -58,14 +57,12 @@ PreferredSizeWidget customAppBar({
       ),
       const Sizer(width: 30),
 
-      showMenu?GestureDetector(
-          onTap: (){
+      showMenu ? GestureDetector(
+          onTap: () {
             scaffoldKey?.currentState?.openDrawer();
           },
-          child: Directionality(
-              textDirection: S.current.localeee=='en'?TextDirection.ltr:TextDirection.rtl,
-
-              child: SvgPicture.asset(AssetRes.menuIcon, color: ColorRes.white))):Sizer(),
+          child: SvgPicture.asset(AssetRes.menuIcon, color: ColorRes.white),
+      ) : Sizer(),
 
       const Sizer(width: 15),
     ],

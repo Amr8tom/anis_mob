@@ -16,15 +16,14 @@ class WorkspaceCardHeader extends StatelessWidget {
     final tt = Theme.of(context).textTheme;
 
     return Row(
-      textDirection: TextDirection.rtl,
       children: [
         Expanded(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 workspace.name,
-                textAlign: TextAlign.end,
+                textAlign: TextAlign.start,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: tt.bodyMedium?.copyWith(
@@ -34,7 +33,6 @@ class WorkspaceCardHeader extends StatelessWidget {
               ),
               const Sizer(height: 3),
               Row(
-                textDirection: TextDirection.rtl,
                 children: [
                   Icon(
                     Icons.location_on_outlined,

@@ -19,6 +19,7 @@ class DRoutesName {
   static const String deleteAccountRoute = 'delete-account-route';
   static const String profileRoute = 'profile-route';
   static const String settingsRoute = 'settings-route';
+  static const String plansRoute = 'plans-route';
 
   /// HR
   static const String attendanceRoute = 'attendance-route';

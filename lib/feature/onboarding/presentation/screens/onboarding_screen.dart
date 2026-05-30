@@ -84,35 +84,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       currentPage: _currentPage,
                       totalPages: OnboardingData.getPages(context).length,
                     ),
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: DButton(
-                              borderRadius: AppSizes.borderRadiusXXLg,
-                              height: AppSizes.heightcontainer,
-                              text: S.current.previous,
-                              onPressed: _goToPreviousPage,
-                              variant: DButtonVariant.secondary,
-                              size: DButtonSize.medium,
-                              useShadow: true,
-                            ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DButton(
+                            borderRadius: AppSizes.borderRadiusXXLg,
+                            height: AppSizes.heightcontainer,
+                            text: S.current.previous,
+                            onPressed: _goToPreviousPage,
+                            variant: DButtonVariant.secondary,
+                            size: DButtonSize.medium,
+                            useShadow: true,
                           ),
-                          const Sizer(width: 8),
-                          Expanded(
-                            child: DButton(
-                              borderRadius: AppSizes.borderRadiusXXLg,
-                              height: AppSizes.heightcontainer,
-                              text: S.current.continuee,
-                              onPressed: _goToNextPage,
-                              variant: DButtonVariant.primary,
-                              size: DButtonSize.medium,
-                            ),
+                        ),
+                        const Sizer(width: 8),
+                        Expanded(
+                          child: DButton(
+                            borderRadius: AppSizes.borderRadiusXXLg,
+                            height: AppSizes.heightcontainer,
+                            text: S.current.continuee,
+                            onPressed: _goToNextPage,
+                            variant: DButtonVariant.primary,
+                            size: DButtonSize.medium,
                           ),
-
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
 

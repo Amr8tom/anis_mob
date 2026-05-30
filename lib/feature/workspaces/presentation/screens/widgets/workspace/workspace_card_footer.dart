@@ -20,7 +20,6 @@ class WorkspaceCardFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      textDirection: TextDirection.rtl,
       children: [
         WorkspaceMetaItem(
           icon: Icons.schedule_rounded,

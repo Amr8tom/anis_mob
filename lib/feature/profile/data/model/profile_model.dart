@@ -8,10 +8,10 @@ class ProfileModel extends ProfileEntity {
     required super.university,
     required super.subscriptionType,
     required super.subscriptionDaysRemaining,
-    required super.walletBalance,
     required super.totalStudyHours,
     required super.streakDays,
     required super.totalSessions,
     required super.badges,
+    super.avatarPath,
   });
 }

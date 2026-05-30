@@ -35,18 +35,16 @@ class WorkspaceHeaderSection extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Status badge + address row
           Row(
-            textDirection: TextDirection.rtl,
             children: [
               _StatusBadge(status: workspace.status),
               Sizer(width: AppSizes.sm),
               Expanded(
                 child: Text(
                   workspace.address,
-                  textDirection: TextDirection.rtl,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: tt.bodySmall?.copyWith(color: ColorRes.anisTextMuted),
@@ -58,7 +56,6 @@ class WorkspaceHeaderSection extends StatelessWidget {
 
           // Meta row: open time · close time · distance
           Row(
-            textDirection: TextDirection.rtl,
             children: [
               _MetaItem(
                 icon: Icons.access_time_rounded,

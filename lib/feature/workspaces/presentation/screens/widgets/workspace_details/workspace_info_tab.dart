@@ -128,8 +128,7 @@ class _WorkspaceDescriptionSection extends StatelessWidget {
         ),
         child: Text(
           description,
-          textDirection: TextDirection.rtl,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
           style: tt.bodyMedium?.copyWith(
             color: ColorRes.anisTextSecondary,
             height: 1.6,
@@ -168,11 +167,11 @@ class _WorkspaceAmenitiesSection extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: AppSizes.padding),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             S.current.amenities,
-            textAlign: TextAlign.end,
+            textAlign: TextAlign.start,
             style: tt.titleSmall?.copyWith(
               fontWeight: FontWeight.w700,
               color: ColorRes.anisNavy,
@@ -182,7 +181,7 @@ class _WorkspaceAmenitiesSection extends StatelessWidget {
           Wrap(
             spacing: AppSizes.sm,
             runSpacing: AppSizes.sm,
-            alignment: WrapAlignment.end,
+            alignment: WrapAlignment.start,
             children: amenities.map((key) {
               return Container(
                 padding: EdgeInsets.symmetric(
@@ -246,11 +245,11 @@ class _WorkspaceDrinksSection extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: AppSizes.padding),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             S.current.drinksMenu,
-            textAlign: TextAlign.end,
+            textAlign: TextAlign.start,
             style: tt.titleSmall?.copyWith(
               fontWeight: FontWeight.w700,
               color: ColorRes.anisNavy,
@@ -297,7 +296,6 @@ class _DrinkRow extends StatelessWidget {
         ],
       ),
       child: Row(
-        textDirection: TextDirection.rtl,
         children: [
           // Emoji icon container
           Container(
@@ -315,7 +313,7 @@ class _DrinkRow extends StatelessWidget {
           Expanded(
             child: Text(
               drink.name,
-              textAlign: TextAlign.end,
+              textAlign: TextAlign.start,
               style: tt.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: ColorRes.anisNavy,
@@ -379,10 +377,9 @@ class _WorkspaceLocationCard extends StatelessWidget {
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              textDirection: TextDirection.rtl,
               children: [
                 Icon(
                   Icons.location_on_rounded,
@@ -402,8 +399,7 @@ class _WorkspaceLocationCard extends StatelessWidget {
             Sizer(height: AppSizes.xs + 2),
             Text(
               address,
-              textDirection: TextDirection.rtl,
-              textAlign: TextAlign.end,
+              textAlign: TextAlign.start,
               style: tt.bodySmall?.copyWith(
                 color: ColorRes.anisTextMuted,
               ),

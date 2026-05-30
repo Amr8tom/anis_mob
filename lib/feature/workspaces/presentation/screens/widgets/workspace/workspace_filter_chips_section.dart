@@ -28,7 +28,6 @@ class WorkspaceFilterChipsSection extends StatelessWidget {
               vertical: AppSizes.sm,
             ),
             child: Row(
-              textDirection: TextDirection.rtl,
               children: chips.map((chip) {
                 final isActive = chip.key == state.activeFilter;
                 return GestureDetector(

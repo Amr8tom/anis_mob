@@ -88,7 +88,6 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
     return Row(
-      textDirection: TextDirection.rtl,
       children: [
         Icon(icon, size: AppSizes.iconSm, color: color),
         Sizer(width: AppSizes.xs),

@@ -35,14 +35,13 @@ class HomeHeaderWidget extends StatelessWidget {
         children: [
           // ── Top bar: greeting + avatar ─────────────────────────────
           Row(
-            textDirection: TextDirection.rtl,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Name + greeting column
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       _greeting(),
@@ -53,7 +52,7 @@ class HomeHeaderWidget extends StatelessWidget {
                     const Sizer(height: 3),
                     Text(
                       profile.name,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.start,
                       style: tt.headlineMedium?.copyWith(
                         color: ColorRes.white,
                         fontWeight: FontWeight.w800,
@@ -86,7 +85,6 @@ class HomeHeaderWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
             ),
             child: Row(
-              textDirection: TextDirection.rtl,
               children: [
                 _StatItem(
                   value:
@@ -114,7 +112,6 @@ class HomeHeaderWidget extends StatelessWidget {
 
           // ── Subscription progress ──────────────────────────────────
           Row(
-            textDirection: TextDirection.rtl,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
