@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../common/widgets/sizeboxs/Sizer.dart';
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../../../core/constants/colors.dart';
+import '../../../../../../common/widgets/sizeboxs/Sizer.dart';
+import '../../../../../../core/constants/app_sizes.dart';
+import '../../../../../../core/constants/colors.dart';
 
 class WorkspaceMetaItem extends StatelessWidget {
   final IconData icon;

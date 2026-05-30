@@ -3,6 +3,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:anis/core/routing/route_names.dart';
 
 import '../../feature/navigation/presentation/screens/navigation_menu_screen.dart';
+import '../../feature/workspaces/domain/entity/workspace_entity.dart';
+import '../../feature/workspaces/presentation/screens/workspace_details_screen.dart';
 import '../../feature/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../feature/terms_conditions/presentation/terms_conditions_screen.dart';
 
@@ -15,6 +17,16 @@ class RouteGenerator {
       case DRoutesName.navigationMenuRoute:
         return PageTransition(
           child: NavigationMenuScreen(),
+          type: PageTransitionType.rightToLeft,
+          settings: settings,
+        );
+
+      case DRoutesName.workspaceDetailsRoute:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final workspace = args?['workspace'] as WorkspaceEntity?;
+        if (workspace == null) return unDefinedRoute();
+        return PageTransition(
+          child: WorkspaceDetailsScreen(workspace: workspace),
           type: PageTransitionType.rightToLeft,
           settings: settings,
         );

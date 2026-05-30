@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../../../core/constants/colors.dart';
-import '../../../../../generated/l10n.dart';
+import '../../../../../../core/constants/app_sizes.dart';
+import '../../../../../../core/constants/colors.dart';
+import '../../../../../../generated/l10n.dart';
 
 class WorkspaceCheckInButton extends StatelessWidget {
   final VoidCallback? onTap;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/constants/colors.dart';
-import '../../../../../generated/l10n.dart';
-import '../../../domain/entity/workspace_entity.dart';
+import '../../../../../../core/constants/colors.dart';
+import '../../../../../../generated/l10n.dart';
+import '../../../../domain/entity/workspace_entity.dart';
 
 class WorkspaceClosedLabel extends StatelessWidget {
   final WorkspaceStatus status;

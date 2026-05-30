@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../common/widgets/sizeboxs/Sizer.dart';
+import '../../../../../../common/widgets/sizeboxs/Sizer.dart';
 
 class WorkspaceFooterSpacingSection extends StatelessWidget {
   const WorkspaceFooterSpacingSection({super.key});

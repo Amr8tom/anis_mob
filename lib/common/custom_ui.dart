@@ -1,55 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
-import '../../common/widgets/sizeboxs/Sizer.dart';
+
+import '../common/widgets/sizeboxs/Sizer.dart';
 import '../core/constants/app_sizes.dart';
 import '../core/constants/asset_resoures.dart';
 import '../core/constants/colors.dart';
 import '../generated/l10n.dart';
 
 class CustomUI {
-  static loader({required BuildContext context}) {
-    return showDialog(
+  const CustomUI._();
+
+  static Future<void> loader({required BuildContext context}) {
+    return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (context) {
-        return Center(
-          child: RepaintBoundary(
-            child: Lottie.asset(AssetRes.loaderLottie, height: 30.h),
-          ),
-        );
-      },
+      builder: (_) => Center(
+        child: RepaintBoundary(
+          child: Lottie.asset(AssetRes.loaderLottie, height: 30.h),
+        ),
+      ),
     );
   }
 
-  static void showLoadingDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder:
-          (_) => Center(
-            child: RepaintBoundary(
-              child: Lottie.asset(AssetRes.loaderLottie, width: 100.w),
-            ),
-          ),
-    );
-  }
+  static void showLoadingDialog(BuildContext context) => loader(context: context);
 
   static void showFailureDialog(BuildContext context, {String? message}) {
-    showDialog(
+    showDialog<void>(
       context: context,
       barrierDismissible: true,
-      builder:
-          (_) => AlertDialog(
-            title: Text(S.current.error),
-            content: Text(message ?? S.current.error),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(S.current.done),
-              ),
-            ],
+      builder: (_) => AlertDialog(
+        title: Text(S.current.error),
+        content: Text(message ?? S.current.error),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(S.current.done),
           ),
+        ],
+      ),
     );
   }
 
@@ -61,13 +50,7 @@ class CustomUI {
     );
   }
 
-
-
-  // ── Anis design-system states ────────────────────────────────────────────────
-
-  /// Generic empty state used across all Anis feature screens.
-  /// Call as: CustomUI.anisEmptyState(context: context, icon: ..., title: ..., subtitle: ...)
-  static Widget anisEmptyState({
+  static Widget appEmptyState({
     required BuildContext context,
     required IconData icon,
     required String title,
@@ -81,9 +64,9 @@ class CustomUI {
           Icon(
             icon,
             size: AppSizes.iconXLarge,
-            color: ColorRes.anisGreen.withOpacity(0.35),
+            color: ColorRes.anisGreen.withValues(alpha: 0.35),
           ),
-          const SizedBox(height: 16),
+          const Sizer(height: 16),
           Text(
             title,
             textAlign: TextAlign.center,
@@ -93,7 +76,7 @@ class CustomUI {
             ),
           ),
           if (subtitle != null) ...[
-            const SizedBox(height: 6),
+            const Sizer(height: 6),
             Text(
               subtitle,
               textAlign: TextAlign.center,
@@ -105,9 +88,7 @@ class CustomUI {
     );
   }
 
-  /// Generic error state used across all Anis feature screens.
-  /// Call as: CustomUI.anisErrorState(context: context, message: ..., onRetry: ...)
-  static Widget anisErrorState({
+  static Widget appErrorState({
     required BuildContext context,
     required String message,
     required VoidCallback onRetry,
@@ -124,13 +105,13 @@ class CustomUI {
               size: AppSizes.iconXLarge,
               color: ColorRes.anisHintText,
             ),
-            const SizedBox(height: 16),
+            const Sizer(height: 16),
             Text(
               message,
               textAlign: TextAlign.center,
               style: tt.bodySmall?.copyWith(color: ColorRes.anisTextMuted),
             ),
-            const SizedBox(height: 20),
+            const Sizer(height: 20),
             ElevatedButton(
               onPressed: onRetry,
               style: ElevatedButton.styleFrom(
@@ -138,8 +119,7 @@ class CustomUI {
                 foregroundColor: ColorRes.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppSizes.borderRadiusLg),
+                  borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                 ),
                 padding: EdgeInsets.symmetric(
                   horizontal: AppSizes.xl,
@@ -159,6 +139,30 @@ class CustomUI {
       ),
     );
   }
+
+  static Widget anisEmptyState({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    String? subtitle,
+  }) =>
+      appEmptyState(
+        context: context,
+        icon: icon,
+        title: title,
+        subtitle: subtitle,
+      );
+
+  static Widget anisErrorState({
+    required BuildContext context,
+    required String message,
+    required VoidCallback onRetry,
+  }) =>
+      appErrorState(
+        context: context,
+        message: message,
+        onRetry: onRetry,
+      );
 
   static Widget simpleSendingDataLoader() {
     return Center(
@@ -194,7 +198,7 @@ class CustomUI {
               height: AppSizes.productItemHeight,
             ),
           ),
-          SizedBox(height: AppSizes.spaceBtwItems),
+          const Sizer(height: 16),
           Text(
             S.current.error,
             style: TextStyle(
@@ -217,7 +221,7 @@ class CustomUI {
           RepaintBoundary(
             child: ColorFiltered(
               colorFilter: ColorFilter.mode(
-                ColorRes.primary.withOpacity(0.7),
+                ColorRes.primary.withValues(alpha: 0.7),
                 BlendMode.srcIn,
               ),
               child: Lottie.asset(
@@ -226,7 +230,7 @@ class CustomUI {
               ),
             ),
           ),
-          SizedBox(height: AppSizes.spaceBtwItems),
+          const Sizer(height: 16),
           Text(
             message ?? S.current.noData,
             style: TextStyle(
@@ -264,7 +268,7 @@ class CustomUI {
           RepaintBoundary(
             child: ColorFiltered(
               colorFilter: ColorFilter.mode(
-                ColorRes.primary.withOpacity(0.7),
+                ColorRes.primary.withValues(alpha: 0.7),
                 BlendMode.srcIn,
               ),
               child: Lottie.asset(
@@ -273,7 +277,7 @@ class CustomUI {
               ),
             ),
           ),
-          SizedBox(height: AppSizes.spaceBtwItems*6),
+          const Sizer(height: 48),
           Text(S.current.noData),
         ],
       ),
@@ -281,7 +285,7 @@ class CustomUI {
   }
 
   static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
-  snackBarSuccess({required BuildContext context, String? message}) {
+      snackBarSuccess({required BuildContext context, String? message}) {
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message ?? S.current.done),
@@ -292,14 +296,15 @@ class CustomUI {
   }
 
   static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
-  snackBarFailure({required BuildContext context, String? message}) {
+      snackBarFailure({required BuildContext context, String? message}) {
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           message ?? S.current.error,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(color: ColorRes.white),
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.copyWith(color: ColorRes.white),
         ),
         backgroundColor: ColorRes.error,
         behavior: SnackBarBehavior.floating,

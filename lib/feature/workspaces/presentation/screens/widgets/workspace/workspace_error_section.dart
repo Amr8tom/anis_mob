@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../common/custom_ui.dart';
+import '../../../../../../common/custom_ui.dart';
 
 class WorkspaceErrorSection extends StatelessWidget {
   final String message;
@@ -15,7 +15,7 @@ class WorkspaceErrorSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverFillRemaining(
-      child: CustomUI.anisErrorState(
+      child: CustomUI.appErrorState(
         context: context,
         message: message,
         onRetry: onRetry,

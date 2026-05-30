@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../common/widgets/sizeboxs/Sizer.dart';
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../../../core/constants/colors.dart';
-import '../../../../../generated/l10n.dart';
-import '../../../domain/entity/workspace_entity.dart';
+import '../../../../../../common/widgets/sizeboxs/Sizer.dart';
+import '../../../../../../core/constants/app_sizes.dart';
+import '../../../../../../core/constants/colors.dart';
+import '../../../../../../generated/l10n.dart';
+import '../../../../domain/entity/workspace_entity.dart';
 
 class WorkspaceOccupancySection extends StatelessWidget {
   final WorkspaceEntity workspace;

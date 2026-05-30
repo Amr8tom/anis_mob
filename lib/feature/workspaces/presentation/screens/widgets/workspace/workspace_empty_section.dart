@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../common/custom_ui.dart';
-import '../../../../../generated/l10n.dart';
+import '../../../../../../common/custom_ui.dart';
+import '../../../../../../generated/l10n.dart';
 
 class WorkspaceEmptySection extends StatelessWidget {
   const WorkspaceEmptySection({super.key});
@@ -9,7 +9,7 @@ class WorkspaceEmptySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverFillRemaining(
-      child: CustomUI.anisEmptyState(
+      child: CustomUI.appEmptyState(
         context: context,
         icon: Icons.store_outlined,
         title: S.current.noWorkspacesFound,

@@ -1,11 +1,18 @@
 import 'package:equatable/equatable.dart';
 
+import 'workspace_drink_entity.dart';
+
 enum WorkspaceStatus { open, busy, full, closed }
 
 class WorkspaceEntity extends Equatable {
   final String id;
   final String name;
   final String address;
+  final String description;
+  final double latitude;
+  final double longitude;
+  final List<String> galleryImages;
+  final List<WorkspaceDrinkEntity> drinks;
   /// Current number of students checked in
   final int currentOccupancy;
   final int capacity;
@@ -23,6 +30,11 @@ class WorkspaceEntity extends Equatable {
     required this.id,
     required this.name,
     required this.address,
+    this.description = '',
+    this.latitude = 0,
+    this.longitude = 0,
+    this.galleryImages = const [],
+    this.drinks = const [],
     required this.currentOccupancy,
     required this.capacity,
     required this.status,
@@ -41,6 +53,7 @@ class WorkspaceEntity extends Equatable {
   @override
   List<Object?> get props => [
         id, name, address, currentOccupancy, capacity,
-        status, distanceKm, openTime, closeTime, amenities,
+            description, latitude, longitude, galleryImages, drinks,
+            status, distanceKm, openTime, closeTime, amenities,
       ];
 }

@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/colors.dart';
+import '../../../../core/extentions/navigation_extension.dart';
+import '../../../../core/routing/route_names.dart';
 import '../../../../generated/l10n.dart';
 import '../../domain/entity/workspace_entity.dart';
 import '../controller/workspace_cubit.dart';
-import 'widgets/workspace_divider_section.dart';
-import 'widgets/workspace_empty_section.dart';
-import 'widgets/workspace_error_section.dart';
-import 'widgets/workspace_filter_chips_section.dart';
-import 'widgets/workspace_footer_spacing_section.dart';
-import 'widgets/workspace_loading_section.dart';
-import 'widgets/workspace_page_title_section.dart';
-import 'widgets/workspace_workspaces_list_section.dart';
+import 'widgets/workspace/workspace_divider_section.dart';
+import 'widgets/workspace/workspace_empty_section.dart';
+import 'widgets/workspace/workspace_error_section.dart';
+import 'widgets/workspace/workspace_filter_chips_section.dart';
+import 'widgets/workspace/workspace_footer_spacing_section.dart';
+import 'widgets/workspace/workspace_loading_section.dart';
+import 'widgets/workspace/workspace_page_title_section.dart';
+import 'widgets/workspace/workspace_workspaces_list_section.dart';
 
 class WorkspacesScreen extends StatelessWidget {
   const WorkspacesScreen({super.key});
@@ -51,6 +53,10 @@ class WorkspacesScreen extends StatelessWidget {
                         workspaces: state.workspaces,
                         onCheckIn: (workspace) =>
                             _onCheckIn(context, workspace),
+                        onTap: (workspace) => context.pushNamed(
+                          DRoutesName.workspaceDetailsRoute,
+                          arguments: {'workspace': workspace},
+                        ),
                       );
                   }
                 },

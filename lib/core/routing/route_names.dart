@@ -46,6 +46,7 @@ class DRoutesName {
   ///  navigation route  and different  sections in navigation screen  routes
   static const String navigationMenuRoute = 'navigation-menu-route';
   static const String notificationsRoute = 'notifications-route';
+  static const String workspaceDetailsRoute = 'workspace-details-route';
   static const String chooseNewRequestNewService = 'Request-New-Service-route';
   static const String requestCreateDetails =
       'Request-create-details-Service-route';

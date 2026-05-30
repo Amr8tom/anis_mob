@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../domain/entity/workspace_entity.dart';
+import '../../../../../../core/constants/app_sizes.dart';
+import '../../../../domain/entity/workspace_entity.dart';
 import 'workspace_card.dart';
 
 class WorkspaceWorkspacesListSection extends StatelessWidget {
   final List<WorkspaceEntity> workspaces;
   final ValueChanged<WorkspaceEntity> onCheckIn;
+  final ValueChanged<WorkspaceEntity> onTap;
 
   const WorkspaceWorkspacesListSection({
     super.key,
     required this.workspaces,
     required this.onCheckIn,
+    required this.onTap,
   });
 
   @override
@@ -23,6 +25,7 @@ class WorkspaceWorkspacesListSection extends StatelessWidget {
           (_, i) => WorkspaceCard(
             workspace: workspaces[i],
             onCheckIn: () => onCheckIn(workspaces[i]),
+            onTap: () => onTap(workspaces[i]),
           ),
           childCount: workspaces.length,
         ),

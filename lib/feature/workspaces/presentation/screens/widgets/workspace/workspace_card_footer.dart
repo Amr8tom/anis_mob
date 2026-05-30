@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
-import '../../../../../common/widgets/sizeboxs/Sizer.dart';
-import '../../../../../generated/l10n.dart';
-import '../../../domain/entity/workspace_entity.dart';
+import '../../../../../../common/widgets/sizeboxs/Sizer.dart';
+import '../../../../../../generated/l10n.dart';
+import '../../../../domain/entity/workspace_entity.dart';
+import 'workspace_meta_item.dart';
 import 'workspace_check_in_button.dart';
 import 'workspace_closed_label.dart';
 import 'workspace_meta_item.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../domain/entity/workspace_entity.dart';
+import '../../../../../../core/constants/app_sizes.dart';
+import '../../../../domain/entity/workspace_entity.dart';
 import 'workspace_card.dart';
 
 class WorkspaceLoadingSection extends StatelessWidget {

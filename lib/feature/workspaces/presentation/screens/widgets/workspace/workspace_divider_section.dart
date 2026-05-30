@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/constants/colors.dart';
+import '../../../../../../core/constants/colors.dart';
 
 class WorkspaceDividerSection extends StatelessWidget {
   const WorkspaceDividerSection({super.key});
