@@ -1,0 +1,154 @@
+name: anis
+description: ""
+version: 1.0.0+1
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+
+  # UI packages
+  flutter_svg: ^2.0.16
+  cached_network_image: ^3.4.1
+  url_launcher: ^6.3.1
+  lottie: ^3.1.3
+  animated_bottom_navigation_bar: any
+  page_transition: ^2.2.1
+  material_floating_search_bar_2: ^0.5.0
+  flutter_staggered_animations: ^1.1.1
+  flutter_launcher_icons: ^0.14.3
+  flutter_screenutil: ^5.9.3
+  iconsax: ^0.0.8
+  sensors_plus: ^6.1.1
+  flutter_rating: ^2.0.2
+  flutter_rating_bar: null
+  skeletonizer: ^1.4.3
+  hijri: ^3.0.0
+  share_plus: ^12.0.2
+
+  # dev package
+  dartz: ^0.10.1
+  equatable: ^2.0.7
+  get_it: ^8.0.3
+  flutter_bloc: ^9.1.1
+  pretty_dio_logger: ^1.4.0
+
+  app_tracking_transparency: ^2.0.6+1
+  intl: ^0.19.0
+  #device_preview: ^1.2.0
+  accordion: ^2.6.0
+
+  # connection packages
+  data_connection_checker_tv: ^0.3.5-nullsafety
+  internet_connection_checker: ^1.0.0+1
+  dio: ^5.7.0
+  webview_flutter: ^4.10.0
+
+  # storage_packages
+  shared_preferences: ^2.5.3
+
+  # image handling
+  image_picker: ^1.0.7
+  file_picker: ^8.0.0
+
+
+
+  # map && location
+  permission_handler: ^12.0.1
+  #  flutter_map: ^8.0.0
+  #  geolocator: ^13.0.2
+  #  geocoding: ^2.1.0
+
+  #  flutter_polyline_points: ^2.1.0
+  # date package
+  #  hijri: ^3.0.0
+  # for updates the app
+  in_app_update: ^4.2.3   # play store
+  upgrader: ^12.1.0 # app store
+
+  #firebase mirroring and minitoring
+#  firebase_core:
+#  firebase_crashlytics:
+#  firebase_analytics:
+#  flutter_otp_text_field: ^1.5.1+1
+#  firebase_messaging: ^16.0.2
+  flutter_local_notifications: ^19.4.2
+  flutter_dash: ^1.0.0
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  intl_utils: ^2.8.10
+  #  firebase_crashlytics: ^4.3.7
+  #  firebase_analytics: ^11.5.0fl
+
+
+#flutter_icons:
+#  android: "flutter_luancher"
+#  ios: true
+#  image_path: "assets/images/pngs/logo.png"
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/pngs/logo.png"
+  remove_alpha_ios: true
+  #  image_path: "assets/images/pngs/logo-with_background.png"
+
+
+
+
+
+# The following section is specific to Flutter packages.
+flutter:
+  generate: true
+  uses-material-design: true
+
+
+  #-------------------- LOCAL ASSETS --------------------#
+  assets:
+    - assets/lotties/
+    - assets/images/pngs/
+    - assets/images/svgs/
+    - assets/images/jpegs/
+    - assets/images/gif/
+    - assets/images/jpg/
+    - assets/images/pngs/social_images/
+    - assets/fonts/en/
+    - assets/fonts/ar/
+
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/ar/Cairo-Light.ttf
+          weight: 300
+        - asset: assets/fonts/ar/Cairo-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/ar/Cairo-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/ar/Cairo-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/ar/Cairo-Bold.ttf
+          weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/to/font-from-package
+flutter_intl:
+  enabled: true
+  class_name: S
+  main_locale: en
+  arb_dir: lib/l10n
+  output_dir: lib/generated

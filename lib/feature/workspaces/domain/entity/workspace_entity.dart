@@ -1,0 +1,46 @@
+import 'package:equatable/equatable.dart';
+
+enum WorkspaceStatus { open, busy, full, closed }
+
+class WorkspaceEntity extends Equatable {
+  final String id;
+  final String name;
+  final String address;
+  /// Current number of students checked in
+  final int currentOccupancy;
+  final int capacity;
+  final WorkspaceStatus status;
+  /// Distance in km from user location
+  final double distanceKm;
+  /// Human-readable open time, e.g. "8:00 ص"
+  final String openTime;
+  /// Human-readable close time, e.g. "11:00 م"
+  final String closeTime;
+  /// Amenity icon keys: 'wifi' | 'ac' | 'coffee' | 'printing' | 'quiet'
+  final List<String> amenities;
+
+  const WorkspaceEntity({
+    required this.id,
+    required this.name,
+    required this.address,
+    required this.currentOccupancy,
+    required this.capacity,
+    required this.status,
+    required this.distanceKm,
+    required this.openTime,
+    required this.closeTime,
+    required this.amenities,
+  });
+
+  /// 0.0 – 1.0 fill fraction
+  double get occupancyFraction =>
+      capacity == 0 ? 0 : (currentOccupancy / capacity).clamp(0.0, 1.0);
+
+  bool get isOpen => status == WorkspaceStatus.open;
+
+  @override
+  List<Object?> get props => [
+        id, name, address, currentOccupancy, capacity,
+        status, distanceKm, openTime, closeTime, amenities,
+      ];
+}
