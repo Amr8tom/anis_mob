@@ -1193,6 +1193,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "createSessionSubmit": MessageLookupByLibrary.simpleMessage("نشر الجلسة"),
     "memberRating": MessageLookupByLibrary.simpleMessage("التقييم"),
     "memberInterests": MessageLookupByLibrary.simpleMessage("الاهتمامات"),
+    "searchWorkspace": MessageLookupByLibrary.simpleMessage("ابحث بالاسم أو المنطقة..."),
     "selectWorkspace": MessageLookupByLibrary.simpleMessage("اختر مكان الجلسة"),
     "selectWorkspaceHint": MessageLookupByLibrary.simpleMessage("يرجى اختيار مكان للجلسة"),
     "fieldRequired": MessageLookupByLibrary.simpleMessage("هذا الحقل مطلوب"),

@@ -1,18 +1,33 @@
 part of 'buddy_cubit.dart';
 
 enum BuddyStatus { initial, loading, success, failure }
+
 enum BuddyActionStatus { idle, loading, success, failure }
 
 final class BuddyState extends Equatable {
+  // ── Session list ───────────────────────────────────────
   final BuddyStatus status;
   final List<BuddySessionEntity> sessions;
   final String universityFilter;
   final String subjectFilter;
-  final String activeChip; // 'all' | 'today' | 'open' | 'availableNow'
+  final String activeChip;
   final String? errorMessage;
+
+  // ── Join action ────────────────────────────────────────
   final BuddyActionStatus joinStatus;
-  final BuddyActionStatus createStatus;
   final String? joinedSessionId;
+
+  // ── Create action ──────────────────────────────────────
+  final BuddyActionStatus createStatus;
+
+  // ── Create-session form state ──────────────────────────
+  final List<WorkspaceEntity> workspaces;      // available workspaces for the picker
+  final BuddyStatus workspacesStatus;
+  final WorkspaceEntity? selectedWorkspace;    // chosen workspace on the form
+  final DateTime? createStartTime;
+  final int maxCapacity;
+  final List<String> createRules;
+  final String workspaceSearchQuery;
 
   const BuddyState({
     this.status = BuddyStatus.initial,
@@ -22,8 +37,15 @@ final class BuddyState extends Equatable {
     this.activeChip = 'all',
     this.errorMessage,
     this.joinStatus = BuddyActionStatus.idle,
-    this.createStatus = BuddyActionStatus.idle,
     this.joinedSessionId,
+    this.createStatus = BuddyActionStatus.idle,
+    this.workspaces = const [],
+    this.workspacesStatus = BuddyStatus.initial,
+    this.selectedWorkspace,
+    this.createStartTime,
+    this.maxCapacity = 4,
+    this.createRules = const [],
+    this.workspaceSearchQuery = '',
   });
 
   BuddyState copyWith({
@@ -34,8 +56,17 @@ final class BuddyState extends Equatable {
     String? activeChip,
     String? errorMessage,
     BuddyActionStatus? joinStatus,
-    BuddyActionStatus? createStatus,
     String? joinedSessionId,
+    BuddyActionStatus? createStatus,
+    List<WorkspaceEntity>? workspaces,
+    BuddyStatus? workspacesStatus,
+    WorkspaceEntity? selectedWorkspace,
+    DateTime? createStartTime,
+    int? maxCapacity,
+    List<String>? createRules,
+    String? workspaceSearchQuery,
+    bool clearSelectedWorkspace = false,
+    bool clearCreateStartTime = false,
   }) {
     return BuddyState(
       status: status ?? this.status,
@@ -45,14 +76,25 @@ final class BuddyState extends Equatable {
       activeChip: activeChip ?? this.activeChip,
       errorMessage: errorMessage ?? this.errorMessage,
       joinStatus: joinStatus ?? this.joinStatus,
-      createStatus: createStatus ?? this.createStatus,
       joinedSessionId: joinedSessionId ?? this.joinedSessionId,
+      createStatus: createStatus ?? this.createStatus,
+      workspaces: workspaces ?? this.workspaces,
+      workspacesStatus: workspacesStatus ?? this.workspacesStatus,
+      selectedWorkspace:
+          clearSelectedWorkspace ? null : (selectedWorkspace ?? this.selectedWorkspace),
+      createStartTime:
+          clearCreateStartTime ? null : (createStartTime ?? this.createStartTime),
+      maxCapacity: maxCapacity ?? this.maxCapacity,
+      createRules: createRules ?? this.createRules,
+      workspaceSearchQuery: workspaceSearchQuery ?? this.workspaceSearchQuery,
     );
   }
 
   @override
   List<Object?> get props => [
         status, sessions, universityFilter, subjectFilter, activeChip,
-        errorMessage, joinStatus, createStatus, joinedSessionId,
+        errorMessage, joinStatus, joinedSessionId, createStatus,
+        workspaces, workspacesStatus, selectedWorkspace,
+        createStartTime, maxCapacity, createRules, workspaceSearchQuery,
       ];
 }

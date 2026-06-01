@@ -1,4 +1,6 @@
+import '../../../workspaces/domain/entity/workspace_entity.dart';
 import '../../domain/entity/buddy_session_entity.dart';
+import 'buddy_member_model.dart';
 
 class BuddySessionModel extends BuddySessionEntity {
   const BuddySessionModel({
@@ -17,9 +19,7 @@ class BuddySessionModel extends BuddySessionEntity {
     super.maxCapacity,
     required super.startTime,
     required super.timeLabel,
-    required super.workspaceId,
-    required super.workspaceName,
-    required super.workspaceAddress,
+    required super.workspace,
     super.sessionStatus,
   });
 }

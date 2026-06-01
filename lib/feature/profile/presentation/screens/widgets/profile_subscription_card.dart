@@ -44,7 +44,7 @@ class ProfileSubscriptionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusXLg),
           boxShadow: [
             BoxShadow(
-              color: ColorRes.anisNavy.withOpacity(0.07),
+              color: ColorRes.anisNavy.withValues(alpha: 0.07),
               blurRadius: AppSizes.md,
               offset: const Offset(0, 4),
             ),
@@ -73,10 +73,10 @@ class ProfileSubscriptionCard extends StatelessWidget {
                     vertical: AppSizes.xs,
                   ),
                   decoration: BoxDecoration(
-                    color: planColor.withOpacity(0.1),
+                    color: planColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
                     border: Border.all(
-                      color: planColor.withOpacity(0.35),
+                      color: planColor.withValues(alpha: 0.35),
                       width: 1,
                     ),
                   ),
@@ -100,7 +100,7 @@ class ProfileSubscriptionCard extends StatelessWidget {
             ),
 
             const Sizer(height: 14),
-            Container(height: 1, color: ColorRes.accent.withOpacity(0.5)),
+            Container(height: 1, color: ColorRes.accent.withValues(alpha: 0.5)),
             const Sizer(height: 14),
 
             // ── Days remaining ────────────────────────────────

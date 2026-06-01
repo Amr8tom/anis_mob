@@ -7046,6 +7046,10 @@ class S {
     return Intl.message('Interests', name: 'memberInterests', desc: '', args: []);
   }
 
+  String get searchWorkspace {
+    return Intl.message('Search by name or area...', name: 'searchWorkspace', desc: '', args: []);
+  }
+
   String get selectWorkspace {
     return Intl.message('Choose Location', name: 'selectWorkspace', desc: '', args: []);
   }

@@ -1,3 +1,7 @@
+import '../../../../core/constants/asset_resoures.dart';
+import '../../../workspaces/data/model/workspace_model.dart';
+import '../../../workspaces/domain/entity/workspace_drink_entity.dart';
+import '../../../workspaces/domain/entity/workspace_entity.dart';
 import '../model/buddy_member_model.dart';
 import '../model/buddy_session_model.dart';
 import '../../domain/entity/buddy_session_entity.dart';
@@ -11,6 +15,95 @@ abstract class BuddyRemoteDataSource {
   Future<bool> joinSession(String sessionId);
   Future<bool> createSession(Map<String, dynamic> data);
 }
+
+// ── Shared workspace objects — same data as WorkspaceRemoteDataSourceImpl ──────
+// Defined once here so BuddySessionModel instances carry the full WorkspaceEntity.
+
+const _ws001 = WorkspaceModel(
+  id: 'ws_001',
+  name: 'مكتبة القاهرة المركزية',
+  address: 'وسط البلد، القاهرة',
+  description: 'مساحة هادئة مناسبة للمذاكرة والعمل الجماعي مع إطلالة مريحة.',
+  latitude: 30.0444,
+  longitude: 31.2357,
+  galleryImages: [AssetRes.product, AssetRes.webApps, AssetRes.mobileApps],
+  drinks: [
+    WorkspaceDrinkEntity(id: 'd1', name: 'Espresso',     icon: 'assets/images/pngs/dollarIcon.png', price: 35),
+    WorkspaceDrinkEntity(id: 'd2', name: 'Cappuccino',   icon: 'assets/images/pngs/dollarIcon.png', price: 48),
+    WorkspaceDrinkEntity(id: 'd3', name: 'Latte',        icon: 'assets/images/pngs/dollarIcon.png', price: 52),
+  ],
+  currentOccupancy: 28,
+  capacity: 40,
+  status: WorkspaceStatus.open,
+  distanceKm: 1.2,
+  openTime: '8:00 ص',
+  closeTime: '11:00 م',
+  amenities: ['wifi', 'ac', 'quiet'],
+);
+
+const _ws002 = WorkspaceModel(
+  id: 'ws_002',
+  name: 'مساحة بريدج الدراسية',
+  address: 'مدينة نصر، القاهرة',
+  description: 'مكان مناسب للمراجعة السريعة والاجتماعات الصغيرة.',
+  latitude: 30.0647,
+  longitude: 31.3386,
+  galleryImages: [AssetRes.product, AssetRes.mobileApps],
+  drinks: [
+    WorkspaceDrinkEntity(id: 'd1', name: 'Americano', icon: 'assets/images/pngs/dollarIcon.png', price: 30),
+    WorkspaceDrinkEntity(id: 'd2', name: 'Mocha',     icon: 'assets/images/pngs/dollarIcon.png', price: 55),
+  ],
+  currentOccupancy: 18,
+  capacity: 20,
+  status: WorkspaceStatus.busy,
+  distanceKm: 2.8,
+  openTime: '9:00 ص',
+  closeTime: '10:00 م',
+  amenities: ['wifi', 'coffee', 'printing'],
+);
+
+const _ws003 = WorkspaceModel(
+  id: 'ws_003',
+  name: 'ستاديوم ستادي هاب',
+  address: 'الزمالك، القاهرة',
+  description: 'مساحة عمل فاخرة وهادئة مع مرافق متكاملة.',
+  latitude: 30.0676,
+  longitude: 31.2218,
+  galleryImages: [AssetRes.webApps, AssetRes.product],
+  drinks: [
+    WorkspaceDrinkEntity(id: 'd1', name: 'Tea',           icon: 'assets/images/pngs/dollarIcon.png', price: 20),
+    WorkspaceDrinkEntity(id: 'd2', name: 'Hot Chocolate', icon: 'assets/images/pngs/dollarIcon.png', price: 45),
+  ],
+  currentOccupancy: 35,
+  capacity: 35,
+  status: WorkspaceStatus.full,
+  distanceKm: 3.5,
+  openTime: '8:00 ص',
+  closeTime: '12:00 م',
+  amenities: ['wifi', 'ac', 'coffee', 'quiet'],
+);
+
+const _ws004 = WorkspaceModel(
+  id: 'ws_004',
+  name: 'مكتبة جامعة عين شمس',
+  address: 'عين شمس، القاهرة',
+  description: 'مكتبة واسعة مع أماكن متعددة للقراءة والمذاكرة.',
+  latitude: 30.0903,
+  longitude: 31.3194,
+  galleryImages: [AssetRes.mobileApps],
+  drinks: [
+    WorkspaceDrinkEntity(id: 'd1', name: 'Cold Brew', icon: 'assets/images/pngs/dollarIcon.png', price: 40),
+  ],
+  currentOccupancy: 12,
+  capacity: 60,
+  status: WorkspaceStatus.open,
+  distanceKm: 5.1,
+  openTime: '7:00 ص',
+  closeTime: '9:00 م',
+  amenities: ['wifi', 'quiet', 'printing'],
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 class BuddyRemoteDataSourceImpl implements BuddyRemoteDataSource {
   static final _now = DateTime.now();
@@ -53,9 +146,7 @@ class BuddyRemoteDataSourceImpl implements BuddyRemoteDataSource {
       maxCapacity: 6,
       startTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 15, 0),
       timeLabel: 'اليوم • 3:00 م',
-      workspaceId: 'ws_001',
-      workspaceName: 'مكتبة الجامعة الأمريكية',
-      workspaceAddress: 'التجمع الخامس، القاهرة الجديدة',
+      workspace: _ws001,
       sessionStatus: BuddySessionStatus.open,
     ),
     BuddySessionModel(
@@ -89,9 +180,7 @@ class BuddyRemoteDataSourceImpl implements BuddyRemoteDataSource {
       maxCapacity: 4,
       startTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 17, 30),
       timeLabel: 'اليوم • 5:30 م',
-      workspaceId: 'ws_002',
-      workspaceName: 'مساحة كوورك داون تاون',
-      workspaceAddress: 'وسط البلد، القاهرة',
+      workspace: _ws002,
       sessionStatus: BuddySessionStatus.open,
     ),
     BuddySessionModel(
@@ -120,9 +209,7 @@ class BuddyRemoteDataSourceImpl implements BuddyRemoteDataSource {
       maxCapacity: 5,
       startTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 11, 0),
       timeLabel: 'غداً • 11:00 ص',
-      workspaceId: 'ws_001',
-      workspaceName: 'مكتبة الجامعة الأمريكية',
-      workspaceAddress: 'التجمع الخامس، القاهرة الجديدة',
+      workspace: _ws001,
       sessionStatus: BuddySessionStatus.open,
     ),
     BuddySessionModel(
@@ -167,9 +254,7 @@ class BuddyRemoteDataSourceImpl implements BuddyRemoteDataSource {
       maxCapacity: 4,
       startTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 19, 0),
       timeLabel: 'اليوم • 7:00 م',
-      workspaceId: 'ws_001',
-      workspaceName: 'مكتبة الجامعة الأمريكية',
-      workspaceAddress: 'التجمع الخامس، القاهرة الجديدة',
+      workspace: _ws004,
       sessionStatus: BuddySessionStatus.full,
     ),
   ];

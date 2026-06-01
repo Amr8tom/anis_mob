@@ -51,8 +51,8 @@ class ProfileHeaderSection extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: ColorRes.anisAvatarDark,
                         shape: BoxShape.circle,
-                        border: Border.all(
-                          color: ColorRes.white.withOpacity(0.3),
+                                border: Border.all(
+                                  color: ColorRes.white.withValues(alpha: 0.3),
                           width: 2.5,
                         ),
                         image: avatarPath != null
@@ -120,7 +120,7 @@ class ProfileHeaderSection extends StatelessWidget {
                 uni,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: ColorRes.white.withOpacity(0.75),
+                              color: ColorRes.white.withValues(alpha: 0.75),
                     ),
               ),
               const Sizer(height: 12),
@@ -158,9 +158,9 @@ class _SubscriptionBadge extends StatelessWidget {
         vertical: AppSizes.xs + 1,
       ),
       decoration: BoxDecoration(
-        color: ColorRes.anisGold.withOpacity(0.2),
+          color: ColorRes.anisGold.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(AppSizes.borderRadiusXLg),
-        border: Border.all(color: ColorRes.anisGold.withOpacity(0.5), width: 1),
+          border: Border.all(color: ColorRes.anisGold.withValues(alpha: 0.5), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

@@ -7,8 +7,8 @@ import '../../../../../../core/constants/colors.dart';
 import '../../../../domain/entity/buddy_session_entity.dart';
 import '../../../controller/buddy_cubit.dart';
 
-/// Tappable workspace card — calls [BuddyCubit.openWorkspaceDetails].
-/// Title rendered by the parent tab widget.
+/// Tappable card showing the session's embedded workspace.
+/// Tapping navigates to the full workspace details screen via [BuddyCubit].
 class SessionWorkspaceCard extends StatelessWidget {
   final BuddySessionEntity session;
   const SessionWorkspaceCard({super.key, required this.session});
@@ -16,6 +16,7 @@ class SessionWorkspaceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
+    final workspace = session.workspace;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: AppSizes.padding),
@@ -25,8 +26,7 @@ class SessionWorkspaceCard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: ColorRes.white,
-            borderRadius:
-                BorderRadius.circular(AppSizes.borderRadiusXLg),
+            borderRadius: BorderRadius.circular(AppSizes.borderRadiusXLg),
             boxShadow: [
               BoxShadow(
                 color: ColorRes.anisNavy.withOpacity(0.05),
@@ -38,7 +38,7 @@ class SessionWorkspaceCard extends StatelessWidget {
           padding: EdgeInsets.all(AppSizes.md),
           child: Row(
             children: [
-              // Location icon with gradient
+              // Location icon
               Container(
                 width: AppSizes.iconXLarge + 4,
                 height: AppSizes.iconXLarge + 4,
@@ -62,13 +62,13 @@ class SessionWorkspaceCard extends StatelessWidget {
               ),
               const Sizer(width: 12),
 
-              // Name + address
+              // Name + address from the embedded WorkspaceEntity
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      session.workspaceName,
+                      workspace.name,
                       textAlign: TextAlign.start,
                       style: tt.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w700,
@@ -77,7 +77,7 @@ class SessionWorkspaceCard extends StatelessWidget {
                     ),
                     const Sizer(height: 3),
                     Text(
-                      session.workspaceAddress,
+                      workspace.address,
                       textAlign: TextAlign.start,
                       style: tt.bodySmall
                           ?.copyWith(color: ColorRes.anisTextMuted),

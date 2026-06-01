@@ -7,6 +7,7 @@ import '../../../../common/widgets/sizeboxs/Sizer.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../generated/l10n.dart';
+import '../../../workspaces/domain/entity/workspace_entity.dart';
 import '../../domain/entity/buddy_session_entity.dart';
 import '../controller/buddy_cubit.dart';
 import 'widgets/buddy_filter_chips.dart';
@@ -169,9 +170,12 @@ class BuddyScreen extends StatelessWidget {
       description: '████████████████████████████',
       startTime: now,
       timeLabel: '██████',
-      workspaceId: '',
-      workspaceName: '██████████',
-      workspaceAddress: '█████████████',
+      workspace: const WorkspaceEntity(
+        id: '', name: '██████████', address: '█████████████',
+        currentOccupancy: 0, capacity: 0,
+        status: WorkspaceStatus.open, distanceKm: 0,
+        openTime: '', closeTime: '', amenities: [],
+      ),
     );
   }
 }

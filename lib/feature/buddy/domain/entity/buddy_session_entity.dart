@@ -1,16 +1,16 @@
 import 'package:equatable/equatable.dart';
+
+import '../../../workspaces/domain/entity/workspace_entity.dart';
 import 'buddy_member_entity.dart';
 
-/// Founder availability dot
 enum BuddyAvailability { online, busy, offline }
 
-/// Overall session status
 enum BuddySessionStatus { open, full, inProgress }
 
 class BuddySessionEntity extends Equatable {
   final String id;
 
-  // ── Founder info ────────────────────────────────────────────────────────
+  // ── Founder info ─────────────────────────────────────────────────────────
   final String buddyName;
   final String buddyInitials;
   /// 'red' | 'blue' | 'purple' | 'green' | 'orange'
@@ -18,25 +18,24 @@ class BuddySessionEntity extends Equatable {
   final String university;
   final BuddyAvailability availability;
 
-  // ── Session content ─────────────────────────────────────────────────────
+  // ── Session content ───────────────────────────────────────────────────────
   final String topic;
   final String subject;
   final String description;
-  final List<String> rules;       // attendance requirements
-  final String? gift;             // founder's gift, e.g. "كوب شاي مجاني"
+  final List<String> rules;
+  final String? gift;
   final List<BuddyMemberEntity> members;
   final int maxCapacity;
 
-  // ── Schedule ────────────────────────────────────────────────────────────
+  // ── Schedule ──────────────────────────────────────────────────────────────
   final DateTime startTime;
-  final String timeLabel; // human-readable, e.g. "اليوم • 3:00 م"
+  final String timeLabel;
 
-  // ── Workspace ───────────────────────────────────────────────────────────
-  final String workspaceId;
-  final String workspaceName;
-  final String workspaceAddress;
+  // ── Workspace ─────────────────────────────────────────────────────────────
+  /// Full workspace entity — used to display info and navigate to details.
+  final WorkspaceEntity workspace;
 
-  // ── Status ──────────────────────────────────────────────────────────────
+  // ── Status ────────────────────────────────────────────────────────────────
   final BuddySessionStatus sessionStatus;
 
   const BuddySessionEntity({
@@ -55,9 +54,7 @@ class BuddySessionEntity extends Equatable {
     this.maxCapacity = 6,
     required this.startTime,
     required this.timeLabel,
-    required this.workspaceId,
-    required this.workspaceName,
-    required this.workspaceAddress,
+    required this.workspace,
     this.sessionStatus = BuddySessionStatus.open,
   });
 
@@ -69,7 +66,6 @@ class BuddySessionEntity extends Equatable {
   List<Object?> get props => [
         id, buddyName, buddyInitials, avatarColorKey, university, availability,
         topic, subject, description, rules, gift, members, maxCapacity,
-        startTime, timeLabel, workspaceId, workspaceName, workspaceAddress,
-        sessionStatus,
+        startTime, timeLabel, workspace, sessionStatus,
       ];
 }

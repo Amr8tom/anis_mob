@@ -1252,6 +1252,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "createSessionSubmit": MessageLookupByLibrary.simpleMessage("Publish Session"),
     "memberRating": MessageLookupByLibrary.simpleMessage("Rating"),
     "memberInterests": MessageLookupByLibrary.simpleMessage("Interests"),
+    "searchWorkspace": MessageLookupByLibrary.simpleMessage("Search by name or area..."),
     "selectWorkspace": MessageLookupByLibrary.simpleMessage("Choose Location"),
     "selectWorkspaceHint": MessageLookupByLibrary.simpleMessage("Please select a workspace location"),
     "fieldRequired": MessageLookupByLibrary.simpleMessage("This field is required"),

@@ -110,11 +110,11 @@ class _MenuTile extends StatelessWidget {
                   vertical: AppSizes.xs,
                 ),
                 decoration: BoxDecoration(
-                  color: ColorRes.anisGreen.withOpacity(0.08),
+                  color: ColorRes.anisGreen.withValues(alpha: 0.08),
                   borderRadius:
                       BorderRadius.circular(AppSizes.borderRadiusMd),
                   border: Border.all(
-                    color: ColorRes.anisGreen.withOpacity(0.25),
+                    color: ColorRes.anisGreen.withValues(alpha: 0.25),
                     width: 1,
                   ),
                 ),
