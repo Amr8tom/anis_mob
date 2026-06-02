@@ -20,7 +20,11 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(count) => "${count} results";
+  static String m0(days) => "${days} days left";
+
+  static String m1(count) => "${count} results";
+
+  static String m2(step, total, label) => "Step ${step} of ${total} • ${label}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -80,12 +84,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "alsoAvailable": MessageLookupByLibrary.simpleMessage(
       "Also Available In :",
     ),
+    "amenities": MessageLookupByLibrary.simpleMessage("Amenities"),
     "amount": MessageLookupByLibrary.simpleMessage("The amount"),
     "angleDevice": MessageLookupByLibrary.simpleMessage("Device Angle"),
     "angleQibla": MessageLookupByLibrary.simpleMessage("Qibla Angle"),
     "announcement": MessageLookupByLibrary.simpleMessage("Announcement"),
     "appLanguage": MessageLookupByLibrary.simpleMessage("App Language"),
     "appName": MessageLookupByLibrary.simpleMessage("teaa"),
+    "appTagline": MessageLookupByLibrary.simpleMessage(
+      "Study smarter together",
+    ),
     "appTitle": MessageLookupByLibrary.simpleMessage("Teaa Client"),
     "applicantName": MessageLookupByLibrary.simpleMessage("Applicant"),
     "approvedRequest": MessageLookupByLibrary.simpleMessage("Approved Request"),
@@ -129,6 +137,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "backToHome": MessageLookupByLibrary.simpleMessage("Back To Home"),
     "badgesEarned": MessageLookupByLibrary.simpleMessage("Badges Earned"),
     "bagDetails": MessageLookupByLibrary.simpleMessage("Bag Details:"),
+    "beFirstToStartSession": MessageLookupByLibrary.simpleMessage(
+      "Be the first to start a session here!",
+    ),
     "beforeEndOfDay": MessageLookupByLibrary.simpleMessage(
       "Before the end of the workday: leaving without returning (early departure).",
     ),
@@ -158,6 +169,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "byClickYourAgreeTerms": MessageLookupByLibrary.simpleMessage(
       "By clicking on the button, you agree to our ",
+    ),
+    "byLoggingInYouAgree": MessageLookupByLibrary.simpleMessage(
+      "By logging in you agree to our",
     ),
     "callUs": MessageLookupByLibrary.simpleMessage("Call us"),
     "camera": MessageLookupByLibrary.simpleMessage("Camera"),
@@ -192,6 +206,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "change": MessageLookupByLibrary.simpleMessage("change"),
     "changeColor": MessageLookupByLibrary.simpleMessage("Change Color"),
+    "changeLanguage": MessageLookupByLibrary.simpleMessage("Change Language"),
     "chatUs": MessageLookupByLibrary.simpleMessage("Chat US"),
     "checkIn": MessageLookupByLibrary.simpleMessage("Check In"),
     "checkInFromRecord": MessageLookupByLibrary.simpleMessage(
@@ -214,6 +229,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "chooseImage": MessageLookupByLibrary.simpleMessage("Choose Image"),
     "choosePaymentMethod": MessageLookupByLibrary.simpleMessage(
       "Payment Method",
+    ),
+    "choosePlanTitle": MessageLookupByLibrary.simpleMessage("Choose Your Plan"),
+    "chooseYourAvatar": MessageLookupByLibrary.simpleMessage(
+      "Choose Your Avatar",
+    ),
+    "chooseYourGender": MessageLookupByLibrary.simpleMessage(
+      "Choose Your Gender",
+    ),
+    "chooseYourUniversity": MessageLookupByLibrary.simpleMessage(
+      "Academic Info 🎓",
     ),
     "city": MessageLookupByLibrary.simpleMessage("The City of Mecca"),
     "cityAr": MessageLookupByLibrary.simpleMessage(
@@ -267,7 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Are you sure you want to exit the app?",
     ),
     "confirmPass": MessageLookupByLibrary.simpleMessage("Confirm Password"),
-    "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm password"),
+    "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),
     "confirmPayment": MessageLookupByLibrary.simpleMessage("Confirm Payment"),
     "congrats": MessageLookupByLibrary.simpleMessage("Congratulation"),
     "contactWithClient": MessageLookupByLibrary.simpleMessage(
@@ -295,6 +320,48 @@ class MessageLookup extends MessageLookupByLibrary {
       "Create New Password",
     ),
     "createRequest": MessageLookupByLibrary.simpleMessage("Create Request"),
+    "createSession": MessageLookupByLibrary.simpleMessage("Create Session"),
+    "createSessionAddRule": MessageLookupByLibrary.simpleMessage("Add Rule"),
+    "createSessionBasicInfo": MessageLookupByLibrary.simpleMessage(
+      "Basic Info",
+    ),
+    "createSessionCapacity": MessageLookupByLibrary.simpleMessage(
+      "Max Members",
+    ),
+    "createSessionDescHint": MessageLookupByLibrary.simpleMessage(
+      "What will you be working on?",
+    ),
+    "createSessionDescription": MessageLookupByLibrary.simpleMessage(
+      "Description",
+    ),
+    "createSessionGiftHint": MessageLookupByLibrary.simpleMessage(
+      "e.g. Coffee, snacks...",
+    ),
+    "createSessionGiftLabel": MessageLookupByLibrary.simpleMessage(
+      "Gift / Treat",
+    ),
+    "createSessionPersons": MessageLookupByLibrary.simpleMessage("persons"),
+    "createSessionRuleHint": MessageLookupByLibrary.simpleMessage(
+      "e.g. No talking loudly",
+    ),
+    "createSessionSchedule": MessageLookupByLibrary.simpleMessage("Schedule"),
+    "createSessionSubject": MessageLookupByLibrary.simpleMessage("Subject"),
+    "createSessionSubjectHint": MessageLookupByLibrary.simpleMessage(
+      "e.g. Mathematics, Physics...",
+    ),
+    "createSessionSubmit": MessageLookupByLibrary.simpleMessage(
+      "Create Session",
+    ),
+    "createSessionTitle": MessageLookupByLibrary.simpleMessage(
+      "Create a Study Session",
+    ),
+    "createSessionTopic": MessageLookupByLibrary.simpleMessage("Topic"),
+    "createSessionTopicHint": MessageLookupByLibrary.simpleMessage(
+      "e.g. Calculus Chapter 3",
+    ),
+    "createYourAccount": MessageLookupByLibrary.simpleMessage(
+      "Create Account 🔐",
+    ),
     "creditCard": MessageLookupByLibrary.simpleMessage("Credit Card"),
     "creditCardPaymentScreen": MessageLookupByLibrary.simpleMessage(
       "Credit Card Payment Screen",
@@ -304,6 +371,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "currentEvent": MessageLookupByLibrary.simpleMessage("Current Events"),
     "currentLocation": MessageLookupByLibrary.simpleMessage("Current Location"),
+    "currentPlan": MessageLookupByLibrary.simpleMessage("Current Plan"),
     "currentRequest": MessageLookupByLibrary.simpleMessage("Current Requests"),
     "currentlyDownloadingSurahes": MessageLookupByLibrary.simpleMessage(
       "Currently downloading Surahes. Please wait...",
@@ -316,6 +384,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "date05": MessageLookupByLibrary.simpleMessage("05/17/2024  06:30PM"),
     "date15": MessageLookupByLibrary.simpleMessage("15/04/2024"),
     "dateBirth": MessageLookupByLibrary.simpleMessage("Date of Brith"),
+    "daysLeft": m0,
     "delayedCash": MessageLookupByLibrary.simpleMessage("Delayed Cash"),
     "delayedCashDes": MessageLookupByLibrary.simpleMessage(
       "buy now and buy later ",
@@ -359,9 +428,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "diseasesWrite": MessageLookupByLibrary.simpleMessage(
       "write if you have any diseases problems",
     ),
-    "changeLanguage": MessageLookupByLibrary.simpleMessage("Change Language"),
-    "currentPlan": MessageLookupByLibrary.simpleMessage("Current Plan"),
-    "daysLeft": MessageLookupByLibrary.simpleMessage("Days Left"),
     "distance": MessageLookupByLibrary.simpleMessage("Distance"),
     "documentData": MessageLookupByLibrary.simpleMessage("Document Data"),
     "documentNumber": MessageLookupByLibrary.simpleMessage("Document Number"),
@@ -382,6 +448,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "downloadingQuran": MessageLookupByLibrary.simpleMessage(
       "Downloading Quran data...",
     ),
+    "drinksMenu": MessageLookupByLibrary.simpleMessage("Drinks Menu"),
     "drivingLicenseNumber": MessageLookupByLibrary.simpleMessage(
       "Driving License Number",
     ),
@@ -437,6 +504,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "enterPhoneNumber": MessageLookupByLibrary.simpleMessage(
       "Enter phone number",
+    ),
+    "enterYourMajorAndYear": MessageLookupByLibrary.simpleMessage(
+      "Tell us about your studies",
     ),
     "enterpharmaceuticalName": MessageLookupByLibrary.simpleMessage(
       "Enter Pharmaceutical Name",
@@ -502,6 +572,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Feedback Sent Successfully",
     ),
     "female": MessageLookupByLibrary.simpleMessage("Female"),
+    "fieldRequired": MessageLookupByLibrary.simpleMessage(
+      "This field is required",
+    ),
     "filterToday": MessageLookupByLibrary.simpleMessage("Today"),
     "findBuddy": MessageLookupByLibrary.simpleMessage("Find Buddy"),
     "findingYourDirection": MessageLookupByLibrary.simpleMessage(
@@ -533,14 +606,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
     "gender": MessageLookupByLibrary.simpleMessage("Gender"),
     "general": MessageLookupByLibrary.simpleMessage("General"),
+    "generalError": MessageLookupByLibrary.simpleMessage(
+      "Something went wrong. Please try again.",
+    ),
     "getPaymentCode": MessageLookupByLibrary.simpleMessage("Get Payment Code"),
     "getStarted": MessageLookupByLibrary.simpleMessage("Get Started"),
     "go": MessageLookupByLibrary.simpleMessage("Go to Home"),
     "goldSubscription": MessageLookupByLibrary.simpleMessage("Gold Plan"),
     "good": MessageLookupByLibrary.simpleMessage("Good"),
-    "goodAfternoon": MessageLookupByLibrary.simpleMessage("Good Afternoon"),
-    "goodEvening": MessageLookupByLibrary.simpleMessage("Good Evening"),
-    "goodMorning": MessageLookupByLibrary.simpleMessage("Good Morning"),
+    "goodAfternoon": MessageLookupByLibrary.simpleMessage("Good afternoon"),
+    "goodEvening": MessageLookupByLibrary.simpleMessage("Good evening"),
+    "goodMorning": MessageLookupByLibrary.simpleMessage("Good morning"),
     "gr": MessageLookupByLibrary.simpleMessage("Group:  Group A"),
     "grA1": MessageLookupByLibrary.simpleMessage("Group A-1"),
     "grB3": MessageLookupByLibrary.simpleMessage("Group B-3"),
@@ -626,6 +702,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "includeFamilyMembers": MessageLookupByLibrary.simpleMessage(
       "Include Family Members",
     ),
+    "infoTab": MessageLookupByLibrary.simpleMessage("Info"),
     "information": MessageLookupByLibrary.simpleMessage("ّInformation"),
     "installmentWithSouhoola": MessageLookupByLibrary.simpleMessage(
       "Installment with souhoola",
@@ -681,6 +758,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Lighten your heart with the remembrance of Allah",
     ),
     "limit": MessageLookupByLibrary.simpleMessage("Lowest Limit"),
+    "liveNow": MessageLookupByLibrary.simpleMessage("Live Now"),
     "loRe": MessageLookupByLibrary.simpleMessage("   Location Residence"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "loc": MessageLookupByLibrary.simpleMessage(
@@ -699,6 +777,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "The World Is Waiting – Let’s Go!",
     ),
     "loginTitle": MessageLookupByLibrary.simpleMessage("Welcome  "),
+    "loginWelcomeBack": MessageLookupByLibrary.simpleMessage(
+      "Welcome back! Sign in to continue.",
+    ),
     "loginWithPhone": MessageLookupByLibrary.simpleMessage("Login with Phone"),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
     "logoutConfirm": MessageLookupByLibrary.simpleMessage(
@@ -721,6 +802,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "makka": MessageLookupByLibrary.simpleMessage("Makka"),
     "makkah": MessageLookupByLibrary.simpleMessage("Makkah"),
     "male": MessageLookupByLibrary.simpleMessage("Male"),
+    "manageSubscription": MessageLookupByLibrary.simpleMessage(
+      "Manage Subscription",
+    ),
     "manager": MessageLookupByLibrary.simpleMessage("Manager"),
     "managerApproval": MessageLookupByLibrary.simpleMessage("Manager Approval"),
     "markAll": MessageLookupByLibrary.simpleMessage("Mark all as read"),
@@ -743,9 +827,21 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "medicalSupplies": MessageLookupByLibrary.simpleMessage("Medical Supplies"),
     "medicine": MessageLookupByLibrary.simpleMessage("Medicine"),
+    "memberInterests": MessageLookupByLibrary.simpleMessage("Interests"),
+    "memberRating": MessageLookupByLibrary.simpleMessage("Rating"),
     "mena": MessageLookupByLibrary.simpleMessage("Mena Camps"),
     "menu": MessageLookupByLibrary.simpleMessage("Menu"),
     "meters": MessageLookupByLibrary.simpleMessage("m"),
+    "minOneLowercase": MessageLookupByLibrary.simpleMessage(
+      "One lowercase letter (a-z)",
+    ),
+    "minOneNumber": MessageLookupByLibrary.simpleMessage("One number (0-9)"),
+    "minOneUppercase": MessageLookupByLibrary.simpleMessage(
+      "One uppercase letter (A-Z)",
+    ),
+    "minSixChars": MessageLookupByLibrary.simpleMessage(
+      "At least 6 characters",
+    ),
     "minutes": MessageLookupByLibrary.simpleMessage("Minutes"),
     "missingItemsNotebook": MessageLookupByLibrary.simpleMessage(
       "Missing Items Notebook....You can upload a missing items sheet or an Excel sheet, and the orders will be processed automatically on your behalf",
@@ -774,13 +870,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "myStats": MessageLookupByLibrary.simpleMessage("My Stats"),
     "myWallet": MessageLookupByLibrary.simpleMessage("My Wallet"),
     "name": MessageLookupByLibrary.simpleMessage("Name:"),
+    "nameTooShortError": MessageLookupByLibrary.simpleMessage(
+      "Name must be at least 2 characters",
+    ),
+    "nameWillAppearOnProfile": MessageLookupByLibrary.simpleMessage(
+      "Your name will appear on your profile and study sessions",
+    ),
     "nation": MessageLookupByLibrary.simpleMessage("Nationality"),
+    "nearbyFilter": MessageLookupByLibrary.simpleMessage("Nearby"),
     "nearbyWorkspaces": MessageLookupByLibrary.simpleMessage(
       "Nearby Workspaces",
     ),
     "newPass": MessageLookupByLibrary.simpleMessage("New Password"),
     "newPassword": MessageLookupByLibrary.simpleMessage("New Password"),
     "newProduct": MessageLookupByLibrary.simpleMessage("New Product"),
+    "next": MessageLookupByLibrary.simpleMessage("Next"),
     "no": MessageLookupByLibrary.simpleMessage("No"),
     "noAttendanceRecords": MessageLookupByLibrary.simpleMessage(
       "No Attendance Records",
@@ -789,10 +893,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Your attendance records will appear here once they are checked in",
     ),
     "noBuddiesFound": MessageLookupByLibrary.simpleMessage("No buddies found"),
-    "manageSubscription": MessageLookupByLibrary.simpleMessage("Manage Subscription"),
-    "noWorkspacesFound": MessageLookupByLibrary.simpleMessage("No workspaces found"),
-    "upgradePlan": MessageLookupByLibrary.simpleMessage("Upgrade Plan"),
-    "walletBalance": MessageLookupByLibrary.simpleMessage("Wallet Balance"),
     "noData": MessageLookupByLibrary.simpleMessage(
       "There is no data here till now",
     ),
@@ -813,11 +913,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "noResult": MessageLookupByLibrary.simpleMessage("No results found"),
     "noResults": MessageLookupByLibrary.simpleMessage("No results found"),
     "noResultsFound": MessageLookupByLibrary.simpleMessage("No results found"),
+    "noSessionsInWorkspace": MessageLookupByLibrary.simpleMessage(
+      "No active sessions in this workspace",
+    ),
     "noSessionsToday": MessageLookupByLibrary.simpleMessage(
       "No sessions today",
     ),
     "noUserFound": MessageLookupByLibrary.simpleMessage(
       "These credentials are not found",
+    ),
+    "noWorkspacesFound": MessageLookupByLibrary.simpleMessage(
+      "No workspaces found",
     ),
     "nomination_end_date": MessageLookupByLibrary.simpleMessage(
       "Nomination End Date",
@@ -870,7 +976,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "oof": MessageLookupByLibrary.simpleMessage("of"),
     "op": MessageLookupByLibrary.simpleMessage("Open"),
     "open": MessageLookupByLibrary.simpleMessage("Open Google Map"),
+    "openInMaps": MessageLookupByLibrary.simpleMessage("Open in Maps"),
     "openNow": MessageLookupByLibrary.simpleMessage("Open Now"),
+    "openSpot": MessageLookupByLibrary.simpleMessage("Open spot"),
     "opensAt": MessageLookupByLibrary.simpleMessage("Opens at"),
     "or": MessageLookupByLibrary.simpleMessage("or"),
     "orderDate": MessageLookupByLibrary.simpleMessage("Order Date"),
@@ -916,8 +1024,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordEmpty": MessageLookupByLibrary.simpleMessage(
       "password can not Be Empty",
     ),
+    "passwordEmptyError": MessageLookupByLibrary.simpleMessage(
+      "Password is required",
+    ),
+    "passwordMissingLowercaseError": MessageLookupByLibrary.simpleMessage(
+      "Password must include a lowercase letter",
+    ),
+    "passwordMissingNumberError": MessageLookupByLibrary.simpleMessage(
+      "Password must include a number",
+    ),
+    "passwordMissingUppercaseError": MessageLookupByLibrary.simpleMessage(
+      "Password must include an uppercase letter",
+    ),
     "passwordTooShort": MessageLookupByLibrary.simpleMessage(
       "The password cant be less than 4 ",
+    ),
+    "passwordTooShortError": MessageLookupByLibrary.simpleMessage(
+      "Password must be at least 6 characters",
+    ),
+    "passwordsDoNotMatch": MessageLookupByLibrary.simpleMessage(
+      "Passwords do not match",
     ),
     "payWithLastAddress": MessageLookupByLibrary.simpleMessage(
       "Pay with Last Address",
@@ -940,6 +1066,44 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "placeName": MessageLookupByLibrary.simpleMessage("Place Name"),
     "placeNumber": MessageLookupByLibrary.simpleMessage("Place Number"),
+    "planBestValue": MessageLookupByLibrary.simpleMessage("Best Value"),
+    "planCtaFree": MessageLookupByLibrary.simpleMessage("Get Started Free"),
+    "planCtaGold": MessageLookupByLibrary.simpleMessage("Go Gold"),
+    "planCtaSilver": MessageLookupByLibrary.simpleMessage("Go Silver"),
+    "planCurrentBadge": MessageLookupByLibrary.simpleMessage("Current"),
+    "planFeatureAds": MessageLookupByLibrary.simpleMessage("Contains ads"),
+    "planFeatureAnalytics": MessageLookupByLibrary.simpleMessage(
+      "Study analytics",
+    ),
+    "planFeatureBuddies": MessageLookupByLibrary.simpleMessage(
+      "Up to 3 buddies",
+    ),
+    "planFeatureNoAds": MessageLookupByLibrary.simpleMessage("No ads"),
+    "planFeaturePriority": MessageLookupByLibrary.simpleMessage(
+      "Priority support",
+    ),
+    "planFeatureSessions10": MessageLookupByLibrary.simpleMessage(
+      "Up to 10 sessions/month",
+    ),
+    "planFeatureSessions2": MessageLookupByLibrary.simpleMessage(
+      "Up to 2 sessions/month",
+    ),
+    "planFeatureSessionsUnlimited": MessageLookupByLibrary.simpleMessage(
+      "Unlimited sessions",
+    ),
+    "planFeatureWorkspaces": MessageLookupByLibrary.simpleMessage(
+      "Limited workspaces",
+    ),
+    "planFeatureWorkspacesUnlimited": MessageLookupByLibrary.simpleMessage(
+      "All workspaces",
+    ),
+    "planFreeTitle": MessageLookupByLibrary.simpleMessage("Free"),
+    "planGoldTitle": MessageLookupByLibrary.simpleMessage("Gold"),
+    "planMostPopular": MessageLookupByLibrary.simpleMessage("Most Popular"),
+    "planPriceFree": MessageLookupByLibrary.simpleMessage("0 EGP"),
+    "planPriceGold": MessageLookupByLibrary.simpleMessage("199 EGP/mo"),
+    "planPriceSilver": MessageLookupByLibrary.simpleMessage("99 EGP/mo"),
+    "planSilverTitle": MessageLookupByLibrary.simpleMessage("Silver"),
     "plateNumber": MessageLookupByLibrary.simpleMessage("Plate Number"),
     "please": MessageLookupByLibrary.simpleMessage(
       "Please enable Location service",
@@ -1101,7 +1265,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "resolved": MessageLookupByLibrary.simpleMessage("Resolved"),
     "results": MessageLookupByLibrary.simpleMessage("results"),
-    "resultsCount": m0,
+    "resultsCount": m1,
     "retry": MessageLookupByLibrary.simpleMessage("Retry"),
     "returnOrder": MessageLookupByLibrary.simpleMessage(
       "Return Order....You can return an item within 3 days after receiving it",
@@ -1138,6 +1302,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Search Surah Index ...",
     ),
     "searchTitle": MessageLookupByLibrary.simpleMessage("Search"),
+    "searchWorkspace": MessageLookupByLibrary.simpleMessage(
+      "Search workspaces...",
+    ),
     "seconds": MessageLookupByLibrary.simpleMessage("Seconds"),
     "seeAll": MessageLookupByLibrary.simpleMessage("see all"),
     "selDep": MessageLookupByLibrary.simpleMessage("Select Department"),
@@ -1148,6 +1315,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Please Select Address first",
     ),
     "selectArr": MessageLookupByLibrary.simpleMessage("select arrival city"),
+    "selectAvatarError": MessageLookupByLibrary.simpleMessage(
+      "Please choose an avatar",
+    ),
     "selectCarBrand": MessageLookupByLibrary.simpleMessage("Select Car Brand"),
     "selectCarColor": MessageLookupByLibrary.simpleMessage("Select Car Color"),
     "selectCategory": MessageLookupByLibrary.simpleMessage("Select Category"),
@@ -1171,6 +1341,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Select document type",
     ),
     "selectEmployee": MessageLookupByLibrary.simpleMessage("Select Employee"),
+    "selectGenderError": MessageLookupByLibrary.simpleMessage(
+      "Please select your gender",
+    ),
     "selectInsuranceClass": MessageLookupByLibrary.simpleMessage(
       "Select insurance class",
     ),
@@ -1182,6 +1355,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "selectLanguage": MessageLookupByLibrary.simpleMessage("Select Language"),
     "selectLuggage": MessageLookupByLibrary.simpleMessage("Select Luggage"),
+    "selectMajorError": MessageLookupByLibrary.simpleMessage(
+      "Please enter your study major",
+    ),
     "selectNation": MessageLookupByLibrary.simpleMessage("Select Nationality"),
     "selectOneActivity": MessageLookupByLibrary.simpleMessage(
       "Select One of Activities",
@@ -1206,6 +1382,22 @@ class MessageLookup extends MessageLookupByLibrary {
       "Select study type",
     ),
     "selectTime": MessageLookupByLibrary.simpleMessage("select time"),
+    "selectUniversity": MessageLookupByLibrary.simpleMessage(
+      "Select your university",
+    ),
+    "selectUniversityError": MessageLookupByLibrary.simpleMessage(
+      "Please select your university",
+    ),
+    "selectWorkspace": MessageLookupByLibrary.simpleMessage("Select Workspace"),
+    "selectWorkspaceHint": MessageLookupByLibrary.simpleMessage(
+      "Tap to choose a workspace",
+    ),
+    "selectYearError": MessageLookupByLibrary.simpleMessage(
+      "Please select your year of study",
+    ),
+    "selectYearOfStudy": MessageLookupByLibrary.simpleMessage(
+      "Select your year",
+    ),
     "send": MessageLookupByLibrary.simpleMessage("Send"),
     "sendFeed": MessageLookupByLibrary.simpleMessage("Send Feedback"),
     "sendOtp": MessageLookupByLibrary.simpleMessage("verify OTP"),
@@ -1218,48 +1410,30 @@ class MessageLookup extends MessageLookupByLibrary {
     "serOffice": MessageLookupByLibrary.simpleMessage("Service Office"),
     "service": MessageLookupByLibrary.simpleMessage("Service Office:  165"),
     "services": MessageLookupByLibrary.simpleMessage("services"),
+    "sessionDate": MessageLookupByLibrary.simpleMessage("Date"),
+    "sessionDescription": MessageLookupByLibrary.simpleMessage(
+      "About this session",
+    ),
     "sessionDuration": MessageLookupByLibrary.simpleMessage("Session Duration"),
     "sessionEnded": MessageLookupByLibrary.simpleMessage("Session Ended"),
-    "sessionFull": MessageLookupByLibrary.simpleMessage("Full"),
+    "sessionFounder": MessageLookupByLibrary.simpleMessage("Founder"),
+    "sessionFull": MessageLookupByLibrary.simpleMessage("Session Full"),
+    "sessionGift": MessageLookupByLibrary.simpleMessage("Gift"),
     "sessionInProgress": MessageLookupByLibrary.simpleMessage("In Progress"),
-    "sessionOpen": MessageLookupByLibrary.simpleMessage("Open"),
-    "sessionsCount": MessageLookupByLibrary.simpleMessage("Sessions"),
-    "sessionFounder": MessageLookupByLibrary.simpleMessage("Session Host"),
-    "sessionDescription": MessageLookupByLibrary.simpleMessage("About This Session"),
-    "sessionTime": MessageLookupByLibrary.simpleMessage("Session Time"),
-    "sessionDate": MessageLookupByLibrary.simpleMessage("Date"),
-    "sessionPlace": MessageLookupByLibrary.simpleMessage("Location"),
+    "sessionJoined": MessageLookupByLibrary.simpleMessage("Joined"),
     "sessionMembers": MessageLookupByLibrary.simpleMessage("Members"),
-    "sessionRules": MessageLookupByLibrary.simpleMessage("Attendance Rules"),
-    "sessionGift": MessageLookupByLibrary.simpleMessage("Host Gift"),
-    "sessionJoined": MessageLookupByLibrary.simpleMessage("You joined the session!"),
-    "createSession": MessageLookupByLibrary.simpleMessage("Create Session"),
-    "createSessionTitle": MessageLookupByLibrary.simpleMessage("New Session"),
-    "createSessionBasicInfo": MessageLookupByLibrary.simpleMessage("Session Info"),
-    "createSessionTopic": MessageLookupByLibrary.simpleMessage("Session Title"),
-    "createSessionTopicHint": MessageLookupByLibrary.simpleMessage("e.g. Physics Review"),
-    "createSessionSubject": MessageLookupByLibrary.simpleMessage("Subject"),
-    "createSessionSubjectHint": MessageLookupByLibrary.simpleMessage("e.g. Modern Physics"),
-    "createSessionDescription": MessageLookupByLibrary.simpleMessage("Description"),
-    "createSessionDescHint": MessageLookupByLibrary.simpleMessage("Describe the session goal and what you'll cover"),
-    "createSessionSchedule": MessageLookupByLibrary.simpleMessage("Schedule & Capacity"),
-    "createSessionCapacity": MessageLookupByLibrary.simpleMessage("Max Participants"),
-    "createSessionPersons": MessageLookupByLibrary.simpleMessage("persons"),
-    "createSessionAddRule": MessageLookupByLibrary.simpleMessage("Add Attendance Rule"),
-    "createSessionRuleHint": MessageLookupByLibrary.simpleMessage("e.g. Bring your textbook"),
-    "createSessionGiftLabel": MessageLookupByLibrary.simpleMessage("Gift for Participants (optional)"),
-    "createSessionGiftHint": MessageLookupByLibrary.simpleMessage("e.g. ☕ Free coffee for everyone"),
-    "createSessionSubmit": MessageLookupByLibrary.simpleMessage("Publish Session"),
-    "memberRating": MessageLookupByLibrary.simpleMessage("Rating"),
-    "memberInterests": MessageLookupByLibrary.simpleMessage("Interests"),
-    "searchWorkspace": MessageLookupByLibrary.simpleMessage("Search by name or area..."),
-    "selectWorkspace": MessageLookupByLibrary.simpleMessage("Choose Location"),
-    "selectWorkspaceHint": MessageLookupByLibrary.simpleMessage("Please select a workspace location"),
-    "fieldRequired": MessageLookupByLibrary.simpleMessage("This field is required"),
-    "openSpot": MessageLookupByLibrary.simpleMessage("Open Spot"),
+    "sessionOpen": MessageLookupByLibrary.simpleMessage("Open"),
+    "sessionPlace": MessageLookupByLibrary.simpleMessage("Location"),
+    "sessionRules": MessageLookupByLibrary.simpleMessage("Session Rules"),
     "sessionTabOverview": MessageLookupByLibrary.simpleMessage("Overview"),
-    "sessionTabPeople": MessageLookupByLibrary.simpleMessage("People & Place"),
+    "sessionTabPeople": MessageLookupByLibrary.simpleMessage("People"),
+    "sessionTime": MessageLookupByLibrary.simpleMessage("Time"),
+    "sessionsCount": MessageLookupByLibrary.simpleMessage("Sessions"),
+    "sessionsTab": MessageLookupByLibrary.simpleMessage("Sessions"),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "setupYourCredentials": MessageLookupByLibrary.simpleMessage(
+      "Set up your login credentials",
+    ),
     "shipping": MessageLookupByLibrary.simpleMessage("shipping"),
     "shippingBody": MessageLookupByLibrary.simpleMessage(
       "please wait your order in the way ",
@@ -1269,30 +1443,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Show All Questions",
     ),
     "silverSubscription": MessageLookupByLibrary.simpleMessage("Silver Plan"),
-    "choosePlanTitle": MessageLookupByLibrary.simpleMessage("Choose Your Plan"),
-    "choosePlanSubtitle": MessageLookupByLibrary.simpleMessage("Join thousands of students and achieve your study goals"),
-    "planFreeTitle": MessageLookupByLibrary.simpleMessage("Free"),
-    "planSilverTitle": MessageLookupByLibrary.simpleMessage("Silver"),
-    "planGoldTitle": MessageLookupByLibrary.simpleMessage("Gold"),
-    "planPriceFree": MessageLookupByLibrary.simpleMessage("Free"),
-    "planPriceSilver": MessageLookupByLibrary.simpleMessage("49 EGP / month"),
-    "planPriceGold": MessageLookupByLibrary.simpleMessage("99 EGP / month"),
-    "planMostPopular": MessageLookupByLibrary.simpleMessage("Most Popular"),
-    "planBestValue": MessageLookupByLibrary.simpleMessage("Best Value"),
-    "planFeatureWorkspaces": MessageLookupByLibrary.simpleMessage("Limited workspaces"),
-    "planFeatureWorkspacesUnlimited": MessageLookupByLibrary.simpleMessage("Unlimited workspaces"),
-    "planFeatureSessions2": MessageLookupByLibrary.simpleMessage("2 sessions / day"),
-    "planFeatureSessions10": MessageLookupByLibrary.simpleMessage("10 sessions / day"),
-    "planFeatureSessionsUnlimited": MessageLookupByLibrary.simpleMessage("Unlimited sessions"),
-    "planFeatureBuddies": MessageLookupByLibrary.simpleMessage("Find study buddies"),
-    "planFeatureAnalytics": MessageLookupByLibrary.simpleMessage("Advanced analytics"),
-    "planFeaturePriority": MessageLookupByLibrary.simpleMessage("Priority support"),
-    "planFeatureAds": MessageLookupByLibrary.simpleMessage("Contains ads"),
-    "planFeatureNoAds": MessageLookupByLibrary.simpleMessage("Ad-free experience"),
-    "planCtaFree": MessageLookupByLibrary.simpleMessage("Start for Free"),
-    "planCtaSilver": MessageLookupByLibrary.simpleMessage("Get Silver"),
-    "planCtaGold": MessageLookupByLibrary.simpleMessage("Get Gold"),
-    "planCurrentBadge": MessageLookupByLibrary.simpleMessage("Current Plan"),
     "singIn": MessageLookupByLibrary.simpleMessage("Sign In"),
     "singUp": MessageLookupByLibrary.simpleMessage("Sing Up"),
     "size": MessageLookupByLibrary.simpleMessage("Size"),
@@ -1306,11 +1456,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "speakToUs": MessageLookupByLibrary.simpleMessage(
       "you can speak to a specialist",
     ),
+    "splashArabicHint": MessageLookupByLibrary.simpleMessage("Arabic"),
+    "splashChooseLanguage": MessageLookupByLibrary.simpleMessage(
+      "Choose your language",
+    ),
+    "splashEnglishHint": MessageLookupByLibrary.simpleMessage("English"),
     "splashScreenText": MessageLookupByLibrary.simpleMessage(
       "Welcome to CementTech Store,your one-stop shop for all cement products with low price and high quality",
     ),
     "splashSubtitle": MessageLookupByLibrary.simpleMessage(
       "Motawifs of Turkey Pilgrims and Pilgrims of Europe, America and Australia Company",
+    ),
+    "splashTagline": MessageLookupByLibrary.simpleMessage(
+      "Find your perfect study buddy",
     ),
     "splashTitle": MessageLookupByLibrary.simpleMessage(
       "شركــة مطوفي حجاج تركيا و حجاج أوروبا وأمريكا واستراليا",
@@ -1325,10 +1483,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Stagnant Items.......You can upload your stagnant items to your account and they will be rotated and resold on your behalf",
     ),
     "startDate": MessageLookupByLibrary.simpleMessage("Start Date"),
+    "startNow": MessageLookupByLibrary.simpleMessage("Start Now"),
     "startSearch": MessageLookupByLibrary.simpleMessage("Starting Search"),
     "startWork": MessageLookupByLibrary.simpleMessage("Start Work"),
     "startWorkType": MessageLookupByLibrary.simpleMessage("Start Work Type"),
     "status": MessageLookupByLibrary.simpleMessage("Status"),
+    "stepIndicator": m2,
     "stoning": MessageLookupByLibrary.simpleMessage("Stoning Devil in Mina"),
     "streakDays": MessageLookupByLibrary.simpleMessage("Day Streak"),
     "streetName": MessageLookupByLibrary.simpleMessage("Street Name"),
@@ -1337,6 +1497,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "studyDestination": MessageLookupByLibrary.simpleMessage(
       "Destination / Entity",
     ),
+    "studyMajor": MessageLookupByLibrary.simpleMessage("Study Major"),
     "studyType": MessageLookupByLibrary.simpleMessage("Study Type"),
     "studyTypeRequired": MessageLookupByLibrary.simpleMessage(
       "Study type is required",
@@ -1447,15 +1608,29 @@ class MessageLookup extends MessageLookupByLibrary {
     "typePersonal": MessageLookupByLibrary.simpleMessage(
       "Type your Personal Email",
     ),
+    "typeUsername": MessageLookupByLibrary.simpleMessage("Enter your email..."),
+    "typeYourEmail": MessageLookupByLibrary.simpleMessage(
+      "e.g. you@example.com",
+    ),
+    "typeYourMajor": MessageLookupByLibrary.simpleMessage(
+      "e.g. Computer Science...",
+    ),
+    "typeYourNameHere": MessageLookupByLibrary.simpleMessage(
+      "Type your name here...",
+    ),
     "under": MessageLookupByLibrary.simpleMessage("Under Process"),
     "underDelivery": MessageLookupByLibrary.simpleMessage("under delivery"),
     "underProcess": MessageLookupByLibrary.simpleMessage("Under Process"),
     "unitPrice": MessageLookupByLibrary.simpleMessage("Unit Price"),
+    "university": MessageLookupByLibrary.simpleMessage("University"),
     "universityHint": MessageLookupByLibrary.simpleMessage(
       "Search by university...",
     ),
     "unknown": MessageLookupByLibrary.simpleMessage("Unknown"),
     "upcoming": MessageLookupByLibrary.simpleMessage("Upcoming"),
+    "upcomingSessions": MessageLookupByLibrary.simpleMessage(
+      "Upcoming Sessions",
+    ),
     "update": MessageLookupByLibrary.simpleMessage("Update"),
     "updateAvailable": MessageLookupByLibrary.simpleMessage("Update Available"),
     "updateBody": MessageLookupByLibrary.simpleMessage(
@@ -1463,6 +1638,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "updateData": MessageLookupByLibrary.simpleMessage("Update Data"),
     "updateRequest": MessageLookupByLibrary.simpleMessage("Update Request"),
+    "upgradePlan": MessageLookupByLibrary.simpleMessage("Upgrade Plan"),
     "uploadFileSelect": MessageLookupByLibrary.simpleMessage(
       "Select File to Upload",
     ),
@@ -1527,6 +1703,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcomeMessage": MessageLookupByLibrary.simpleMessage(
       "Welcome in C-Store for cement products",
     ),
+    "welcomeUser": MessageLookupByLibrary.simpleMessage("Welcome! 👋"),
+    "whatIsYourName": MessageLookupByLibrary.simpleMessage(
+      "What\'s your full name?",
+    ),
     "whatisNewOffers": MessageLookupByLibrary.simpleMessage(
       "What are the latest offers ?",
     ),
@@ -1550,9 +1730,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "workspaceFull": MessageLookupByLibrary.simpleMessage("Full"),
     "workspaceOpen": MessageLookupByLibrary.simpleMessage("Available"),
-    "workspacesSubtitle": MessageLookupByLibrary.simpleMessage("Find your perfect study spot"),
+    "workspacesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Find the perfect spot to study with your buddy",
+    ),
     "workspacesTab": MessageLookupByLibrary.simpleMessage("Workspaces"),
-    "nearbyFilter": MessageLookupByLibrary.simpleMessage("Nearby"),
     "worktype": MessageLookupByLibrary.simpleMessage(
       "write more details like : Type Of The Service",
     ),
@@ -1574,16 +1755,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "writeVisa": MessageLookupByLibrary.simpleMessage("write your visa number"),
     "writetitleHere": MessageLookupByLibrary.simpleMessage("write title here"),
+    "yearOfStudy": MessageLookupByLibrary.simpleMessage("Year of Study"),
     "yes": MessageLookupByLibrary.simpleMessage("Yes"),
     "youHave": MessageLookupByLibrary.simpleMessage("you have : "),
-    "sessionsTab": MessageLookupByLibrary.simpleMessage("Sessions"),
-    "infoTab": MessageLookupByLibrary.simpleMessage("Info"),
-    "liveNow": MessageLookupByLibrary.simpleMessage("Live Now"),
-    "upcomingSessions": MessageLookupByLibrary.simpleMessage("Upcoming"),
-    "amenities": MessageLookupByLibrary.simpleMessage("Amenities"),
-    "openInMaps": MessageLookupByLibrary.simpleMessage("Open in Maps"),
-    "noSessionsInWorkspace": MessageLookupByLibrary.simpleMessage("No sessions in this workspace"),
-    "beFirstToStartSession": MessageLookupByLibrary.simpleMessage("Be the first to start a study session here!"),
-    "drinksMenu": MessageLookupByLibrary.simpleMessage("Drinks"),
+    "yourAcademicInfo": MessageLookupByLibrary.simpleMessage("Academic Info"),
+    "yourAccount": MessageLookupByLibrary.simpleMessage("Your Account"),
+    "yourName": MessageLookupByLibrary.simpleMessage("Your Name"),
+    "yourPersonality": MessageLookupByLibrary.simpleMessage("Gender & Avatar"),
   };
 }

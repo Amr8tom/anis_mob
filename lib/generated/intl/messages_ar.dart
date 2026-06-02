@@ -20,7 +20,12 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
-  static String m0(count) => "${count} نتيجة";
+  static String m0(days) => "متبقي ${days} يوم";
+
+  static String m1(count) => "${count} نتيجة";
+
+  static String m2(step, total, label) =>
+      "الخطوة ${step} من ${total} • ${label}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -76,12 +81,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "هل لديك حساب بالفعل؟",
     ),
     "alsoAvailable": MessageLookupByLibrary.simpleMessage(" : أيضا متاح في"),
+    "amenities": MessageLookupByLibrary.simpleMessage("المرافق"),
     "amount": MessageLookupByLibrary.simpleMessage("المبلغ"),
     "angleDevice": MessageLookupByLibrary.simpleMessage("زاوية الجهاز"),
     "angleQibla": MessageLookupByLibrary.simpleMessage("زاوية القبلة"),
     "announcement": MessageLookupByLibrary.simpleMessage("إعلان"),
     "appLanguage": MessageLookupByLibrary.simpleMessage("لغة التطبيق"),
     "appName": MessageLookupByLibrary.simpleMessage("تيا"),
+    "appTagline": MessageLookupByLibrary.simpleMessage("ذاكر بذكاء مع رفيقك"),
     "appTitle": MessageLookupByLibrary.simpleMessage("عميل تيا"),
     "applicantName": MessageLookupByLibrary.simpleMessage("مقدم الطلب"),
     "approvedRequest": MessageLookupByLibrary.simpleMessage("طلب معتمد"),
@@ -123,6 +130,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "backToHome": MessageLookupByLibrary.simpleMessage("العودة إلى الرئيسية"),
     "badgesEarned": MessageLookupByLibrary.simpleMessage("الشارات المكتسبة"),
     "bagDetails": MessageLookupByLibrary.simpleMessage("تفاصيل الحقيبة:"),
+    "beFirstToStartSession": MessageLookupByLibrary.simpleMessage(
+      "كن أول من يبدأ جلسة هنا!",
+    ),
     "beforeEndOfDay": MessageLookupByLibrary.simpleMessage(
       "قبل انتهاء الدوام: المغادرة وعدم العودة (الخروج المبكر).",
     ),
@@ -146,6 +156,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "buyingLimit": MessageLookupByLibrary.simpleMessage("حد الشراء"),
     "byClickYourAgreeTerms": MessageLookupByLibrary.simpleMessage(
       " بالضغط على الزر، فإنك توافق على ",
+    ),
+    "byLoggingInYouAgree": MessageLookupByLibrary.simpleMessage(
+      "بتسجيل دخولك أنت توافق على",
     ),
     "callUs": MessageLookupByLibrary.simpleMessage("اتصل بنا"),
     "camera": MessageLookupByLibrary.simpleMessage("كاميرا"),
@@ -180,6 +193,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "change": MessageLookupByLibrary.simpleMessage(" تغيير "),
     "changeColor": MessageLookupByLibrary.simpleMessage("تغيير اللون"),
+    "changeLanguage": MessageLookupByLibrary.simpleMessage("تغيير اللغة"),
     "chatUs": MessageLookupByLibrary.simpleMessage("تحدث الينا "),
     "checkIn": MessageLookupByLibrary.simpleMessage("تسجيل الوصول"),
     "checkInFromRecord": MessageLookupByLibrary.simpleMessage(
@@ -201,6 +215,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "checkedOut": MessageLookupByLibrary.simpleMessage("تم تسجيل الخروج"),
     "chooseImage": MessageLookupByLibrary.simpleMessage("اختر صورة"),
     "choosePaymentMethod": MessageLookupByLibrary.simpleMessage("طرق الدفع"),
+    "choosePlanTitle": MessageLookupByLibrary.simpleMessage("اختر خطتك"),
+    "chooseYourAvatar": MessageLookupByLibrary.simpleMessage(
+      "اختر صورتك الرمزية",
+    ),
+    "chooseYourGender": MessageLookupByLibrary.simpleMessage("اختر جنسك"),
+    "chooseYourUniversity": MessageLookupByLibrary.simpleMessage(
+      "البيانات الدراسية 🎓",
+    ),
     "city": MessageLookupByLibrary.simpleMessage("مدينة مكة"),
     "cityAr": MessageLookupByLibrary.simpleMessage("مدينة الإقامة ( الوصول )"),
     "cityDep": MessageLookupByLibrary.simpleMessage("مدينة الإقامة (المغادرة)"),
@@ -275,6 +297,44 @@ class MessageLookup extends MessageLookupByLibrary {
       "انشئ كلمة مرور جديدة",
     ),
     "createRequest": MessageLookupByLibrary.simpleMessage("إنشاء الطلب"),
+    "createSession": MessageLookupByLibrary.simpleMessage("إنشاء جلسة"),
+    "createSessionAddRule": MessageLookupByLibrary.simpleMessage("أضف قاعدة"),
+    "createSessionBasicInfo": MessageLookupByLibrary.simpleMessage(
+      "المعلومات الأساسية",
+    ),
+    "createSessionCapacity": MessageLookupByLibrary.simpleMessage(
+      "الحد الأقصى للأعضاء",
+    ),
+    "createSessionDescHint": MessageLookupByLibrary.simpleMessage(
+      "ما الذي ستعمل عليه؟",
+    ),
+    "createSessionDescription": MessageLookupByLibrary.simpleMessage("الوصف"),
+    "createSessionGiftHint": MessageLookupByLibrary.simpleMessage(
+      "مثال: قهوة، وجبات خفيفة...",
+    ),
+    "createSessionGiftLabel": MessageLookupByLibrary.simpleMessage(
+      "هدية / مكافأة",
+    ),
+    "createSessionPersons": MessageLookupByLibrary.simpleMessage("أشخاص"),
+    "createSessionRuleHint": MessageLookupByLibrary.simpleMessage(
+      "مثال: عدم الكلام بصوت عالٍ",
+    ),
+    "createSessionSchedule": MessageLookupByLibrary.simpleMessage(
+      "الجدول الزمني",
+    ),
+    "createSessionSubject": MessageLookupByLibrary.simpleMessage("المادة"),
+    "createSessionSubjectHint": MessageLookupByLibrary.simpleMessage(
+      "مثال: رياضيات، فيزياء...",
+    ),
+    "createSessionSubmit": MessageLookupByLibrary.simpleMessage("إنشاء الجلسة"),
+    "createSessionTitle": MessageLookupByLibrary.simpleMessage(
+      "إنشاء جلسة دراسية",
+    ),
+    "createSessionTopic": MessageLookupByLibrary.simpleMessage("الموضوع"),
+    "createSessionTopicHint": MessageLookupByLibrary.simpleMessage(
+      "مثال: الفصل الثالث من التفاضل",
+    ),
+    "createYourAccount": MessageLookupByLibrary.simpleMessage("أنشئ حسابك 🔐"),
     "creditCard": MessageLookupByLibrary.simpleMessage("بطاقة ائتمان"),
     "creditCardPaymentScreen": MessageLookupByLibrary.simpleMessage(
       "شاشة دفع بطاقة الائتمان",
@@ -284,6 +344,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "currentEvent": MessageLookupByLibrary.simpleMessage("الفعاليات الحالية"),
     "currentLocation": MessageLookupByLibrary.simpleMessage("الموقع الحالي"),
+    "currentPlan": MessageLookupByLibrary.simpleMessage("الخطة الحالية"),
     "currentRequest": MessageLookupByLibrary.simpleMessage("الطلبات الحالية"),
     "currentlyDownloadingSurahes": MessageLookupByLibrary.simpleMessage(
       "Currently downloading Surahes. Please wait...",
@@ -296,6 +357,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "date05": MessageLookupByLibrary.simpleMessage("05/17/2024  06:30PM"),
     "date15": MessageLookupByLibrary.simpleMessage("15/04/2024"),
     "dateBirth": MessageLookupByLibrary.simpleMessage("التاريخ الميلادي"),
+    "daysLeft": m0,
     "delayedCash": MessageLookupByLibrary.simpleMessage("الدفع المؤجل"),
     "delayedCashDes": MessageLookupByLibrary.simpleMessage(
       "اشتري الآن وادفع لاحقا",
@@ -337,9 +399,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "diseasesWrite": MessageLookupByLibrary.simpleMessage(
       "اكتب إذا كان لديك أي مشاكل مرضية",
     ),
-    "changeLanguage": MessageLookupByLibrary.simpleMessage("تغيير اللغة"),
-    "currentPlan": MessageLookupByLibrary.simpleMessage("الخطة الحالية"),
-    "daysLeft": MessageLookupByLibrary.simpleMessage("أيام متبقية"),
     "distance": MessageLookupByLibrary.simpleMessage("المسافة"),
     "documentData": MessageLookupByLibrary.simpleMessage("بيانات الوثيقة"),
     "documentNumber": MessageLookupByLibrary.simpleMessage("رقم المستند"),
@@ -358,6 +417,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "downloadingQuran": MessageLookupByLibrary.simpleMessage(
       "جاري تنزيل القرآن...",
     ),
+    "drinksMenu": MessageLookupByLibrary.simpleMessage("قائمة المشروبات"),
     "drivingLicenseNumber": MessageLookupByLibrary.simpleMessage(
       "رقم رخصة سياقة",
     ),
@@ -408,6 +468,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "أدخل رقم هاتفك لاستلام رمز التحقق",
     ),
     "enterPhoneNumber": MessageLookupByLibrary.simpleMessage("أدخل رقم الهاتف"),
+    "enterYourMajorAndYear": MessageLookupByLibrary.simpleMessage(
+      "حدثنا عن دراستك",
+    ),
     "enterpharmaceuticalName": MessageLookupByLibrary.simpleMessage(
       " أدخل اسم الدواء ",
     ),
@@ -468,6 +531,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "feed": MessageLookupByLibrary.simpleMessage("التعليقات"),
     "feedSend": MessageLookupByLibrary.simpleMessage("تم إرسال تعليقك بنجاح"),
     "female": MessageLookupByLibrary.simpleMessage("أنثى"),
+    "fieldRequired": MessageLookupByLibrary.simpleMessage("هذا الحقل مطلوب"),
     "filterToday": MessageLookupByLibrary.simpleMessage("اليوم"),
     "findBuddy": MessageLookupByLibrary.simpleMessage("إيجاد رفيق"),
     "findingYourDirection": MessageLookupByLibrary.simpleMessage(
@@ -499,6 +563,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "gallery": MessageLookupByLibrary.simpleMessage("المعرض"),
     "gender": MessageLookupByLibrary.simpleMessage("النوع"),
     "general": MessageLookupByLibrary.simpleMessage("عام"),
+    "generalError": MessageLookupByLibrary.simpleMessage(
+      "حدث خطأ. يرجى المحاولة مرة أخرى.",
+    ),
     "getPaymentCode": MessageLookupByLibrary.simpleMessage(
       "احصل على كود الدفع",
     ),
@@ -590,6 +657,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "includeFamilyMembers": MessageLookupByLibrary.simpleMessage(
       "تضمين أفراد الأسرة",
     ),
+    "infoTab": MessageLookupByLibrary.simpleMessage("المعلومات"),
     "information": MessageLookupByLibrary.simpleMessage("المعلومات"),
     "installmentWithSouhoola": MessageLookupByLibrary.simpleMessage(
       "قسط مع سهولة",
@@ -641,6 +709,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "نور قلبك بذكر الله",
     ),
     "limit": MessageLookupByLibrary.simpleMessage("الحد الأدني"),
+    "liveNow": MessageLookupByLibrary.simpleMessage("مباشر الآن"),
     "loRe": MessageLookupByLibrary.simpleMessage("   موقع السكم"),
     "loading": MessageLookupByLibrary.simpleMessage("جاري التحميل"),
     "loc": MessageLookupByLibrary.simpleMessage(
@@ -657,6 +726,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "العالم في انتظارك – هيا بنا!",
     ),
     "loginTitle": MessageLookupByLibrary.simpleMessage("مرحبـاً بك"),
+    "loginWelcomeBack": MessageLookupByLibrary.simpleMessage(
+      "مرحبًا بعودتك! سجّل دخولك للمتابعة.",
+    ),
     "loginWithPhone": MessageLookupByLibrary.simpleMessage(
       "تسجيل الدخول بالهاتف",
     ),
@@ -681,6 +753,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "makka": MessageLookupByLibrary.simpleMessage("مكه"),
     "makkah": MessageLookupByLibrary.simpleMessage("مكة"),
     "male": MessageLookupByLibrary.simpleMessage("ذكر"),
+    "manageSubscription": MessageLookupByLibrary.simpleMessage(
+      "إدارة الاشتراك",
+    ),
     "manager": MessageLookupByLibrary.simpleMessage("المدير"),
     "managerApproval": MessageLookupByLibrary.simpleMessage("موافقة المدير"),
     "markAll": MessageLookupByLibrary.simpleMessage("تحديد كمقروءة"),
@@ -703,9 +778,21 @@ class MessageLookup extends MessageLookupByLibrary {
       "المستلزمات الطبية",
     ),
     "medicine": MessageLookupByLibrary.simpleMessage("الدواء"),
+    "memberInterests": MessageLookupByLibrary.simpleMessage("الاهتمامات"),
+    "memberRating": MessageLookupByLibrary.simpleMessage("التقييم"),
     "mena": MessageLookupByLibrary.simpleMessage("مخيمات منى"),
     "menu": MessageLookupByLibrary.simpleMessage("القائمة"),
     "meters": MessageLookupByLibrary.simpleMessage("متر"),
+    "minOneLowercase": MessageLookupByLibrary.simpleMessage(
+      "حرف صغير واحد (a-z)",
+    ),
+    "minOneNumber": MessageLookupByLibrary.simpleMessage(
+      "رقم واحد على الأقل (0-9)",
+    ),
+    "minOneUppercase": MessageLookupByLibrary.simpleMessage(
+      "حرف كبير واحد (A-Z)",
+    ),
+    "minSixChars": MessageLookupByLibrary.simpleMessage("6 أحرف على الأقل"),
     "minutes": MessageLookupByLibrary.simpleMessage("دقائق"),
     "missingItemsNotebook": MessageLookupByLibrary.simpleMessage(
       "دفتر الأصناف المفقودة....يمكنك رفع ورقة أصناف مفقودة أو ورقة إكسل، وسيتم معالجة الطلبات تلقائيا نيابة عنك",
@@ -736,11 +823,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "myStats": MessageLookupByLibrary.simpleMessage("إحصائياتي"),
     "myWallet": MessageLookupByLibrary.simpleMessage("محفظتي"),
     "name": MessageLookupByLibrary.simpleMessage("الاسم:"),
+    "nameTooShortError": MessageLookupByLibrary.simpleMessage(
+      "الاسم يجب أن يكون حرفين على الأقل",
+    ),
+    "nameWillAppearOnProfile": MessageLookupByLibrary.simpleMessage(
+      "اسمك سيظهر على ملفك الشخصي وجلسات الدراسة",
+    ),
     "nation": MessageLookupByLibrary.simpleMessage("الجنسية"),
+    "nearbyFilter": MessageLookupByLibrary.simpleMessage("قريب منك"),
     "nearbyWorkspaces": MessageLookupByLibrary.simpleMessage("مساحات قريبة"),
     "newPass": MessageLookupByLibrary.simpleMessage("كلمة مرور جديدة"),
     "newPassword": MessageLookupByLibrary.simpleMessage("كلمة المرور الجديدة"),
     "newProduct": MessageLookupByLibrary.simpleMessage("مٌــنتج جَـدٍيد"),
+    "next": MessageLookupByLibrary.simpleMessage("التالي"),
     "no": MessageLookupByLibrary.simpleMessage("لا"),
     "noAttendanceRecords": MessageLookupByLibrary.simpleMessage(
       "لا توجد سجلات حضور",
@@ -751,10 +846,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "noBuddiesFound": MessageLookupByLibrary.simpleMessage(
       "لم يتم العثور على رفاق",
     ),
-    "manageSubscription": MessageLookupByLibrary.simpleMessage("إدارة الاشتراك"),
-    "noWorkspacesFound": MessageLookupByLibrary.simpleMessage("لا توجد مساحات دراسة"),
-    "upgradePlan": MessageLookupByLibrary.simpleMessage("ترقية الاشتراك"),
-    "walletBalance": MessageLookupByLibrary.simpleMessage("رصيد المحفظة"),
     "noData": MessageLookupByLibrary.simpleMessage(
       "لا يــوجد شـئ في الوقت الحـالي",
     ),
@@ -775,11 +866,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "noResult": MessageLookupByLibrary.simpleMessage("لا توٌجـد نتــائج"),
     "noResults": MessageLookupByLibrary.simpleMessage("لم نجد أي نتائج"),
     "noResultsFound": MessageLookupByLibrary.simpleMessage("لا توجد نتائج"),
+    "noSessionsInWorkspace": MessageLookupByLibrary.simpleMessage(
+      "لا توجد جلسات نشطة في هذه المساحة",
+    ),
     "noSessionsToday": MessageLookupByLibrary.simpleMessage(
       "لا توجد جلسات اليوم",
     ),
     "noUserFound": MessageLookupByLibrary.simpleMessage(
       "لم يتم العثور على هذه البيانات",
+    ),
+    "noWorkspacesFound": MessageLookupByLibrary.simpleMessage(
+      "لم يتم العثور على مساحات",
     ),
     "nomination_end_date": MessageLookupByLibrary.simpleMessage(
       "تاريخ نهاية الترشيح",
@@ -832,7 +929,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "oof": MessageLookupByLibrary.simpleMessage("من"),
     "op": MessageLookupByLibrary.simpleMessage("مفتوحة"),
     "open": MessageLookupByLibrary.simpleMessage("افتح خريطة جوجل"),
+    "openInMaps": MessageLookupByLibrary.simpleMessage("افتح في الخرائط"),
     "openNow": MessageLookupByLibrary.simpleMessage("مفتوح الآن"),
+    "openSpot": MessageLookupByLibrary.simpleMessage("مقعد متاح"),
     "opensAt": MessageLookupByLibrary.simpleMessage("يفتح الساعة"),
     "or": MessageLookupByLibrary.simpleMessage("أو"),
     "orderDate": MessageLookupByLibrary.simpleMessage("تاريخ الطلب"),
@@ -878,8 +977,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordEmpty": MessageLookupByLibrary.simpleMessage(
       "كلمة المرور لا يمكن أن تكون فارغة",
     ),
+    "passwordEmptyError": MessageLookupByLibrary.simpleMessage(
+      "كلمة المرور مطلوبة",
+    ),
+    "passwordMissingLowercaseError": MessageLookupByLibrary.simpleMessage(
+      "كلمة المرور يجب أن تحتوي على حرف صغير",
+    ),
+    "passwordMissingNumberError": MessageLookupByLibrary.simpleMessage(
+      "كلمة المرور يجب أن تحتوي على رقم",
+    ),
+    "passwordMissingUppercaseError": MessageLookupByLibrary.simpleMessage(
+      "كلمة المرور يجب أن تحتوي على حرف كبير",
+    ),
     "passwordTooShort": MessageLookupByLibrary.simpleMessage(
       " لا يــمكن أن تــكون كـلمة المرور أقل من 4  ",
+    ),
+    "passwordTooShortError": MessageLookupByLibrary.simpleMessage(
+      "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
+    ),
+    "passwordsDoNotMatch": MessageLookupByLibrary.simpleMessage(
+      "كلمتا المرور غير متطابقتين",
     ),
     "payWithLastAddress": MessageLookupByLibrary.simpleMessage(
       "الدفع باستخدام العنوان الأخير",
@@ -900,6 +1017,42 @@ class MessageLookup extends MessageLookupByLibrary {
     "phoneRequired": MessageLookupByLibrary.simpleMessage("رقم الهاتف مطلوب"),
     "placeName": MessageLookupByLibrary.simpleMessage("اسم المكان"),
     "placeNumber": MessageLookupByLibrary.simpleMessage("رقم هاتف المكان"),
+    "planBestValue": MessageLookupByLibrary.simpleMessage("أفضل قيمة"),
+    "planCtaFree": MessageLookupByLibrary.simpleMessage("ابدأ مجاناً"),
+    "planCtaGold": MessageLookupByLibrary.simpleMessage("اشترك في الذهبي"),
+    "planCtaSilver": MessageLookupByLibrary.simpleMessage("اشترك في الفضي"),
+    "planCurrentBadge": MessageLookupByLibrary.simpleMessage("الحالي"),
+    "planFeatureAds": MessageLookupByLibrary.simpleMessage("يحتوي على إعلانات"),
+    "planFeatureAnalytics": MessageLookupByLibrary.simpleMessage(
+      "تحليلات الدراسة",
+    ),
+    "planFeatureBuddies": MessageLookupByLibrary.simpleMessage("حتى 3 رفقاء"),
+    "planFeatureNoAds": MessageLookupByLibrary.simpleMessage("بدون إعلانات"),
+    "planFeaturePriority": MessageLookupByLibrary.simpleMessage(
+      "دعم ذو أولوية",
+    ),
+    "planFeatureSessions10": MessageLookupByLibrary.simpleMessage(
+      "حتى 10 جلسات/شهر",
+    ),
+    "planFeatureSessions2": MessageLookupByLibrary.simpleMessage(
+      "حتى جلستين/شهر",
+    ),
+    "planFeatureSessionsUnlimited": MessageLookupByLibrary.simpleMessage(
+      "جلسات غير محدودة",
+    ),
+    "planFeatureWorkspaces": MessageLookupByLibrary.simpleMessage(
+      "مساحات محدودة",
+    ),
+    "planFeatureWorkspacesUnlimited": MessageLookupByLibrary.simpleMessage(
+      "جميع المساحات",
+    ),
+    "planFreeTitle": MessageLookupByLibrary.simpleMessage("مجاني"),
+    "planGoldTitle": MessageLookupByLibrary.simpleMessage("ذهبي"),
+    "planMostPopular": MessageLookupByLibrary.simpleMessage("الأكثر شيوعاً"),
+    "planPriceFree": MessageLookupByLibrary.simpleMessage("0 جنيه"),
+    "planPriceGold": MessageLookupByLibrary.simpleMessage("199 جنيه/شهر"),
+    "planPriceSilver": MessageLookupByLibrary.simpleMessage("99 جنيه/شهر"),
+    "planSilverTitle": MessageLookupByLibrary.simpleMessage("فضي"),
     "plateNumber": MessageLookupByLibrary.simpleMessage("رقم اللوحة"),
     "please": MessageLookupByLibrary.simpleMessage("الرجاء تفعيل خدمة الموقع"),
     "pleaseAddRate": MessageLookupByLibrary.simpleMessage("يرجى إضافة تقييم"),
@@ -1050,7 +1203,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "resolved": MessageLookupByLibrary.simpleMessage("تم الحل"),
     "results": MessageLookupByLibrary.simpleMessage("نتيجة"),
-    "resultsCount": m0,
+    "resultsCount": m1,
     "retry": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
     "returnOrder": MessageLookupByLibrary.simpleMessage(
       "إرجاع الطلب....يمكنك إرجاع صنف خلال 3 أيام بعد استلامه",
@@ -1087,6 +1240,7 @@ class MessageLookup extends MessageLookupByLibrary {
       " ابحث في فهرس السور",
     ),
     "searchTitle": MessageLookupByLibrary.simpleMessage("الــبحث"),
+    "searchWorkspace": MessageLookupByLibrary.simpleMessage("ابحث عن مساحة..."),
     "seconds": MessageLookupByLibrary.simpleMessage("ثواني"),
     "seeAll": MessageLookupByLibrary.simpleMessage("رؤية الكل"),
     "selDep": MessageLookupByLibrary.simpleMessage("اختر القسم"),
@@ -1097,6 +1251,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "الرجـاء أختيار عنوان أولا",
     ),
     "selectArr": MessageLookupByLibrary.simpleMessage("اختر مدينة الوصول"),
+    "selectAvatarError": MessageLookupByLibrary.simpleMessage(
+      "يرجى اختيار صورة رمزية",
+    ),
     "selectCarBrand": MessageLookupByLibrary.simpleMessage(
       "اختر ماركة السيارة",
     ),
@@ -1118,6 +1275,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectDepartment": MessageLookupByLibrary.simpleMessage("اختر القسم"),
     "selectDocumentType": MessageLookupByLibrary.simpleMessage("اختر النوع"),
     "selectEmployee": MessageLookupByLibrary.simpleMessage("اختر الموظف"),
+    "selectGenderError": MessageLookupByLibrary.simpleMessage(
+      "يرجى اختيار الجنس",
+    ),
     "selectInsuranceClass": MessageLookupByLibrary.simpleMessage(
       "اختر فئة التأمين",
     ),
@@ -1127,6 +1287,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "selectLanguage": MessageLookupByLibrary.simpleMessage("أختيار اللغة"),
     "selectLuggage": MessageLookupByLibrary.simpleMessage(" اختر الأمتعة"),
+    "selectMajorError": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال تخصصك الدراسي",
+    ),
     "selectNation": MessageLookupByLibrary.simpleMessage("اختر الجنسية"),
     "selectOneActivity": MessageLookupByLibrary.simpleMessage(
       "اختر احد الانشاط",
@@ -1147,6 +1310,20 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "selectStudyType": MessageLookupByLibrary.simpleMessage("اختر نوع الدراسة"),
     "selectTime": MessageLookupByLibrary.simpleMessage("حدد الوقت"),
+    "selectUniversity": MessageLookupByLibrary.simpleMessage("اختر جامعتك"),
+    "selectUniversityError": MessageLookupByLibrary.simpleMessage(
+      "يرجى اختيار جامعتك",
+    ),
+    "selectWorkspace": MessageLookupByLibrary.simpleMessage("اختر مساحة"),
+    "selectWorkspaceHint": MessageLookupByLibrary.simpleMessage(
+      "اضغط لاختيار مساحة",
+    ),
+    "selectYearError": MessageLookupByLibrary.simpleMessage(
+      "يرجى اختيار السنة الدراسية",
+    ),
+    "selectYearOfStudy": MessageLookupByLibrary.simpleMessage(
+      "اختر سنتك الدراسية",
+    ),
     "send": MessageLookupByLibrary.simpleMessage("أرسال"),
     "sendFeed": MessageLookupByLibrary.simpleMessage("ارسل رأيك"),
     "sendOtp": MessageLookupByLibrary.simpleMessage("تاكيد رمز التحقق"),
@@ -1159,48 +1336,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "serOffice": MessageLookupByLibrary.simpleMessage("مكتب خدمات"),
     "service": MessageLookupByLibrary.simpleMessage("مكتب خدمات:  165"),
     "services": MessageLookupByLibrary.simpleMessage("الخدمات"),
+    "sessionDate": MessageLookupByLibrary.simpleMessage("التاريخ"),
+    "sessionDescription": MessageLookupByLibrary.simpleMessage("عن هذه الجلسة"),
     "sessionDuration": MessageLookupByLibrary.simpleMessage("مدة الجلسة"),
     "sessionEnded": MessageLookupByLibrary.simpleMessage("انتهت الجلسة"),
-    "sessionFull": MessageLookupByLibrary.simpleMessage("ممتلئة"),
-    "sessionInProgress": MessageLookupByLibrary.simpleMessage("جارية"),
+    "sessionFounder": MessageLookupByLibrary.simpleMessage("المؤسس"),
+    "sessionFull": MessageLookupByLibrary.simpleMessage("الجلسة ممتلئة"),
+    "sessionGift": MessageLookupByLibrary.simpleMessage("الهدية"),
+    "sessionInProgress": MessageLookupByLibrary.simpleMessage("جلسة جارية"),
+    "sessionJoined": MessageLookupByLibrary.simpleMessage("انضممت"),
+    "sessionMembers": MessageLookupByLibrary.simpleMessage("الأعضاء"),
     "sessionOpen": MessageLookupByLibrary.simpleMessage("مفتوحة"),
-    "sessionsCount": MessageLookupByLibrary.simpleMessage("عدد الجلسات"),
-    "sessionFounder": MessageLookupByLibrary.simpleMessage("منظم الجلسة"),
-    "sessionDescription": MessageLookupByLibrary.simpleMessage("وصف الجلسة"),
-    "sessionTime": MessageLookupByLibrary.simpleMessage("وقت الجلسة"),
-    "sessionDate": MessageLookupByLibrary.simpleMessage("تاريخ الجلسة"),
-    "sessionPlace": MessageLookupByLibrary.simpleMessage("مكان الجلسة"),
-    "sessionMembers": MessageLookupByLibrary.simpleMessage("المشاركون"),
-    "sessionRules": MessageLookupByLibrary.simpleMessage("شروط الحضور"),
-    "sessionGift": MessageLookupByLibrary.simpleMessage("هدية من المنظم"),
-    "sessionJoined": MessageLookupByLibrary.simpleMessage("انضممت للجلسة!"),
-    "createSession": MessageLookupByLibrary.simpleMessage("أنشئ جلسة"),
-    "createSessionTitle": MessageLookupByLibrary.simpleMessage("جلسة جديدة"),
-    "createSessionBasicInfo": MessageLookupByLibrary.simpleMessage("معلومات الجلسة"),
-    "createSessionTopic": MessageLookupByLibrary.simpleMessage("عنوان الجلسة"),
-    "createSessionTopicHint": MessageLookupByLibrary.simpleMessage("مثال: مراجعة الفيزياء"),
-    "createSessionSubject": MessageLookupByLibrary.simpleMessage("المادة"),
-    "createSessionSubjectHint": MessageLookupByLibrary.simpleMessage("مثال: الفيزياء الحديثة"),
-    "createSessionDescription": MessageLookupByLibrary.simpleMessage("وصف الجلسة"),
-    "createSessionDescHint": MessageLookupByLibrary.simpleMessage("اشرح هدف الجلسة وما ستغطيه"),
-    "createSessionSchedule": MessageLookupByLibrary.simpleMessage("الموعد والسعة"),
-    "createSessionCapacity": MessageLookupByLibrary.simpleMessage("الحد الأقصى للمشاركين"),
-    "createSessionPersons": MessageLookupByLibrary.simpleMessage("مشارك"),
-    "createSessionAddRule": MessageLookupByLibrary.simpleMessage("أضف شرط حضور"),
-    "createSessionRuleHint": MessageLookupByLibrary.simpleMessage("مثال: أحضر كتبك"),
-    "createSessionGiftLabel": MessageLookupByLibrary.simpleMessage("هدية للمشاركين (اختياري)"),
-    "createSessionGiftHint": MessageLookupByLibrary.simpleMessage("مثال: ☕ فنجان قهوة مجاني"),
-    "createSessionSubmit": MessageLookupByLibrary.simpleMessage("نشر الجلسة"),
-    "memberRating": MessageLookupByLibrary.simpleMessage("التقييم"),
-    "memberInterests": MessageLookupByLibrary.simpleMessage("الاهتمامات"),
-    "searchWorkspace": MessageLookupByLibrary.simpleMessage("ابحث بالاسم أو المنطقة..."),
-    "selectWorkspace": MessageLookupByLibrary.simpleMessage("اختر مكان الجلسة"),
-    "selectWorkspaceHint": MessageLookupByLibrary.simpleMessage("يرجى اختيار مكان للجلسة"),
-    "fieldRequired": MessageLookupByLibrary.simpleMessage("هذا الحقل مطلوب"),
-    "openSpot": MessageLookupByLibrary.simpleMessage("مقعد شاغر"),
+    "sessionPlace": MessageLookupByLibrary.simpleMessage("الموقع"),
+    "sessionRules": MessageLookupByLibrary.simpleMessage("قواعد الجلسة"),
     "sessionTabOverview": MessageLookupByLibrary.simpleMessage("نظرة عامة"),
-    "sessionTabPeople": MessageLookupByLibrary.simpleMessage("الأعضاء والمكان"),
+    "sessionTabPeople": MessageLookupByLibrary.simpleMessage("الأشخاص"),
+    "sessionTime": MessageLookupByLibrary.simpleMessage("الوقت"),
+    "sessionsCount": MessageLookupByLibrary.simpleMessage("عدد الجلسات"),
+    "sessionsTab": MessageLookupByLibrary.simpleMessage("الجلسات"),
     "settings": MessageLookupByLibrary.simpleMessage("الاعدادات"),
+    "setupYourCredentials": MessageLookupByLibrary.simpleMessage(
+      "أعدّ بيانات تسجيل الدخول",
+    ),
     "shipping": MessageLookupByLibrary.simpleMessage("الشحن"),
     "shippingBody": MessageLookupByLibrary.simpleMessage(
       "يرجى انتظار طلبك في الطريق",
@@ -1210,30 +1367,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "عرض جميع الأسئلة",
     ),
     "silverSubscription": MessageLookupByLibrary.simpleMessage("باقة فضية"),
-    "choosePlanTitle": MessageLookupByLibrary.simpleMessage("اختر باقتك"),
-    "choosePlanSubtitle": MessageLookupByLibrary.simpleMessage("انضم لآلاف الطلاب وحقق أهدافك الدراسية"),
-    "planFreeTitle": MessageLookupByLibrary.simpleMessage("مجاني"),
-    "planSilverTitle": MessageLookupByLibrary.simpleMessage("فضي"),
-    "planGoldTitle": MessageLookupByLibrary.simpleMessage("ذهبي"),
-    "planPriceFree": MessageLookupByLibrary.simpleMessage("مجاناً"),
-    "planPriceSilver": MessageLookupByLibrary.simpleMessage("٤٩ ج.م / شهر"),
-    "planPriceGold": MessageLookupByLibrary.simpleMessage("٩٩ ج.م / شهر"),
-    "planMostPopular": MessageLookupByLibrary.simpleMessage("الأكثر شيوعاً"),
-    "planBestValue": MessageLookupByLibrary.simpleMessage("أفضل قيمة"),
-    "planFeatureWorkspaces": MessageLookupByLibrary.simpleMessage("مساحات عمل محدودة"),
-    "planFeatureWorkspacesUnlimited": MessageLookupByLibrary.simpleMessage("مساحات عمل غير محدودة"),
-    "planFeatureSessions2": MessageLookupByLibrary.simpleMessage("٢ جلسة يومياً"),
-    "planFeatureSessions10": MessageLookupByLibrary.simpleMessage("١٠ جلسات يومياً"),
-    "planFeatureSessionsUnlimited": MessageLookupByLibrary.simpleMessage("جلسات غير محدودة"),
-    "planFeatureBuddies": MessageLookupByLibrary.simpleMessage("ابحث عن رفيق دراسة"),
-    "planFeatureAnalytics": MessageLookupByLibrary.simpleMessage("تحليلات متقدمة"),
-    "planFeaturePriority": MessageLookupByLibrary.simpleMessage("دعم فني أولوية"),
-    "planFeatureAds": MessageLookupByLibrary.simpleMessage("عرض إعلانات"),
-    "planFeatureNoAds": MessageLookupByLibrary.simpleMessage("بدون إعلانات"),
-    "planCtaFree": MessageLookupByLibrary.simpleMessage("ابدأ مجاناً"),
-    "planCtaSilver": MessageLookupByLibrary.simpleMessage("اشترك في الفضي"),
-    "planCtaGold": MessageLookupByLibrary.simpleMessage("اشترك في الذهبي"),
-    "planCurrentBadge": MessageLookupByLibrary.simpleMessage("باقتك الحالية"),
     "singIn": MessageLookupByLibrary.simpleMessage("تسجـيل الدخـول"),
     "singUp": MessageLookupByLibrary.simpleMessage("تسجيـل حسـاب جـديد"),
     "size": MessageLookupByLibrary.simpleMessage("الحجم"),
@@ -1245,11 +1378,17 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "souhoola": MessageLookupByLibrary.simpleMessage("سهولة"),
     "speakToUs": MessageLookupByLibrary.simpleMessage("تحدث إلينا"),
+    "splashArabicHint": MessageLookupByLibrary.simpleMessage("عربي"),
+    "splashChooseLanguage": MessageLookupByLibrary.simpleMessage("اختر لغتك"),
+    "splashEnglishHint": MessageLookupByLibrary.simpleMessage("English"),
     "splashScreenText": MessageLookupByLibrary.simpleMessage(
       "مرحبا بك في متجر سمنتك، متجرك الشامل لجميع منتجات الأسمنت بأسعار منخفضة وجودة عالية",
     ),
     "splashSubtitle": MessageLookupByLibrary.simpleMessage(
       "شركة مطوفي حجاج تركيا و حجاج أوروبا وأمريكا واستراليا",
+    ),
+    "splashTagline": MessageLookupByLibrary.simpleMessage(
+      "ابحث عن رفيق الدراسة المثالي",
     ),
     "splashTitle": MessageLookupByLibrary.simpleMessage(
       "شركــة مطوفي حجاج تركيا و حجاج أوروبا وأمريكا واستراليا",
@@ -1260,16 +1399,19 @@ class MessageLookup extends MessageLookupByLibrary {
       "الأصناف الراكدة.......يمكنك رفع أصنافك الراكدة على حسابك وسيتم تدويرها وإعادة بيعها نيابة عنك",
     ),
     "startDate": MessageLookupByLibrary.simpleMessage("تاريخ البداية"),
+    "startNow": MessageLookupByLibrary.simpleMessage("ابدأ الآن"),
     "startSearch": MessageLookupByLibrary.simpleMessage("ابدا البحث"),
     "startWork": MessageLookupByLibrary.simpleMessage("بدء العمل"),
     "startWorkType": MessageLookupByLibrary.simpleMessage("نوع بدء العمل"),
     "status": MessageLookupByLibrary.simpleMessage("الحالة"),
+    "stepIndicator": m2,
     "stoning": MessageLookupByLibrary.simpleMessage("رجم الشيطان في منى"),
     "streakDays": MessageLookupByLibrary.simpleMessage("أيام متواصلة"),
     "streetName": MessageLookupByLibrary.simpleMessage("أسم الشارع"),
     "study": MessageLookupByLibrary.simpleMessage("التدريب والدراسة"),
     "studyBuddy": MessageLookupByLibrary.simpleMessage("رفيق دراسة"),
     "studyDestination": MessageLookupByLibrary.simpleMessage("الجهة / الوجهة"),
+    "studyMajor": MessageLookupByLibrary.simpleMessage("التخصص"),
     "studyType": MessageLookupByLibrary.simpleMessage("نوع الدراسة"),
     "studyTypeRequired": MessageLookupByLibrary.simpleMessage(
       "نوع الدراسة مطلوب",
@@ -1379,13 +1521,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "typePersonal": MessageLookupByLibrary.simpleMessage(
       "اكتب بريدك الإلكتروني الشخصي",
     ),
+    "typeUsername": MessageLookupByLibrary.simpleMessage(
+      "أدخل بريدك الإلكتروني...",
+    ),
+    "typeYourEmail": MessageLookupByLibrary.simpleMessage(
+      "مثال: you@example.com",
+    ),
+    "typeYourMajor": MessageLookupByLibrary.simpleMessage(
+      "مثال: علوم الحاسب...",
+    ),
+    "typeYourNameHere": MessageLookupByLibrary.simpleMessage(
+      "اكتب اسمك هنا...",
+    ),
     "under": MessageLookupByLibrary.simpleMessage("قيد التنفيذ"),
     "underDelivery": MessageLookupByLibrary.simpleMessage("قيد التوصيل"),
     "underProcess": MessageLookupByLibrary.simpleMessage("تحت العمل"),
     "unitPrice": MessageLookupByLibrary.simpleMessage("سعر الوحدة"),
+    "university": MessageLookupByLibrary.simpleMessage("الجامعة"),
     "universityHint": MessageLookupByLibrary.simpleMessage("ابحث بالجامعة..."),
     "unknown": MessageLookupByLibrary.simpleMessage("غير معروف"),
     "upcoming": MessageLookupByLibrary.simpleMessage("قريبا"),
+    "upcomingSessions": MessageLookupByLibrary.simpleMessage("الجلسات القادمة"),
     "update": MessageLookupByLibrary.simpleMessage("تحديث"),
     "updateAvailable": MessageLookupByLibrary.simpleMessage(
       "تحـديث جديد متاح ",
@@ -1395,6 +1551,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "updateData": MessageLookupByLibrary.simpleMessage("تحديث البيانات"),
     "updateRequest": MessageLookupByLibrary.simpleMessage("تعديل الطلب"),
+    "upgradePlan": MessageLookupByLibrary.simpleMessage("ترقية الخطة"),
     "uploadFileSelect": MessageLookupByLibrary.simpleMessage(" اختر ملف للرفع"),
     "userName": MessageLookupByLibrary.simpleMessage("أسم المستخدم"),
     "userPolicy": MessageLookupByLibrary.simpleMessage("سياسة المستخدم"),
@@ -1455,6 +1612,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcomeMessage": MessageLookupByLibrary.simpleMessage(
       "اهلا في متجر سمنتك لمنتجات الآسمنت",
     ),
+    "welcomeUser": MessageLookupByLibrary.simpleMessage("أهلًا بك! 👋"),
+    "whatIsYourName": MessageLookupByLibrary.simpleMessage("ما اسمك الكامل؟"),
     "whatisNewOffers": MessageLookupByLibrary.simpleMessage(
       "ما هي العروض الجديدة",
     ),
@@ -1474,9 +1633,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "workspaceFull": MessageLookupByLibrary.simpleMessage("ممتلئ"),
     "workspaceOpen": MessageLookupByLibrary.simpleMessage("متاح"),
-    "workspacesSubtitle": MessageLookupByLibrary.simpleMessage("ابحث عن مكانك المثالي للدراسة"),
+    "workspacesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "اعثر على المكان المثالي للدراسة مع رفيقك",
+    ),
     "workspacesTab": MessageLookupByLibrary.simpleMessage("مساحات"),
-    "nearbyFilter": MessageLookupByLibrary.simpleMessage("قريب مني"),
     "worktype": MessageLookupByLibrary.simpleMessage(
       "اكتب تفاصيل أكثر مثل: نوع الخدمة",
     ),
@@ -1504,16 +1664,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "writetitleHere": MessageLookupByLibrary.simpleMessage(
       "اكتب عنوان طلبك هنا",
     ),
+    "yearOfStudy": MessageLookupByLibrary.simpleMessage("السنة الدراسية"),
     "yes": MessageLookupByLibrary.simpleMessage("نعم"),
     "youHave": MessageLookupByLibrary.simpleMessage("  لديــك "),
-    "sessionsTab": MessageLookupByLibrary.simpleMessage("الجلسات"),
-    "infoTab": MessageLookupByLibrary.simpleMessage("المعلومات"),
-    "liveNow": MessageLookupByLibrary.simpleMessage("يدرس الآن"),
-    "upcomingSessions": MessageLookupByLibrary.simpleMessage("قادمة"),
-    "amenities": MessageLookupByLibrary.simpleMessage("المرافق"),
-    "openInMaps": MessageLookupByLibrary.simpleMessage("فتح في الخريطة"),
-    "noSessionsInWorkspace": MessageLookupByLibrary.simpleMessage("لا توجد جلسات في هذه المساحة"),
-    "beFirstToStartSession": MessageLookupByLibrary.simpleMessage("كن أول من يبدأ جلسة دراسية هنا!"),
-    "drinksMenu": MessageLookupByLibrary.simpleMessage("المشروبات"),
+    "yourAcademicInfo": MessageLookupByLibrary.simpleMessage(
+      "بياناتك الدراسية",
+    ),
+    "yourAccount": MessageLookupByLibrary.simpleMessage("حسابك"),
+    "yourName": MessageLookupByLibrary.simpleMessage("اسمك"),
+    "yourPersonality": MessageLookupByLibrary.simpleMessage("شخصيتك"),
   };
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../common/widgets/sizeboxs/Sizer.dart';
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../../../core/constants/colors.dart';
-import '../../../../../generated/l10n.dart';
-import '../../../domain/entity/profile_entity.dart';
-import '../../controller/profile_cubit.dart';
+import '../../../../../../common/widgets/sizeboxs/Sizer.dart';
+import '../../../../../../core/constants/app_sizes.dart';
+import '../../../../../../core/constants/colors.dart';
+import '../../../../../../generated/l10n.dart';
+import '../../../../domain/entity/profile_entity.dart';
+import '../../../controller/profile_cubit.dart';
 
 class ProfileSubscriptionCard extends StatelessWidget {
   final ProfileEntity? profile;
@@ -110,16 +110,8 @@ class ProfileSubscriptionCard extends StatelessWidget {
                     size: AppSizes.iconSm, color: ColorRes.anisGreen),
                 const Sizer(width: 6),
                 Text(
-                  S.current.daysLeft,
+                  S.current.daysLeft(daysLeft),
                   style: tt.bodySmall?.copyWith(color: ColorRes.anisHintText),
-                ),
-                const Sizer(width: 6),
-                Text(
-                  '$daysLeft',
-                  style: tt.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: ColorRes.anisNavy,
-                  ),
                 ),
               ],
             ),

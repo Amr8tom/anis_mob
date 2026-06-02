@@ -1,3 +1,4 @@
+import 'package:anis/feature/profile/presentation/screens/widgets/profile/profile_header_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -6,11 +7,10 @@ import '../../../../common/widgets/sizeboxs/Sizer.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/colors.dart';
 import '../controller/profile_cubit.dart';
-import 'widgets/profile_badges_section.dart';
-import 'widgets/profile_header_section.dart';
-import 'widgets/profile_menu_section.dart';
-import 'widgets/profile_stats_section.dart';
-import 'widgets/profile_subscription_card.dart';
+import 'widgets/profile/profile_badges_section.dart';
+import 'widgets/profile/profile_menu_section.dart';
+import 'widgets/profile/profile_stats_section.dart';
+import 'widgets/profile/profile_subscription_card.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

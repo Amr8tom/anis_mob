@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 
 import '../connection/checkNetwork.dart';
 import '../dio/dio_helper.dart';
+import 'auth_service_locator.dart';
 import 'buddy_service_locator.dart';
 import 'home_service_locator.dart';
 import 'language_service_locator.dart';
@@ -22,6 +23,7 @@ class DI {
     );
 
     // ── Features ──────────────────────────────────────────────────────────────
+    await AuthServiceLocator.execute(serviceLocator: serviceLocator);
     await NavigationServiseLocator.execute(serviceLocator: serviceLocator);
     await HomeServiceLocator.execute(serviceLocator: serviceLocator);
 

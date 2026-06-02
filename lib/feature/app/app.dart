@@ -36,7 +36,7 @@ class AnisApp extends StatelessWidget {
               return MaterialApp(
                 onGenerateRoute: RouteGenerator.generateRoute,
                 initialRoute: DRoutesName.navigationMenuRoute,
-                title: "shaoni",
+                title: "Anis",
                 debugShowCheckedModeBanner: false,
                 themeMode: ThemeMode.light,
                 theme: DAppTheme.lightTheme(context),

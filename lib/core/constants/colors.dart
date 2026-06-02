@@ -133,6 +133,18 @@ class ColorRes {
   static const Color anisErrorRedBg     = Color(0xFFFEE2E2);
   static const Color anisWarningBg      = Color(0xFFFEF3C7); // amber tint bg
 
+  // ── Auth / Splash dark screen palette ──────────────────────────────────────
+  /// Dark gradient top — very dark forest green
+  static const Color anisAuthBgTop    = Color(0xFF0A1F18);
+  /// Dark gradient mid — dark navy-green
+  static const Color anisAuthBgMid    = Color(0xFF0D1728);
+  /// Dark gradient bottom — near black
+  static const Color anisAuthBgBottom = Color(0xFF060A10);
+  /// Card / input container background on dark screens
+  static const Color anisAuthContainer = Color(0xFF162118);
+  /// Subtle border on dark screens
+  static const Color anisAuthBorder   = Color(0xFF1E3228);
+
   /// Gradient Colors
   static const Gradient linerGradient = LinearGradient(
     begin: Alignment(0, 0),

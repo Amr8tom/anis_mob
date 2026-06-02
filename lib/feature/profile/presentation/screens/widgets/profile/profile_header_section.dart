@@ -3,11 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../common/widgets/sizeboxs/Sizer.dart';
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../../../core/constants/colors.dart';
-import '../../../../../generated/l10n.dart';
-import '../../controller/profile_cubit.dart';
+import '../../../../../../common/widgets/sizeboxs/Sizer.dart';
+import '../../../../../../core/constants/app_sizes.dart';
+import '../../../../../../core/constants/colors.dart';
+import '../../../../../../generated/l10n.dart';
+import '../../../controller/profile_cubit.dart';
+
 
 class ProfileHeaderSection extends StatelessWidget {
   const ProfileHeaderSection({super.key});

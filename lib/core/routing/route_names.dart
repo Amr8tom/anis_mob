@@ -1,7 +1,8 @@
 class DRoutesName {
   /// Shared Screens (User)
   static const String test = 'test-route';
-  static const String loginRoute = 'phone-log-route';
+  static const String loginRoute    = 'phone-log-route';
+  static const String userInfoRoute = 'user-info-route';
   static const String nextPageInSignupRoute = 'next_page_in-signup-route';
   static const String verifyEmailRoute = 'verify-email-route';
   static const String verifyAccountRoute = 'verify-account-route';

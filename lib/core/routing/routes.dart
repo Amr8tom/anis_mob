@@ -11,6 +11,8 @@ import '../../feature/navigation/presentation/screens/navigation_menu_screen.dar
 import '../../feature/profile/presentation/screens/plans_screen.dart';
 import '../../feature/workspaces/domain/entity/workspace_entity.dart';
 import '../../feature/workspaces/presentation/screens/workspace_details_screen.dart';
+import '../../feature/auth/presentation/screen/login_screen.dart';
+import '../../feature/auth/presentation/screen/user_info_screen.dart';
 import '../../feature/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../feature/terms_conditions/presentation/terms_conditions_screen.dart';
 import '../service_locator/service_locator.dart';
@@ -257,6 +259,22 @@ class RouteGenerator {
         final currentPlan = args?['currentPlan'] as String? ?? 'free';
         return PageTransition(
           child: PlansScreen(currentPlan: currentPlan),
+          type: PageTransitionType.rightToLeft,
+          settings: settings,
+        );
+
+      /// Auth — Login
+      case DRoutesName.loginRoute:
+        return PageTransition(
+          child: const LoginScreen(),
+          type: PageTransitionType.rightToLeft,
+          settings: settings,
+        );
+
+      /// Auth — User Info wizard (new user registration)
+      case DRoutesName.userInfoRoute:
+        return PageTransition(
+          child: const UserInfoScreen(),
           type: PageTransitionType.rightToLeft,
           settings: settings,
         );

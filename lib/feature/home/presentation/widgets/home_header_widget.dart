@@ -97,7 +97,7 @@ class HomeHeaderWidget extends StatelessWidget {
                 _VertDivider(),
                 _StatItem(
                   value: '${profile.subscriptionDaysRemaining}',
-                  label: S.current.daysLeft,
+                  label: S.current.daysLeft(profile.subscriptionDaysRemaining),
                 ),
                 _VertDivider(),
                 _StatItem(

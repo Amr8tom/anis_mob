@@ -38,5 +38,11 @@ enum CacheKeys {
   offices,
   officesList,
 
-
+  // ── Auth / User-info wizard ─────────────────────────────────────────────────
+  userAvatar,
+  userGender,
+  userUniversity,
+  userMajor,
+  userYear,
+  userEmail,
 }

@@ -6,6 +6,7 @@ class URL {
   static const String updateProfile = '$baseUrl/User/edit-profile';
   static const String getAllRequestsStatusCount =
       '$baseUrl/Request/status-counts/all-services';
+  static const String createInfo = '$baseUrl/Auth/register';
   static const String forgetPassword = '$baseUrl/Auth/ForgetPassword';
   static const String setPassword = '$baseUrl/Auth/SetPassword';
   static const String resendOtp = '$baseUrl/Auth/ResendOtp';

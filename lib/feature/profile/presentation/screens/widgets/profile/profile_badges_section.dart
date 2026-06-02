@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../common/widgets/sizeboxs/Sizer.dart';
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../../../core/constants/colors.dart';
-import '../../../../../generated/l10n.dart';
-import '../../../domain/entity/profile_entity.dart';
+import '../../../../../../common/widgets/sizeboxs/Sizer.dart';
+import '../../../../../../core/constants/app_sizes.dart';
+import '../../../../../../core/constants/colors.dart';
+import '../../../../../../generated/l10n.dart';
+import '../../../../domain/entity/profile_entity.dart';
 
 class ProfileBadgesSection extends StatelessWidget {
   final List<ProfileBadge> badges;

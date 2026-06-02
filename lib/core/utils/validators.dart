@@ -1,4 +1,4 @@
-import '../../../generated/l10n.dart';
+import 'package:anis/generated/l10n.dart';
 
 class Validators {
   // Email validation
