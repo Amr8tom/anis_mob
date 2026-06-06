@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../core/constants/colors.dart';
 import '../../../../core/extentions/navigation_extension.dart';
 import '../../../../core/routing/route_names.dart';

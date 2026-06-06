@@ -89,4 +89,16 @@ class WorkspaceDummyRepository implements WorkspaceRepository {
     }
     return Right(result);
   }
+
+  @override
+  Future<Either<Failure, WorkspaceEntity>> getWorkspaceDetails(
+    String workspaceId,
+  ) async {
+    try {
+      return Right(
+          _workspaces.firstWhere((workspace) => workspace.id == workspaceId));
+    } on StateError {
+      return const Left(NotFoundFailure(message: 'Workspace not found'));
+    }
+  }
 }

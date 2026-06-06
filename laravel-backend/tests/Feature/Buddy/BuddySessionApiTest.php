@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Buddy;
 
+use App\Enums\SessionStatus;
+use App\Enums\SessionType;
 use App\Models\StudySession;
 use App\Models\User;
 use App\Models\Workspace;
@@ -35,6 +37,40 @@ final class BuddySessionApiTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.id', $session->id)
             ->assertJsonPath('data.sessionStatus', 'open');
+    }
+
+    public function test_all_filter_is_accepted_for_older_clients(): void
+    {
+        StudySession::factory()->create();
+
+        $this->getJson('/api/v1/buddy-sessions?filter=all')
+            ->assertOk()
+            ->assertJsonPath('meta.total', 1);
+    }
+
+    public function test_today_and_this_week_filters_match_the_mobile_app(): void
+    {
+        StudySession::factory()->create(['start_time' => now()->addHour()]);
+        StudySession::factory()->create(['start_time' => now()->addWeeks(2)]);
+
+        $this->getJson('/api/v1/buddy-sessions?filter=today')
+            ->assertOk()
+            ->assertJsonPath('meta.total', 1);
+
+        $this->getJson('/api/v1/buddy-sessions?filter=thisWeek')
+            ->assertOk()
+            ->assertJsonPath('meta.total', 1);
+    }
+
+    public function test_list_excludes_non_buddy_and_closed_sessions(): void
+    {
+        StudySession::factory()->create();
+        StudySession::factory()->create(['type' => SessionType::EVENT]);
+        StudySession::factory()->create(['status' => SessionStatus::ENDED]);
+
+        $this->getJson('/api/v1/buddy-sessions')
+            ->assertOk()
+            ->assertJsonPath('meta.total', 1);
     }
 
     public function test_create_requires_authentication(): void

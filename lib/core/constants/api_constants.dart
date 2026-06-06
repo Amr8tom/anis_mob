@@ -7,7 +7,7 @@ class URL {
   /// Notes on hosts:
   ///   • iOS simulator / desktop / web  → http://127.0.0.1:8000/api/v1
   ///   • Android emulator               → http://10.0.2.2:8000/api/v1
-  ///   • Physical device                → http://<your-machine-LAN-IP>:8000/api/v1
+  ///   • Physical device                → http://[your-machine-LAN-IP]:8000/api/v1
   static const String baseUrl = String.fromEnvironment(
     'ANIS_API_BASE',
     defaultValue: 'http://127.0.0.1:8000/api/v1',

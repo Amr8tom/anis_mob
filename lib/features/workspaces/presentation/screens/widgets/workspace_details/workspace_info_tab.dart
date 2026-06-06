@@ -8,6 +8,7 @@ import '../../../../../../core/constants/colors.dart';
 import '../../../../../../generated/l10n.dart';
 import '../../../../domain/entity/workspace_drink_entity.dart';
 import '../../../../domain/entity/workspace_entity.dart';
+import 'workspace_gallery_image.dart';
 
 class WorkspaceInfoTab extends StatelessWidget {
   final WorkspaceEntity workspace;
@@ -82,17 +83,7 @@ class _WorkspaceGallery extends StatelessWidget {
             child: Container(
               width: 280.0,
               color: ColorRes.anisChipBg,
-              child: Image.asset(
-                images[index],
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Center(
-                  child: Icon(
-                    Icons.image_outlined,
-                    color: ColorRes.anisHintText,
-                    size: AppSizes.iconLg,
-                  ),
-                ),
-              ),
+              child: WorkspaceGalleryImage(source: images[index]),
             ),
           );
         },

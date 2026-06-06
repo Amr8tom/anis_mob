@@ -5,11 +5,15 @@ import 'package:anis/core/routing/route_names.dart';
 
 import '../../features/buddy/domain/entity/buddy_session_entity.dart';
 import '../../features/buddy/presentation/controller/buddy_cubit.dart';
+import '../../features/buddy/presentation/controller/buddy_session_details_cubit.dart';
 import '../../features/buddy/presentation/screens/create_session_screen.dart';
+import '../../features/buddy/presentation/screens/session_details_loader_screen.dart';
 import '../../features/buddy/presentation/screens/session_details_screen.dart';
 import '../../features/navigation/presentation/screens/navigation_menu_screen.dart';
 import '../../features/profile/presentation/screens/plans_screen.dart';
 import '../../features/workspaces/domain/entity/workspace_entity.dart';
+import '../../features/workspaces/presentation/controller/workspace_details_cubit.dart';
+import '../../features/workspaces/presentation/screens/workspace_details_loader_screen.dart';
 import '../../features/workspaces/presentation/screens/workspace_details_screen.dart';
 import '../../features/auth/presentation/screen/login_screen.dart';
 import '../../features/auth/presentation/screen/user_info_screen.dart';
@@ -42,9 +46,17 @@ class RouteGenerator {
       case DRoutesName.workspaceDetailsRoute:
         final args = settings.arguments as Map<String, dynamic>?;
         final workspace = args?['workspace'] as WorkspaceEntity?;
-        if (workspace == null) return unDefinedRoute();
+        final workspaceId = args?['workspaceId'] as String?;
+        if (workspace == null && workspaceId == null) return unDefinedRoute();
         return PageTransition(
-          child: WorkspaceDetailsScreen(workspace: workspace),
+          child: workspace != null
+              ? WorkspaceDetailsScreen(workspace: workspace)
+              : BlocProvider(
+                  create: (_) => serviceLocator<WorkspaceDetailsCubit>(
+                    param1: workspaceId!,
+                  ),
+                  child: const WorkspaceDetailsLoaderScreen(),
+                ),
           type: PageTransitionType.rightToLeft,
           settings: settings,
         );
@@ -244,11 +256,22 @@ class RouteGenerator {
       case DRoutesName.sessionDetailsRoute:
         final args = settings.arguments as Map<String, dynamic>?;
         final session = args?['session'] as BuddySessionEntity?;
-        if (session == null) return unDefinedRoute();
+        final sessionId = args?['sessionId'] as String?;
+        if (session == null && sessionId == null) return unDefinedRoute();
         return PageTransition(
-          child: BlocProvider(
-            create: (_) => serviceLocator<BuddyCubit>(),
-            child: SessionDetailsScreen(session: session),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => serviceLocator<BuddyCubit>()),
+              if (sessionId != null)
+                BlocProvider(
+                  create: (_) => serviceLocator<BuddySessionDetailsCubit>(
+                    param1: sessionId,
+                  ),
+                ),
+            ],
+            child: session != null
+                ? SessionDetailsScreen(session: session)
+                : const SessionDetailsLoaderScreen(),
           ),
           type: PageTransitionType.rightToLeft,
           settings: settings,

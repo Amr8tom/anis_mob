@@ -6,6 +6,7 @@ namespace App\Domain\Workspace\Repositories;
 
 use App\Domain\Workspace\Contracts\WorkspaceRepositoryInterface;
 use App\Enums\SessionStatus;
+use App\Enums\SessionType;
 use App\Enums\VisitStatus;
 use App\Enums\WorkspaceStatus;
 use App\Models\Workspace;
@@ -49,6 +50,7 @@ final class EloquentWorkspaceRepository implements WorkspaceRepositoryInterface
             ->with([
                 'drinks',
                 'sessions' => fn ($q) => $q
+                    ->where('type', SessionType::STUDY_GROUP->value)
                     ->whereIn('status', [SessionStatus::UPCOMING->value, SessionStatus::IN_PROGRESS->value])
                     ->with('host')
                     ->withCount('participants')

@@ -7,7 +7,9 @@ import '../model/workspace_model.dart';
 
 abstract class WorkspaceLocalDataSource {
   Future<void> cacheWorkspaces(List<WorkspaceModel> workspaces);
+  Future<void> cacheWorkspace(WorkspaceModel workspace);
   Future<List<WorkspaceModel>> getCachedWorkspaces();
+  Future<WorkspaceModel> getCachedWorkspace(String workspaceId);
 }
 
 class WorkspaceLocalDataSourceImpl implements WorkspaceLocalDataSource {
@@ -24,6 +26,24 @@ class WorkspaceLocalDataSourceImpl implements WorkspaceLocalDataSource {
   }
 
   @override
+  Future<void> cacheWorkspace(WorkspaceModel workspace) async {
+    List<WorkspaceModel> workspaces;
+    try {
+      workspaces = await getCachedWorkspaces();
+    } on CacheFailure {
+      workspaces = [];
+    }
+
+    final index = workspaces.indexWhere((item) => item.id == workspace.id);
+    if (index == -1) {
+      workspaces.add(workspace);
+    } else {
+      workspaces[index] = workspace;
+    }
+    await cacheWorkspaces(workspaces);
+  }
+
+  @override
   Future<List<WorkspaceModel>> getCachedWorkspaces() async {
     final cached = storage.getString(key: StorageKeys.workspaces.name);
     if (cached == null || cached.isEmpty) throw CacheFailure();
@@ -31,5 +51,15 @@ class WorkspaceLocalDataSourceImpl implements WorkspaceLocalDataSource {
     return (jsonDecode(cached) as List<dynamic>)
         .map((item) => WorkspaceModel.fromJson(item as Map<String, dynamic>))
         .toList();
+  }
+
+  @override
+  Future<WorkspaceModel> getCachedWorkspace(String workspaceId) async {
+    final workspaces = await getCachedWorkspaces();
+    try {
+      return workspaces.firstWhere((workspace) => workspace.id == workspaceId);
+    } on StateError {
+      throw const CacheFailure();
+    }
   }
 }

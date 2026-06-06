@@ -83,6 +83,17 @@ class BuddyDummyRepository implements BuddyRepository {
   }
 
   @override
+  Future<Either<Failure, BuddySessionEntity>> getBuddySessionDetails(
+    String sessionId,
+  ) async {
+    try {
+      return Right(_sessions.firstWhere((session) => session.id == sessionId));
+    } on StateError {
+      return const Left(NotFoundFailure(message: 'Session not found'));
+    }
+  }
+
+  @override
   Future<Either<Failure, bool>> joinSession(String sessionId) async {
     await Future.delayed(const Duration(milliseconds: 250));
     return const Right(true);

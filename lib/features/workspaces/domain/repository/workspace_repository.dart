@@ -7,4 +7,7 @@ abstract class WorkspaceRepository {
   Future<Either<Failure, List<WorkspaceEntity>>> getWorkspaces({
     String? filter, // 'all' | 'openNow' | 'nearby'
   });
+  Future<Either<Failure, WorkspaceEntity>> getWorkspaceDetails(
+    String workspaceId,
+  );
 }

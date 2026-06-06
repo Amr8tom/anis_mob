@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Workspace;
 
+use App\Enums\SessionType;
+use App\Models\StudySession;
 use App\Models\Workspace;
 use App\Models\WorkspaceDrink;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -47,6 +49,20 @@ final class WorkspaceApiTest extends TestCase
             ->assertJsonPath('data.status', 'open')               // lowercased for Flutter
             ->assertJsonPath('data.drinks.0.price', 25.5)         // cents -> currency
             ->assertJsonStructure(['data' => ['id', 'dayCalculationHours', 'distanceKm', 'currentOccupancy']]);
+    }
+
+    public function test_embedded_sessions_only_include_buddy_study_groups(): void
+    {
+        $workspace = Workspace::factory()->create();
+        StudySession::factory()->create(['workspace_id' => $workspace->id]);
+        StudySession::factory()->create([
+            'workspace_id' => $workspace->id,
+            'type' => SessionType::EVENT,
+        ]);
+
+        $this->getJson("/api/v1/workspaces/{$workspace->id}")
+            ->assertOk()
+            ->assertJsonCount(1, 'data.sessions');
     }
 
     public function test_detail_404_for_inactive_workspace(): void

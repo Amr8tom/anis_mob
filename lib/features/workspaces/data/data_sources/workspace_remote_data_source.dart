@@ -5,6 +5,7 @@ import '../model/workspace_model.dart';
 
 abstract class WorkspaceRemoteDataSource {
   Future<List<WorkspaceModel>> getWorkspaces({String? filter});
+  Future<WorkspaceModel> getWorkspaceDetails(String workspaceId);
 }
 
 class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
@@ -28,6 +29,16 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
         .toList();
   }
 
+  @override
+  Future<WorkspaceModel> getWorkspaceDetails(String workspaceId) async {
+    final response = await _dio.get(
+      url: URL.workspaceById(workspaceId),
+      requiresAuth: false,
+    );
+
+    return WorkspaceModel.fromJson(_extractObject(response));
+  }
+
   /// Unwraps the Laravel paginated envelope: `{ success, message, data: [], meta }`.
   List<dynamic> _extractList(dynamic response) {
     if (response is Map<String, dynamic>) {
@@ -36,5 +47,15 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
     }
     if (response is List) return response;
     throw const ServerFailure(message: 'Unexpected workspaces response shape');
+  }
+
+  Map<String, dynamic> _extractObject(dynamic response) {
+    if (response is Map<String, dynamic>) {
+      final data = response['data'];
+      if (data is Map<String, dynamic>) return data;
+    }
+    throw const ServerFailure(
+      message: 'Unexpected workspace response shape',
+    );
   }
 }

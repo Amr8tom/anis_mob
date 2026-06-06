@@ -8,6 +8,9 @@ abstract class BuddyRepository {
     String? subject,
     String? filter,
   });
+  Future<Either<Failure, BuddySessionEntity>> getBuddySessionDetails(
+    String sessionId,
+  );
   Future<Either<Failure, bool>> joinSession(String sessionId);
   Future<Either<Failure, bool>> createSession(Map<String, dynamic> data);
 }

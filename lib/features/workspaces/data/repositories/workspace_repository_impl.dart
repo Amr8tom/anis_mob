@@ -42,6 +42,30 @@ class WorkspaceRepositoryImpl implements WorkspaceRepository {
     return _getCachedWorkspaces(filter: filter);
   }
 
+  @override
+  Future<Either<Failure, WorkspaceEntity>> getWorkspaceDetails(
+    String workspaceId,
+  ) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await remoteDataSource.getWorkspaceDetails(workspaceId);
+        await localDataSource.cacheWorkspace(result);
+        return Right(result);
+      } on Failure catch (failure) {
+        final cached = await _getCachedWorkspace(workspaceId);
+        return cached.fold((_) => Left(failure), Right.new);
+      } catch (error) {
+        final cached = await _getCachedWorkspace(workspaceId);
+        return cached.fold(
+          (_) => Left(ServerFailure(message: error.toString())),
+          Right.new,
+        );
+      }
+    }
+
+    return _getCachedWorkspace(workspaceId);
+  }
+
   Future<Either<Failure, List<WorkspaceEntity>>> _getCachedWorkspaces({
     String? filter,
   }) async {
@@ -59,6 +83,18 @@ class WorkspaceRepositoryImpl implements WorkspaceRepository {
       return Left(failure);
     } catch (e) {
       return Left(CacheFailure());
+    }
+  }
+
+  Future<Either<Failure, WorkspaceEntity>> _getCachedWorkspace(
+    String workspaceId,
+  ) async {
+    try {
+      return Right(await localDataSource.getCachedWorkspace(workspaceId));
+    } on CacheFailure catch (failure) {
+      return Left(failure);
+    } catch (_) {
+      return const Left(CacheFailure());
     }
   }
 }

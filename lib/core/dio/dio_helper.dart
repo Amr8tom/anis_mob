@@ -22,10 +22,10 @@ class DioHelper {
     // Authorization tokens, passwords, and response tokens are not leaked.
     this.dio.interceptors.add(
           PrettyDioLogger(
-            requestHeader: false,
-            requestBody: false,
-            responseBody: false,
-            responseHeader: false,
+            requestHeader: true,
+            requestBody: true,
+            responseBody: true,
+            responseHeader: true,
             request: true,
             error: true,
             compact: true,

@@ -6,6 +6,7 @@ import '../../../../../../common/widgets/sizeboxs/sizer.dart';
 import '../../../../../../core/constants/app_sizes.dart';
 import '../../../../../../core/constants/colors.dart';
 import '../../../../../../generated/l10n.dart';
+import 'workspace_gallery_image.dart';
 
 class WorkspaceGallerySection extends StatelessWidget {
   final List<String> images;
@@ -35,13 +36,7 @@ class WorkspaceGallerySection extends StatelessWidget {
             child: Container(
               width: 260.w,
               color: ColorRes.accent,
-              child: Image.asset(
-                image,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Center(
-                  child: Icon(Icons.image_not_supported_outlined),
-                ),
-              ),
+              child: WorkspaceGalleryImage(source: image),
             ),
           );
         },

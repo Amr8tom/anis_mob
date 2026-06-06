@@ -4,6 +4,8 @@ import '../../../../../../common/custom_ui.dart';
 import '../../../../../../common/widgets/sizeboxs/sizer.dart';
 import '../../../../../../core/constants/app_sizes.dart';
 import '../../../../../../core/constants/colors.dart';
+import '../../../../../../core/extentions/navigation_extension.dart';
+import '../../../../../../core/routing/route_names.dart';
 import '../../../../../../features/home/domain/entity/study_session_entity.dart';
 import '../../../../../../features/home/presentation/widgets/session_card_widget.dart';
 import '../../../../../../generated/l10n.dart';
@@ -49,7 +51,10 @@ class WorkspaceSessionsTab extends StatelessWidget {
           ...liveSessions.map(
             (s) => Padding(
               padding: EdgeInsets.only(bottom: AppSizes.sm),
-              child: SessionCardWidget(session: s),
+              child: SessionCardWidget(
+                session: s,
+                onTap: () => _openSession(context, s.id),
+              ),
             ),
           ),
           Sizer(height: AppSizes.md),
@@ -64,11 +69,21 @@ class WorkspaceSessionsTab extends StatelessWidget {
           ...upcomingSessions.map(
             (s) => Padding(
               padding: EdgeInsets.only(bottom: AppSizes.sm),
-              child: SessionCardWidget(session: s),
+              child: SessionCardWidget(
+                session: s,
+                onTap: () => _openSession(context, s.id),
+              ),
             ),
           ),
         ],
       ],
+    );
+  }
+
+  void _openSession(BuildContext context, String sessionId) {
+    context.pushNamed(
+      DRoutesName.sessionDetailsRoute,
+      arguments: {'sessionId': sessionId},
     );
   }
 }

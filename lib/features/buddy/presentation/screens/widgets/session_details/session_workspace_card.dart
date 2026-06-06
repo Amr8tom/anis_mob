@@ -8,7 +8,7 @@ import '../../../../../../core/routing/route_names.dart';
 import '../../../../domain/entity/buddy_session_entity.dart';
 
 /// Tappable card showing the session's embedded workspace.
-/// Tapping navigates to the full workspace details screen via [BuddyCubit].
+/// Tapping loads the full workspace details, including its active sessions.
 class SessionWorkspaceCard extends StatelessWidget {
   final BuddySessionEntity session;
   const SessionWorkspaceCard({super.key, required this.session});
@@ -23,7 +23,7 @@ class SessionWorkspaceCard extends StatelessWidget {
       child: GestureDetector(
         onTap: () => context.pushNamed(
           DRoutesName.workspaceDetailsRoute,
-          arguments: {'workspace': session.workspace},
+          arguments: {'workspaceId': session.workspace.id},
         ),
         child: Container(
           decoration: BoxDecoration(

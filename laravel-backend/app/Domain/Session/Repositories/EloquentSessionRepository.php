@@ -30,9 +30,13 @@ final class EloquentSessionRepository implements SessionRepositoryInterface
         return StudySession::query()
             ->with(['host', 'workspace.drinks', 'participants'])
             ->withCount('participants')
+            ->where('type', SessionType::STUDY_GROUP->value)
+            ->whereIn('status', [SessionStatus::UPCOMING->value, SessionStatus::IN_PROGRESS->value])
             ->when($university, fn (Builder $q, string $u) => $q->whereHas('host', fn (Builder $h) => $h->where('university', $u)))
             ->when($subject, fn (Builder $q, string $s) => $q->where('subject', $s))
             ->when($filter === 'open', fn (Builder $q) => $q->where('status', SessionStatus::UPCOMING->value))
+            ->when($filter === 'today', fn (Builder $q) => $q->whereDate('start_time', today()))
+            ->when($filter === 'thisWeek', fn (Builder $q) => $q->whereBetween('start_time', [now()->startOfWeek(), now()->endOfWeek()]))
             ->when($filter === 'availableNow', fn (Builder $q) => $q->whereHas('host', fn (Builder $h) => $h->where('availability', 'ONLINE')))
             ->orderBy('start_time')
             ->paginate($perPage);
@@ -43,6 +47,7 @@ final class EloquentSessionRepository implements SessionRepositoryInterface
         return StudySession::query()
             ->with(['host', 'workspace.drinks', 'participants'])
             ->withCount('participants')
+            ->where('type', SessionType::STUDY_GROUP->value)
             ->whereKey($id)
             ->firstOrFail();
     }

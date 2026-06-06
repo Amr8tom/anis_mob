@@ -21,7 +21,7 @@ final class ListBuddySessionsRequest extends FormRequest
         return [
             'university' => ['nullable', 'string', 'max:120'],
             'subject' => ['nullable', 'string', 'max:120'],
-            'filter' => ['nullable', 'string', 'in:availableNow,open'],
+            'filter' => ['nullable', 'string', 'in:all,today,thisWeek,availableNow,open'],
             'page' => ['nullable', 'integer', 'min:1'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ];

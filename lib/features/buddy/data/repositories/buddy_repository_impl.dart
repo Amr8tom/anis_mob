@@ -61,12 +61,39 @@ class BuddyRepositoryImpl implements BuddyRepository {
   }
 
   @override
+  Future<Either<Failure, BuddySessionEntity>> getBuddySessionDetails(
+    String sessionId,
+  ) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await remoteDataSource.getBuddySessionDetails(sessionId);
+        await localDataSource.cacheBuddySession(result);
+        return Right(result);
+      } on Failure catch (failure) {
+        final cached = await _getCachedSession(sessionId);
+        return cached.fold((_) => Left(failure), Right.new);
+      } catch (error) {
+        final cached = await _getCachedSession(sessionId);
+        return cached.fold(
+          (_) => Left(ServerFailure(message: error.toString())),
+          Right.new,
+        );
+      }
+    }
+
+    return _getCachedSession(sessionId);
+  }
+
+  @override
   Future<Either<Failure, bool>> joinSession(String sessionId) async {
-    if (!await networkInfo.isConnected) return Left(CacheFailure());
+    if (!await networkInfo.isConnected) return Left(const CacheFailure());
 
     try {
       final result = await remoteDataSource.joinSession(sessionId);
       return Right(result);
+    } on Failure catch (failure) {
+      // Preserve typed failures (e.g. ConflictFailure for full/already-joined).
+      return Left(failure);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }
@@ -74,11 +101,13 @@ class BuddyRepositoryImpl implements BuddyRepository {
 
   @override
   Future<Either<Failure, bool>> createSession(Map<String, dynamic> data) async {
-    if (!await networkInfo.isConnected) return Left(CacheFailure());
+    if (!await networkInfo.isConnected) return Left(const CacheFailure());
 
     try {
       final result = await remoteDataSource.createSession(data);
       return Right(result);
+    } on Failure catch (failure) {
+      return Left(failure);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }
@@ -113,11 +142,47 @@ class BuddyRepositoryImpl implements BuddyRepository {
                 (session) => session.sessionStatus == BuddySessionStatus.open)
             .toList();
       }
+      if (filter == 'today') {
+        final now = DateTime.now();
+        cached = cached
+            .where(
+              (session) =>
+                  session.startTime.year == now.year &&
+                  session.startTime.month == now.month &&
+                  session.startTime.day == now.day,
+            )
+            .toList();
+      }
+      if (filter == 'thisWeek') {
+        final now = DateTime.now();
+        final start = DateTime(now.year, now.month, now.day)
+            .subtract(Duration(days: now.weekday - DateTime.monday));
+        final end = start.add(const Duration(days: 7));
+        cached = cached
+            .where(
+              (session) =>
+                  !session.startTime.isBefore(start) &&
+                  session.startTime.isBefore(end),
+            )
+            .toList();
+      }
       return Right(cached);
     } on CacheFailure catch (failure) {
       return Left(failure);
     } catch (e) {
       return Left(CacheFailure());
+    }
+  }
+
+  Future<Either<Failure, BuddySessionEntity>> _getCachedSession(
+    String sessionId,
+  ) async {
+    try {
+      return Right(await localDataSource.getCachedBuddySession(sessionId));
+    } on CacheFailure catch (failure) {
+      return Left(failure);
+    } catch (_) {
+      return const Left(CacheFailure());
     }
   }
 }
