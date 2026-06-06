@@ -16,8 +16,8 @@ class DTextFormFieldTheme {
         fontWeight: FontWeight.w400, fontSize: 14.sp, color: Colors.black),
     errorStyle: const TextStyle()
         .copyWith(fontWeight: FontWeight.w400, fontStyle: FontStyle.normal),
-    floatingLabelStyle:
-        const TextStyle().copyWith(color: ColorRes.black.withOpacity(0.8)),
+    floatingLabelStyle: const TextStyle()
+        .copyWith(color: ColorRes.black.withValues(alpha: 0.8)),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(14.r),
       borderSide: BorderSide(width: 1.w, color: ColorRes.black),
@@ -48,7 +48,7 @@ class DTextFormFieldTheme {
         const TextStyle().copyWith(fontSize: 14.sp, color: Colors.white),
     hintStyle: const TextStyle().copyWith(fontSize: 14.sp, color: Colors.white),
     floatingLabelStyle:
-        const TextStyle().copyWith(color: Colors.white.withOpacity(0.8)),
+        const TextStyle().copyWith(color: Colors.white.withValues(alpha: 0.8)),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(14.r),
       borderSide: BorderSide(width: 1.w, color: Colors.grey),

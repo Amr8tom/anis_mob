@@ -7,9 +7,9 @@ import '../../../core/constants/colors.dart';
 import '../../../core/device/device_utility.dart';
 import '../../../core/utils/helpers/background_image.dart';
 import '../../../generated/l10n.dart';
-import '../sizeboxs/Sizer.dart';
+import '../sizeboxs/sizer.dart';
 
-void CustomDialogImgTitleDes({
+void customDialogImgTitleDes({
   required BuildContext context,
   required String title,
   required String des,
@@ -57,8 +57,8 @@ void CustomDialogImgTitleDes({
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: width ?? AppSizes.containerSmall*1.5,
-                    height: height ?? AppSizes.containerSmall*1.5,
+                    width: width ?? AppSizes.containerSmall * 1.5,
+                    height: height ?? AppSizes.containerSmall * 1.5,
                     child: BackgroundImage(
                       isSvgImage: isSvg,
                       isPositioned: false,
@@ -70,13 +70,13 @@ void CustomDialogImgTitleDes({
                   Text(
                     title,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: ColorRes.black,
-                      fontWeight: FontWeight.bold
-                    ),
+                        color: ColorRes.black, fontWeight: FontWeight.bold),
                   ),
                   const Sizer(height: 8),
                   Text(
-                    orderNumber ==null?des:   "${S.current.orderNumber} ${orderNumber ?? ''}",
+                    orderNumber == null
+                        ? des
+                        : "${S.current.orderNumber} $orderNumber",
                     style: Theme.of(
                       context,
                     ).textTheme.bodyMedium?.copyWith(color: ColorRes.grey2),
@@ -86,12 +86,11 @@ void CustomDialogImgTitleDes({
                   if (button1 != null && button2 != null) ...[
                     SizedBox(
                       width: AppSizes.fullWidth,
-                      // height: AppSizes.fullHeight,
                       child: Row(
                         children: [
                           Expanded(
                             child: DButton(
-                              text: button1!,
+                              text: button1,
                               height: AppSizes.heightcontainer,
                               borderRadius: AppSizes.borderRadiusXXLg,
                               size: DButtonSize.medium,
@@ -107,25 +106,13 @@ void CustomDialogImgTitleDes({
                               borderRadius: AppSizes.borderRadiusXXLg,
                               size: DButtonSize.medium,
                               variant: DButtonVariant.secondary,
-                              onPressed:onTab2,
+                              onPressed: onTab2,
                             ),
                           ),
-                          // Expanded(
-                          //   child: DButton(
-                          //     borderRadius: AppSizes.borderRadiusXXLg,
-                          //     height: AppSizes.heightcontainer,
-                          //     text: S.current.languageEnglish,
-                          //     onPressed: (){},
-                          //     variant: DButtonVariant.secondary,
-                          //     size: DButtonSize.medium,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
                   ],
-
-                  // Sizer(height: 8),
                 ],
               ),
             ],

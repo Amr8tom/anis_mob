@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/asset_resoures.dart';
 import '../../../core/constants/colors.dart';
-import '../../../feature/navigation/presentation/controllers/navigation_cubit.dart';
+import '../../../features/navigation/presentation/controllers/navigation_cubit.dart';
 import '../../../generated/l10n.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
@@ -28,7 +28,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         color: ColorRes.white,
         boxShadow: [
           BoxShadow(
-            color: ColorRes.anisNavy.withOpacity(0.08),
+            color: ColorRes.anisNavy.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, -4),
           ),

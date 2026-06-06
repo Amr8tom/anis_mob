@@ -53,14 +53,17 @@ dependencies:
   data_connection_checker_tv: ^0.3.5-nullsafety
   internet_connection_checker: ^1.0.0+1
   dio: ^5.7.0
+  http: ^1.2.2
   webview_flutter: ^4.10.0
 
   # storage_packages
   shared_preferences: ^2.5.3
+  mobile_scanner: ^7.0.0
 
   # image handling
   image_picker: ^1.0.7
   file_picker: ^8.0.0
+  path_provider: ^2.1.5
 
 
 

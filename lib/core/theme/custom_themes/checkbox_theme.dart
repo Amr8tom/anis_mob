@@ -36,7 +36,7 @@ class DCheckBoxTheme {
     }),
     fillColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
-        return Colors.blueGrey.withOpacity(.8);
+        return Colors.blueGrey.withValues(alpha: .8);
       } else {
         return Colors.transparent;
       }

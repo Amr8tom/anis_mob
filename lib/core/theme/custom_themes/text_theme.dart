@@ -13,15 +13,13 @@ class DTextTheme {
         fontWeight: FontWeight.bold,
         color: ColorRes.black,
         // height: 1.2,
-        fontFamily: 'Cairo'
-    ),
+        fontFamily: 'Cairo'),
     headlineMedium: TextStyle(
         fontSize: 22.sp,
         fontWeight: FontWeight.bold,
         color: ColorRes.black,
         // height: 1.2,
-        fontFamily: 'Cairo'
-    ),
+        fontFamily: 'Cairo'),
     headlineSmall: TextStyle().copyWith(
         fontSize: 18.sp,
         fontWeight: FontWeight.w600,
@@ -49,8 +47,7 @@ class DTextTheme {
         fontSize: 16.sp,
         fontWeight: FontWeight.w500,
         // height: 1.5.h,
-        color: ColorRes.black
-    ),
+        color: ColorRes.black),
     bodyMedium: TextStyle(overflow: TextOverflow.ellipsis).copyWith(
         fontFamily: 'Cairo',
         fontSize: 14.sp,
@@ -101,6 +98,6 @@ class DTextTheme {
     labelMedium: TextStyle().copyWith(
         fontSize: 12.sp,
         fontWeight: FontWeight.normal,
-        color: Colors.white.withOpacity(0.5)),
+        color: Colors.white.withValues(alpha: 0.5)),
   );
 }

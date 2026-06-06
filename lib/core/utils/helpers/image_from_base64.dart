@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../constants/app_sizes.dart';
 
-Image ImageFromBase64String({
+Image imageFromBase64String({
   required String base64String,
   double? width,
   double? height,
@@ -14,7 +14,7 @@ Image ImageFromBase64String({
     width: width,
     height: height,
     errorBuilder: (context, error, stackTrace) {
-      return  Icon(
+      return Icon(
         Icons.image_not_supported,
         color: Colors.grey,
         size: AppSizes.iconXLarge,

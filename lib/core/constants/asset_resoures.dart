@@ -1,5 +1,3 @@
-import 'package:anis/generated/l10n.dart';
-
 class AssetRes {
   /// -- App Logos
   static const String appLogo = 'assets/images/pngs/meals_screen.png';
@@ -159,7 +157,7 @@ class AssetRes {
   static const String sunIcon = 'assets/images/svgs/sun.svg';
   static const String quraanIcon = 'assets/images/svgs/quran_icon.svg';
   static const String locationIcon = 'assets/images/svgs/location_icon.svg';
-  static const String qibla_Icon = 'assets/images/svgs/qiblaa_icon.svg';
+  static const String qiblaIcon = 'assets/images/svgs/qiblaa_icon.svg';
 
   /// Product
   static const String product = 'assets/images/pngs/product.png';

@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
-import 'package:anis/common/widgets/sizeboxs/Sizer.dart';
+import 'package:anis/common/widgets/sizeboxs/sizer.dart';
 import 'package:anis/core/widgets/buttons/d_button.dart';
 import '../../generated/l10n.dart';
 import '../constants/app_sizes.dart';
 import '../constants/colors.dart';
 
 Future<void> checkForUpdate({required BuildContext context}) async {
-  InAppUpdate.checkForUpdate().then((updateInfo) {
+  try {
+    final updateInfo = await InAppUpdate.checkForUpdate();
+    if (!context.mounted) return;
     if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
       _showUpdateDialog(
         context: context,
         versionCode: updateInfo.availableVersionCode?.toString(),
       );
     }
-  }).catchError((error) {
-    debugPrint('Error checking for update: $error');
-  });
+  } catch (_) {}
 }
 
 void _showUpdateDialog({
@@ -37,7 +37,7 @@ void _showUpdateDialog({
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: Colors.black.withValues(alpha: 0.15),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
               ),
@@ -54,7 +54,7 @@ void _showUpdateDialog({
                   gradient: LinearGradient(
                     colors: [
                       ColorRes.primary,
-                      ColorRes.primary.withOpacity(0.75),
+                      ColorRes.primary.withValues(alpha: 0.75),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -71,7 +71,7 @@ void _showUpdateDialog({
                       width: 72,
                       height: 72,
                       decoration: BoxDecoration(
-                        color: ColorRes.white.withOpacity(0.2),
+                        color: ColorRes.white.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -96,7 +96,7 @@ void _showUpdateDialog({
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: ColorRes.white.withOpacity(0.25),
+                          color: ColorRes.white.withValues(alpha: 0.25),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -136,11 +136,11 @@ void _showUpdateDialog({
                       borderRadius: AppSizes.borderRadiusXXLg,
                       size: DButtonSize.medium,
                       variant: DButtonVariant.primary,
-                      onPressed: () {
+                      onPressed: () async {
                         Navigator.of(context).pop();
-                        InAppUpdate.performImmediateUpdate().catchError(
-                          (error) => debugPrint('Update error: $error'),
-                        );
+                        try {
+                          await InAppUpdate.performImmediateUpdate();
+                        } catch (_) {}
                       },
                     ),
                     const Sizer(height: 10),

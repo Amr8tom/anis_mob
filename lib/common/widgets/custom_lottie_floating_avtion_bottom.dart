@@ -5,7 +5,7 @@ import '../../core/constants/asset_resoures.dart';
 import '../../core/device/device_utility.dart';
 import '../../core/constants/app_sizes.dart';
 import '../../core/constants/colors.dart';
-import '../../feature/navigation/presentation/controllers/navigation_cubit.dart';
+import '../../features/navigation/presentation/controllers/navigation_cubit.dart';
 
 class CustomLottieFloatingAvtionBottom extends StatelessWidget {
   const CustomLottieFloatingAvtionBottom({super.key});
@@ -18,14 +18,13 @@ class CustomLottieFloatingAvtionBottom extends StatelessWidget {
       child: RepaintBoundary(
         child: CircleAvatar(
           backgroundColor: ColorRes.yellow,
-          radius: DDeviceUtils.getScreenWidth(context)/10,
+          radius: DDeviceUtils.getScreenWidth(context) / 10,
           child: SizedBox(
-        
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: AppSizes.imageSize*1.2,
+                  width: AppSizes.imageSize * 1.2,
                   child: Transform.scale(
                     scale: 1.3,
                     child: ColorFiltered(

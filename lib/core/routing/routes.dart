@@ -3,18 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:anis/core/routing/route_names.dart';
 
-import '../../feature/buddy/domain/entity/buddy_session_entity.dart';
-import '../../feature/buddy/presentation/controller/buddy_cubit.dart';
-import '../../feature/buddy/presentation/screens/create_session_screen.dart';
-import '../../feature/buddy/presentation/screens/session_details_screen.dart';
-import '../../feature/navigation/presentation/screens/navigation_menu_screen.dart';
-import '../../feature/profile/presentation/screens/plans_screen.dart';
-import '../../feature/workspaces/domain/entity/workspace_entity.dart';
-import '../../feature/workspaces/presentation/screens/workspace_details_screen.dart';
-import '../../feature/auth/presentation/screen/login_screen.dart';
-import '../../feature/auth/presentation/screen/user_info_screen.dart';
-import '../../feature/onboarding/presentation/screens/onboarding_screen.dart';
-import '../../feature/terms_conditions/presentation/terms_conditions_screen.dart';
+import '../../features/buddy/domain/entity/buddy_session_entity.dart';
+import '../../features/buddy/presentation/controller/buddy_cubit.dart';
+import '../../features/buddy/presentation/screens/create_session_screen.dart';
+import '../../features/buddy/presentation/screens/session_details_screen.dart';
+import '../../features/navigation/presentation/screens/navigation_menu_screen.dart';
+import '../../features/profile/presentation/screens/plans_screen.dart';
+import '../../features/workspaces/domain/entity/workspace_entity.dart';
+import '../../features/workspaces/presentation/screens/workspace_details_screen.dart';
+import '../../features/auth/presentation/screen/login_screen.dart';
+import '../../features/auth/presentation/screen/user_info_screen.dart';
+import '../../features/onboarding/presentation/controller/onboarding_cubit.dart';
+import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
+import '../../features/splash/presentation/screens/splash_screen.dart';
+import '../../features/terms_conditions/presentation/terms_conditions_screen.dart';
 import '../service_locator/service_locator.dart';
 
 class RouteGenerator {
@@ -23,6 +25,13 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       /// navigation
+      case DRoutesName.splashSRoute:
+        return PageTransition(
+          child: const SplashScreen(),
+          type: PageTransitionType.fade,
+          settings: settings,
+        );
+
       case DRoutesName.navigationMenuRoute:
         return PageTransition(
           child: NavigationMenuScreen(),
@@ -43,7 +52,10 @@ class RouteGenerator {
       /// onboarding Screen
       case DRoutesName.onBoardingRoute:
         return PageTransition(
-          child: const OnboardingScreen(),
+          child: BlocProvider(
+            create: (_) => serviceLocator<OnboardingCubit>(),
+            child: const OnboardingScreen(),
+          ),
           type: PageTransitionType.rightToLeft,
           settings: settings,
         );
@@ -157,7 +169,7 @@ class RouteGenerator {
       //   );
       //
       // /// FAQ Screen
-      // case DRoutesName.FAQRoute:
+      // case DRoutesName.faqRoute:
       //   return PageTransition(
       //     child: const FaqScreen(),
       //     type: PageTransitionType.rightToLeft,

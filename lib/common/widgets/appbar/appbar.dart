@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:anis/core/extentions/navigation_extension.dart';
 
 import '../../../core/constants/app_sizes.dart';
-import '../../../core/constants/asset_resoures.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/routing/route_names.dart';
 
-import '../../../feature/navigation/presentation/widgets/profile_header.dart';
-import '../sizeboxs/Sizer.dart';
+import '../../../features/navigation/presentation/widgets/profile_header.dart';
 
 class DAppBar extends StatelessWidget implements PreferredSizeWidget {
-  DAppBar({
+  const DAppBar({
     super.key,
     this.title,
     this.showBackArrow = false,
@@ -46,12 +41,11 @@ class DAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double? appHeight;
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
-  void Function()? doSomeThing;
+  final VoidCallback? doSomeThing;
 
   @override
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
-    final isDetail = showBackArrow && !isHeader;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -99,9 +93,8 @@ class DAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: title != null
                       ? Text(
                           title!,
-                          textAlign: centerTitle
-                              ? TextAlign.center
-                              : TextAlign.start,
+                          textAlign:
+                              centerTitle ? TextAlign.center : TextAlign.start,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: tt.titleMedium?.copyWith(
@@ -115,7 +108,8 @@ class DAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
 
                 // ── Actions ────────────────────────────────────────────
-                if (actions != null) ...actions!
+                if (actions != null)
+                  ...actions!
                 else if (!showBackArrow || isHeader) ...[
                   _NotificationButton(
                     onPressed: () => context.pushNamed(

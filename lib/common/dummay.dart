@@ -1,9 +1,6 @@
-import 'package:flutter/material.dart';
-import '../core/constants/asset_resoures.dart';
 import '../core/constants/colors.dart';
 
 class Dummy {
-
   /// Dummy Activities Meals list
 
   ///
@@ -150,5 +147,4 @@ class Dummy {
       'type': 'loan ',
     },
   ];
-
 }

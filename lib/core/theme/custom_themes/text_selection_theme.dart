@@ -7,13 +7,15 @@ class DTextSelectionTheme {
 
   static TextSelectionThemeData lightTextSelection = TextSelectionThemeData(
     cursorColor: ColorRes.primary, // Cursor color
-    selectionColor: ColorRes.primary.withOpacity(0.3), // Text selection color
+    selectionColor:
+        ColorRes.primary.withValues(alpha: 0.3), // Text selection color
     selectionHandleColor: ColorRes.primary, // Text selection handle color
   );
 
   static TextSelectionThemeData darkTextSelection = TextSelectionThemeData(
     cursorColor: ColorRes.primary, // Cursor color
-    selectionColor: ColorRes.primary.withOpacity(0.3), // Text selection color
+    selectionColor:
+        ColorRes.primary.withValues(alpha: 0.3), // Text selection color
     selectionHandleColor: ColorRes.primary, // Text selection handle color
   );
 }

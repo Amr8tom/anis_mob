@@ -1,12 +1,12 @@
 class DRoutesName {
   /// Shared Screens (User)
   static const String test = 'test-route';
-  static const String loginRoute    = 'phone-log-route';
+  static const String loginRoute = 'phone-log-route';
   static const String userInfoRoute = 'user-info-route';
   static const String nextPageInSignupRoute = 'next_page_in-signup-route';
   static const String verifyEmailRoute = 'verify-email-route';
   static const String verifyAccountRoute = 'verify-account-route';
-  static const String OTPRoute = 'OTP-route';
+  static const String otpRoute = 'OTP-route';
   static const String addNewPasswordRoute = 'add-new-password-route';
   static const String addNewEmailRoute = 'add-new-email-route';
   static const String verifyCodeRoute = 'verify-code-route';
@@ -27,19 +27,22 @@ class DRoutesName {
   static const String createAttendanceRoute = 'attendance-route';
   static const String createStudyRequestRoute = 'create-study-form-route';
   static const String createCarPermissionRoute = 'create-car-permission-route';
-  static const String createComplaintRequestRoute = 'create-complaint-request-route';
+  static const String createComplaintRequestRoute =
+      'create-complaint-request-route';
   static const String createStartWorkRoute = 'create-start-work-route';
-  static const String createExperienceCertificateRoute = 'create-experience-certificate-route';
+  static const String createExperienceCertificateRoute =
+      'create-experience-certificate-route';
   static const String createIDDocumentRoute = 'create-id-document-route';
-  static const String createMedicalInsuranceRoute = 'create-medical-insurance-route';
+  static const String createMedicalInsuranceRoute =
+      'create-medical-insurance-route';
 
   /// location & maps Screen
   static const String mapRoute = 'map-route';
 
   /// side menu
-  static const String FAQRoute = 'F-A-Q-route';
+  static const String faqRoute = 'F-A-Q-route';
   static const String feedbackRoute = 'feedback-route';
-  static const String QRCodeRoute = 'Q-R-Code-route';
+  static const String qrCodeRoute = 'Q-R-Code-route';
   static const String requestRoutes = 'request-route';
   static const String requestDetailsRoutes = 'request-details-route';
   static const String requestCertainService = 'request-certain-route';

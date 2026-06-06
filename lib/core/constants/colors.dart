@@ -5,7 +5,7 @@ class ColorRes {
 
   /// App Basic Colors
   static const Color primary = Color(0xFF009D8B);
-    static const Color primaryLight = Color(0xFF404040);
+  static const Color primaryLight = Color(0xFF404040);
   static const Color scaffoldBG = Color(0xFFE7ECED);
   static const Color lightYellow = Color(0x38FFD700);
   static const Color lightYellow2 = Color(0xFFDCBA8D);
@@ -69,8 +69,8 @@ class ColorRes {
   static const Color grey6 = Color(0xfff3f3f9);
   static const Color greyForBorders = Color(0x1a292929);
   static const Color grey4 = Color(0xfff1f1f1);
-  static const Color grey_F707340 = Color(0x406f7073);
-  static const Color grey5= Color(0x1a6f7073);
+  static const Color greyF707340 = Color(0x406f7073);
+  static const Color grey5 = Color(0x1a6f7073);
   static const Color bgColorOfCategoryComponent = Color(0xFFFCFCFC);
   static const Color softGrey = Color(0xFFF4F4F4);
   static const Color lightGrey = Color(0xFFF1F1F1);
@@ -81,69 +81,97 @@ class ColorRes {
 
   /// ── Anis Brand Colors ──────────────────────────────────────────────────────
   /// Primary green used for headers, icons, active nav items
-  static const Color anisGreen       = Color(0xFF0D7A4E);
+  static const Color anisGreen = Color(0xFF0D7A4E);
+
   /// Bright green used for CTA buttons / accents
   static const Color anisButtonGreen = Color(0xFF14A800);
+
   /// Dark navy used for text headings and nav-bar labels
-  static const Color anisNavy        = Color(0xFF1A1A2E);
+  static const Color anisNavy = Color(0xFF1A1A2E);
+
   /// Mint background (scaffold / card backgrounds)
-  static const Color anisMintBg      = Color(0xFFF2FFF8);
+  static const Color anisMintBg = Color(0xFFF2FFF8);
+
   /// Slightly-darker mint for card surfaces
-  static const Color anisCardBg      = Color(0xFFEAFAF2);
+  static const Color anisCardBg = Color(0xFFEAFAF2);
+
   /// Divider / subtle border in Anis screens
-  static const Color anisLine        = Color(0xFFD4EFE2);
+  static const Color anisLine = Color(0xFFD4EFE2);
 
   /// Session / status tag colours
-  static const Color anisTagBlue     = Color(0xFFD0E8FF);
-  static const Color anisTagBlueTxt  = Color(0xFF1A6FB8);
-  static const Color anisTagYellow   = Color(0xFFFFF3CD);
-  static const Color anisTagYellowTxt= Color(0xFFA07000);
-  static const Color anisTagPink     = Color(0xFFFFDDE8);
-  static const Color anisTagPinkTxt  = Color(0xFFB0004A);
-  static const Color anisTagGreen    = Color(0xFFD4F5E5);
+  static const Color anisTagBlue = Color(0xFFD0E8FF);
+  static const Color anisTagBlueTxt = Color(0xFF1A6FB8);
+  static const Color anisTagYellow = Color(0xFFFFF3CD);
+  static const Color anisTagYellowTxt = Color(0xFFA07000);
+  static const Color anisTagPink = Color(0xFFFFDDE8);
+  static const Color anisTagPinkTxt = Color(0xFFB0004A);
+  static const Color anisTagGreen = Color(0xFFD4F5E5);
   static const Color anisTagGreenTxt = Color(0xFF0D7A4E);
 
   /// Avatar / placeholder palette used in buddy cards
-  static const Color anisAvatarA     = Color(0xFFB8E8D0);
-  static const Color anisAvatarB     = Color(0xFFFFD6A5);
-  static const Color anisAvatarC     = Color(0xFFD6BFFF);
-  static const Color anisAvatarD     = Color(0xFFFFB3C1);
+  static const Color anisAvatarA = Color(0xFFB8E8D0);
+  static const Color anisAvatarB = Color(0xFFFFD6A5);
+  static const Color anisAvatarC = Color(0xFFD6BFFF);
+  static const Color anisAvatarD = Color(0xFFFFB3C1);
+
   /// Dark green used for home header avatar background
-  static const Color anisAvatarDark  = Color(0xFF0A5E3C);
+  static const Color anisAvatarDark = Color(0xFF0A5E3C);
 
   /// UI text palette used across Anis screens
-  static const Color anisTextDark       = Color(0xFF1F2937); // primary dark text in cards
-  static const Color anisTextSecondary  = Color(0xFF374151); // secondary / empty-state labels
-  static const Color anisTextMuted      = Color(0xFF6B7280); // muted / meta info
-  static const Color anisChipText       = Color(0xFF4B5563); // inactive chip / subtitle text
-  static const Color anisHintText       = Color(0xFF9CA3AF); // placeholder / hint / offline dot
+  static const Color anisTextDark =
+      Color(0xFF1F2937); // primary dark text in cards
+  static const Color anisTextSecondary =
+      Color(0xFF374151); // secondary / empty-state labels
+  static const Color anisTextMuted = Color(0xFF6B7280); // muted / meta info
+  static const Color anisChipText =
+      Color(0xFF4B5563); // inactive chip / subtitle text
+  static const Color anisHintText =
+      Color(0xFF9CA3AF); // placeholder / hint / offline dot
 
   /// Availability indicator dots
-  static const Color anisOnlineGreen    = Color(0xFF22C55E); // buddy online
-  static const Color anisBusyAmber      = Color(0xFFF59E0B); // buddy busy
+  static const Color anisOnlineGreen = Color(0xFF22C55E); // buddy online
+  static const Color anisBusyAmber = Color(0xFFF59E0B); // buddy busy
 
   /// Subscription / badge accent (gold amber)
-  static const Color anisGold           = Color(0xFFFBBF24);
+  static const Color anisGold = Color(0xFFFBBF24);
 
   /// Inactive chip / secondary button background
-  static const Color anisChipBg         = Color(0xFFF3F4F6);
+  static const Color anisChipBg = Color(0xFFF3F4F6);
+
+  /// Gender selection accent colors (sign-up step)
+  static const Color anisGenderMale = Color(0xFF3B82F6);
+  static const Color anisGenderFemale = Color(0xFFF472B6);
+
+  /// Workspace illustration desk surface — very light green-tinted white
+  static const Color anisWorkspaceSurface = Color(0xFFE8F5EE);
 
   /// Error / destructive states (workspace full, logout button)
-  static const Color anisErrorRed       = Color(0xFFEF4444);
-  static const Color anisErrorRedBg     = Color(0xFFFEE2E2);
-  static const Color anisWarningBg      = Color(0xFFFEF3C7); // amber tint bg
+  static const Color anisErrorRed = Color(0xFFEF4444);
+  static const Color anisErrorRedBg = Color(0xFFFEE2E2);
+  static const Color anisWarningBg = Color(0xFFFEF3C7); // amber tint bg
 
   // ── Auth / Splash dark screen palette ──────────────────────────────────────
   /// Dark gradient top — very dark forest green
-  static const Color anisAuthBgTop    = Color(0xFF0A1F18);
+  static const Color anisAuthBgTop = Color(0xFF0A1F18);
+
   /// Dark gradient mid — dark navy-green
-  static const Color anisAuthBgMid    = Color(0xFF0D1728);
+  static const Color anisAuthBgMid = Color(0xFF0D1728);
+
   /// Dark gradient bottom — near black
   static const Color anisAuthBgBottom = Color(0xFF060A10);
+
   /// Card / input container background on dark screens
   static const Color anisAuthContainer = Color(0xFF162118);
+
   /// Subtle border on dark screens
-  static const Color anisAuthBorder   = Color(0xFF1E3228);
+  static const Color anisAuthBorder = Color(0xFF1E3228);
+
+  // ── Light-mode input fields (login / forms on white bg) ────────────────────
+  /// Light gray fill for text fields on white screens
+  static const Color anisInputBg = Color(0xFFF7F7F7);
+
+  /// Neutral border for text fields at rest
+  static const Color anisInputBorder = Color(0xFFE2E2E2);
 
   /// Gradient Colors
   static const Gradient linerGradient = LinearGradient(

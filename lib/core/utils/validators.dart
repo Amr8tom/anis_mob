@@ -41,7 +41,6 @@ class Validators {
     if (value.length < 2) {
       // return 'Username must be at least 2 characters';
       return S.current.authenticationError;
-
     }
 
     return null;
@@ -88,9 +87,10 @@ class Validators {
       return S.current.pleaseEndterValue;
     }
 
+    final normalized = value.replaceAll(RegExp(r'[^0-9]'), '');
     final phoneRegex = RegExp(r'^[0-9]{10,15}$');
 
-    if (!phoneRegex.hasMatch(value.replaceAll(RegExp(r'[\s\-()]'), ''))) {
+    if (!phoneRegex.hasMatch(normalized)) {
       return 'Please enter a valid phone number';
     }
 
@@ -114,5 +114,3 @@ class Validators {
     return null;
   }
 }
-
-

@@ -122,34 +122,33 @@ class DButton extends StatelessWidget {
       case DButtonSize.small:
         return 40.0.h;
       case DButtonSize.medium:
-        return AppSizes.buttonHeight.h; // 40.8
+        return AppSizes.buttonHeight.h;
       case DButtonSize.large:
-        return AppSizes.buttonHeight.h * 1.2; // 48medium height
+        return AppSizes.buttonHeight.h * 1.2;
     }
   }
 
   ButtonStyle _getButtonStyle() {
     return ElevatedButton.styleFrom(
-     /// todo: font size height
       backgroundColor: _getBackgroundColor(),
       foregroundColor: _getForegroundColor(),
       disabledBackgroundColor: ColorRes.buttonDisabled,
       disabledForegroundColor: ColorRes.grey,
       elevation: useShadow ? _getElevation() : 0,
-      // Modified this line
-      shadowColor:
-          useShadow ? ColorRes.black.withOpacity(0.15) : Colors.transparent,
-      // Enhanced shadow
+      shadowColor: useShadow
+          ? ColorRes.black.withValues(alpha: 0.15)
+          : Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
           borderRadius ?? (useRoundedBorder ? _getBorderRadius() : 0),
         ),
         side: _getBorderSide(),
       ),
-      padding: padding ?? EdgeInsets.symmetric(
-        horizontal: _getHorizontalPadding(),
-        vertical: _getVerticalPadding(),
-      ),
+      padding: padding ??
+          EdgeInsets.symmetric(
+            horizontal: _getHorizontalPadding(),
+            vertical: _getVerticalPadding(),
+          ),
     );
   }
 

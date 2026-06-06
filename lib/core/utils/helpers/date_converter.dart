@@ -18,8 +18,7 @@ class DateConverter {
       final result = _gregorianToHijri(gYear, gMonth, gDay);
 
       return '${result['year']}/${result['month'].toString().padLeft(2, '0')}/${result['day'].toString().padLeft(2, '0')}';
-    } catch (e) {
-      print('Date conversion error: $e');
+    } catch (_) {
       return gregorianDateString;
     }
   }
@@ -57,8 +56,7 @@ class DateConverter {
       final monthName = month > 0 && month <= 12 ? monthNames[month - 1] : '';
 
       return '${result['day']} $monthName ${result['year']}';
-    } catch (e) {
-      print('Date formatting error: $e');
+    } catch (_) {
       return gregorianDateString;
     }
   }
@@ -91,16 +89,12 @@ class DateConverter {
     int n = (l - 1) ~/ 10631;
     l = l - 10631 * n + 354;
 
-    int j = ((10985 - l) ~/ 5316) *
-            ((50 * l) ~/ 17719) +
-        (l ~/ 5670) *
-            ((43 * l) ~/ 15238);
+    int j = ((10985 - l) ~/ 5316) * ((50 * l) ~/ 17719) +
+        (l ~/ 5670) * ((43 * l) ~/ 15238);
 
     l = l -
-        ((30 - j) ~/ 15) *
-            ((17719 * j) ~/ 50) -
-        (j ~/ 16) *
-            ((15238 * j) ~/ 43) +
+        ((30 - j) ~/ 15) * ((17719 * j) ~/ 50) -
+        (j ~/ 16) * ((15238 * j) ~/ 43) +
         29;
 
     int m = (24 * l) ~/ 709;

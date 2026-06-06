@@ -18,9 +18,6 @@ class PermissionsService {
     if (status.isDenied || status.isPermanentlyDenied) {
       status = await permission.request();
     }
-    if (!status.isGranted) {
-      print('$permissionName permission not granted.');
-    }
   }
 
   static Future<bool> checkPermission(Permission permission) async {
@@ -30,11 +27,8 @@ class PermissionsService {
 
   static Future<void> notifications() async {
     if (Platform.isIOS) {
-      // ✅ Check current status first
       PermissionStatus status = await Permission.notification.status;
-      print('Current notification permission status: $status');
 
-      // ✅ If not determined, request it
       if (status.isPermanentlyDenied || status.isDenied) {
         await requestPermission(Permission.notification, 'notification');
 
@@ -46,20 +40,14 @@ class PermissionsService {
 
         // await openAppSettings();
       }
-      if (status.isGranted) {
-        print('✅ Notification permission granted');
-      } else if (status.isPermanentlyDenied) {
+      if (status.isPermanentlyDenied) {
         await IOSFlutterLocalNotificationsPlugin().requestPermissions(
           alert: true,
           badge: true,
           sound: true,
         );
-        print('Current notification permission status: $status');
-      } else {
-        print('❌ Notification permission denied');
       }
     } else {
-      // ✅ Android
       await requestPermission(Permission.notification, 'Notification');
     }
   }
@@ -77,7 +65,6 @@ class PermissionsService {
   //   }
   // }
 
-  // ✅ Activity Recognition (Android & iOS)
   static Future<void> activityRecognition() async {
     await requestPermission(
       Permission.activityRecognition,
@@ -106,7 +93,7 @@ class PermissionsService {
   }
 
   static Future<void> calendar() async {
-    await requestPermission(Permission.calendar, 'Calendar');
+    await requestPermission(Permission.calendarFullAccess, 'Calendar');
   }
 
   static Future<void> photos() async {
@@ -117,7 +104,6 @@ class PermissionsService {
     await requestPermission(Permission.accessMediaLocation, 'Network');
   }
 
-  // ✅ App Tracking Transparency (iOS only)
   static Future<void> appTracking() async {
     if (Platform.isIOS) {
       try {
@@ -125,38 +111,24 @@ class PermissionsService {
             await AppTrackingTransparency.requestTrackingAuthorization();
         switch (status) {
           case TrackingStatus.authorized:
-            print('✅ Tracking authorized');
             break;
           case TrackingStatus.denied:
-            print('❌ Tracking denied');
             break;
           case TrackingStatus.notDetermined:
-            print('⚠️ Tracking not determined');
             break;
           case TrackingStatus.restricted:
-            print('⚠️ Tracking restricted');
             break;
           case TrackingStatus.notSupported:
-            print('⚠️ Tracking not supported');
             break;
-          default:
-            print('⚠️ Unknown tracking status: $status');
         }
-      } catch (e) {
-        print('Error requesting tracking permission: $e');
-      }
-    } else {
-      print('App tracking transparency is iOS-only');
+      } catch (_) {}
     }
   }
 
-  // ✅ Combined tracking permission (handles both platforms)
   static Future<void> tracking() async {
     if (Platform.isAndroid) {
-      // Android: Request activity recognition
       await activityRecognition();
     } else if (Platform.isIOS) {
-      // iOS: Request app tracking transparency
       await appTracking();
     }
   }

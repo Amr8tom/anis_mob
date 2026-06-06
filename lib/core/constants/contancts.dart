@@ -4,12 +4,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Contacts {
   static launchFacebookProfile({required String faceLink}) async {
-    String facebookUrl = faceLink;
+    final facebookUri = Uri.parse(faceLink);
 
-    if (await canLaunch(facebookUrl)) {
-      await launch(facebookUrl);
+    if (await canLaunchUrl(facebookUri)) {
+      await launchUrl(facebookUri);
     } else {
-      throw 'Could not launch $facebookUrl';
+      throw 'Could not launch $facebookUri';
     }
   }
 
@@ -21,8 +21,7 @@ class Contacts {
 
     try {
       await launchUrl(phoneUri);
-    } catch (e) {
-      print(e);
+    } catch (_) {
       throw CacheFailure();
     }
   }
@@ -58,11 +57,11 @@ class Contacts {
   // }
 
   static Future<void> openInstagram() async {
-    const url = 'https://www.instagram.com'; // Instagram URL
-    if (await canLaunch(url)) {
-      await launch(url);
+    final uri = Uri.parse('https://www.instagram.com');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not launch $uri';
     }
   }
 

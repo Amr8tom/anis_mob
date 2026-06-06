@@ -1,0 +1,80 @@
+part of 'home_cubit.dart';
+
+enum HomeStatus { initial, loading, success, failure }
+
+enum AttendanceStatus {
+  idle, // not checked in
+  checkingIn, // scanning / API call in progress
+  checkedIn, // inside workspace, timer running
+  checkingOut, // API call in progress
+  checkedOut, // just finished before returning to idle
+}
+
+extension AttendanceStatusX on AttendanceStatus {
+  bool get isIdle => this == AttendanceStatus.idle;
+  bool get isCheckingIn => this == AttendanceStatus.checkingIn;
+  bool get isCheckedIn => this == AttendanceStatus.checkedIn;
+  bool get isCheckingOut => this == AttendanceStatus.checkingOut;
+  bool get isCheckedOut => this == AttendanceStatus.checkedOut;
+  bool get isBusy => isCheckingIn || isCheckingOut;
+}
+
+final class HomeState extends Equatable {
+  final HomeStatus status;
+  final UserProfileEntity? userProfile;
+  final List<StudySessionEntity> todaySessions;
+  final String? errorMessage;
+
+  // Workspace attendance
+  final AttendanceStatus attendanceStatus;
+  final WorkspaceAttendanceEntity? activeSession;
+  final String? attendanceError;
+
+  const HomeState({
+    this.status = HomeStatus.initial,
+    this.userProfile,
+    this.todaySessions = const [],
+    this.errorMessage,
+    this.attendanceStatus = AttendanceStatus.idle,
+    this.activeSession,
+    this.attendanceError,
+  });
+
+  bool get isCheckedIn => activeSession != null && activeSession!.isActive;
+
+  HomeState copyWith({
+    HomeStatus? status,
+    UserProfileEntity? userProfile,
+    List<StudySessionEntity>? todaySessions,
+    String? errorMessage,
+    AttendanceStatus? attendanceStatus,
+    WorkspaceAttendanceEntity? activeSession,
+    bool clearSession = false,
+    String? attendanceError,
+    bool clearAttendanceError = false,
+  }) {
+    return HomeState(
+      status: status ?? this.status,
+      userProfile: userProfile ?? this.userProfile,
+      todaySessions: todaySessions ?? this.todaySessions,
+      errorMessage: errorMessage ?? this.errorMessage,
+      attendanceStatus: attendanceStatus ?? this.attendanceStatus,
+      activeSession:
+          clearSession ? null : (activeSession ?? this.activeSession),
+      attendanceError: clearAttendanceError
+          ? null
+          : (attendanceError ?? this.attendanceError),
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        status,
+        userProfile,
+        todaySessions,
+        errorMessage,
+        attendanceStatus,
+        activeSession,
+        attendanceError,
+      ];
+}
