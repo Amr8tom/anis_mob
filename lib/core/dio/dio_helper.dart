@@ -2,256 +2,171 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import '../error/failure.dart';
+import '../error/failure_mapper.dart';
 import '../local_storage/local_storage.dart';
 import '../local_storage/storage_keys.dart';
 
+/// Thin, feature-agnostic HTTP client. Every verb funnels through a single
+/// internal request method that builds headers, handles 200/201/204, and
+/// converts any error (HTTP status or transport) into a typed [Failure].
+///
+/// Callers receive the decoded response body (`Map`, `List`, `String`, or
+/// `null` for 204). On failure a [Failure] is thrown — never a `null` return,
+/// never a raw `DioException`.
 class DioHelper {
   final LocalStorage storage;
   final Dio dio;
 
-  DioHelper(this.storage) : dio = Dio() {
-    /// Adding Pretty Dio Logger for debugging
-    dio.interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        error: true,
-        compact: true,
-        maxWidth: 90,
-        enabled: kDebugMode,
-      ),
-    );
+  DioHelper(this.storage, {Dio? dio}) : dio = dio ?? Dio() {
+    // Logger stays in debug only and never prints headers or bodies, so
+    // Authorization tokens, passwords, and response tokens are not leaked.
+    this.dio.interceptors.add(
+          PrettyDioLogger(
+            requestHeader: false,
+            requestBody: false,
+            responseBody: false,
+            responseHeader: false,
+            request: true,
+            error: true,
+            compact: true,
+            maxWidth: 90,
+            enabled: kDebugMode,
+          ),
+        );
   }
 
-  String get currentLanguage {
+  String get _currentLanguage {
     final language = storage.getString(key: StorageKeys.lang.name);
     return language == null || language.isEmpty ? 'en' : language;
   }
 
-  String get token => storage.getString(key: StorageKeys.token.name) ?? '';
+  String get _token => storage.getString(key: StorageKeys.token.name) ?? '';
 
-  Map<String, String> get authHeaders => {
-        "Authorization": "Bearer $token",
-        "App-Language": currentLanguage,
-      };
+  // ───────────────────────────── Public API ─────────────────────────────
 
-  Future getData({
+  Future<dynamic> get({
     required String url,
-    bool isHeader = true,
-    Map<String, dynamic>? data,
+    Map<String, dynamic>? queryParameters,
+    bool requiresAuth = true,
+  }) {
+    return _request(
+      method: 'GET',
+      url: url,
+      queryParameters: queryParameters,
+      requiresAuth: requiresAuth,
+    );
+  }
+
+  Future<dynamic> post({
+    required String url,
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    bool requiresAuth = true,
+  }) {
+    return _request(
+      method: 'POST',
+      url: url,
+      data: data,
+      queryParameters: queryParameters,
+      requiresAuth: requiresAuth,
+    );
+  }
+
+  Future<dynamic> put({
+    required String url,
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    bool requiresAuth = true,
+  }) {
+    return _request(
+      method: 'PUT',
+      url: url,
+      data: data,
+      queryParameters: queryParameters,
+      requiresAuth: requiresAuth,
+    );
+  }
+
+  Future<dynamic> patch({
+    required String url,
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    bool requiresAuth = true,
+  }) {
+    return _request(
+      method: 'PATCH',
+      url: url,
+      data: data,
+      queryParameters: queryParameters,
+      requiresAuth: requiresAuth,
+    );
+  }
+
+  Future<dynamic> delete({
+    required String url,
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    bool requiresAuth = true,
+  }) {
+    return _request(
+      method: 'DELETE',
+      url: url,
+      data: data,
+      queryParameters: queryParameters,
+      requiresAuth: requiresAuth,
+    );
+  }
+
+  // ─────────────────────────── Internals ───────────────────────────
+
+  Future<dynamic> _request({
+    required String method,
+    required String url,
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    required bool requiresAuth,
   }) async {
     try {
-      Response response = await dio.get(
+      final response = await dio.request(
         url,
-        options: isHeader
-            ? Options(
-                headers: authHeaders,
-              )
-            : null,
         data: data,
+        queryParameters: queryParameters,
+        options: Options(
+          method: method,
+          headers: _buildHeaders(requiresAuth: requiresAuth),
+          // Handle status codes ourselves instead of letting Dio throw.
+          validateStatus: (_) => true,
+        ),
       );
-      if (response.statusCode == 200) {
+
+      final code = response.statusCode ?? 0;
+      if (code == 200 || code == 201 || code == 204) {
         return response.data;
       }
-    } on DioException {
-      throw ServerFailure(
-        message: '================== server failure =============',
-      );
+
+      throw FailureMapper.fromResponse(code, response.data);
+    } on DioException catch (exception) {
+      // Connection errors / timeouts never reach the status check above.
+      throw FailureMapper.fromDioException(exception);
     }
   }
 
-  Future<Map<String, dynamic>?> postData({
-    // bool handleError = true,
-    required String url,
-    Map<String, dynamic>? body,
-    String? token,
-  }) async {
-    try {
-      Response response = await dio.post(
-        url,
-        data: body,
-        options: Options(
-          followRedirects: false,
-          validateStatus: (status) => true,
-          headers: authHeaders,
-        ),
-      );
-      if (response.statusCode == 204 ||
-          response.statusCode == 200 ||
-          response.statusCode == 201) {
-        return response.data;
-      } else if (response.statusCode == 403 ||
-          response.statusCode == 401 ||
-          response.statusCode == 400) {
-        if (response is String) {
-          throw ServerFailure.fromString(response.data);
-        } else {
-          throw ServerFailure.fromMap(response.data);
-        }
-      } else if (response.statusCode == 400) {
-        throw ServerFailure(message: "server failure");
+  /// Builds request headers. Authorization is only attached for authenticated
+  /// requests when a non-empty token exists — public requests never send an
+  /// empty Bearer header.
+  Map<String, String> _buildHeaders({required bool requiresAuth}) {
+    final headers = <String, String>{
+      'Accept': 'application/json',
+      'App-Language': _currentLanguage,
+    };
+
+    if (requiresAuth) {
+      final token = _token;
+      if (token.isNotEmpty) {
+        headers['Authorization'] = 'Bearer $token';
       }
-    } on DioException {
-      rethrow;
     }
-    return null;
-  }
 
-  Future<dynamic> postDataWithStringBody({
-    // bool handleError = true,
-    required String url,
-    String? body,
-    String? token,
-  }) async {
-    try {
-      Response response = await dio.post(
-        url,
-        data: body,
-        options: Options(
-          followRedirects: false,
-          validateStatus: (status) => true,
-          headers: authHeaders,
-        ),
-      );
-      if (response.statusCode == 204 ||
-          response.statusCode == 200 ||
-
-          ///401 unauthorized
-          response.statusCode == 401 ||
-          response.statusCode == 400 ||
-          response.statusCode == 201) {
-        return response.data;
-      } else if (response.statusCode == 403) {
-        throw ServerFailure(
-          message: '================== server failure =============',
-        );
-      }
-    } on DioException {
-      rethrow;
-    }
-    return null;
-  }
-
-  Future<Map<String, dynamic>?> postFormData({
-    bool handleError = true,
-    required String url,
-    FormData? formData,
-    String? token,
-  }) async {
-    try {
-      Response response = await dio.post(
-        url,
-        data: formData,
-        options: Options(
-          followRedirects: false,
-          validateStatus: (status) => true,
-          headers: {
-            // 'Content-Type': 'application/json',
-            'Content-Type': 'multipart/form-data',
-            ...authHeaders,
-          },
-        ),
-      );
-      if (response.statusCode == 204 ||
-          response.statusCode == 200 ||
-          response.statusCode == 201) {
-      } else if (response.statusCode == 403) {
-        throw ServerFailure(
-          message: '================== server failure =============',
-        );
-      }
-      return response.data;
-    } on DioException {
-      rethrow;
-    }
-  }
-
-  Future<Response> postDataWithoutAuth({
-    bool handleError = true,
-    required String url,
-    Map<String, dynamic>? body,
-    String? token,
-  }) async {
-    try {
-      Response response = await dio.post(
-        url,
-        data: body,
-        options: Options(
-          /// validate status option to prevent dio from throwing error automatically and let me handle it
-          followRedirects: false,
-          validateStatus: (status) => true,
-        ),
-      );
-
-      if (response.statusCode == 204 ||
-          response.statusCode == 200 ||
-          response.statusCode == 201) {
-      } else if (response.statusCode == 403) {
-        throw ServerFailure.fromString(response.data);
-      } else if (response.statusCode == 401) {
-        throw ServerFailure(message: " unauthorized");
-      } else if (response.statusCode == 400) {
-        throw ValidationFailure.fromMap(response.data);
-      }
-      return response;
-    } on DioException {
-      rethrow;
-    }
-  }
-
-  Future<Response> putData({
-    required String url,
-    Map<String, dynamic>? body,
-  }) async {
-    return await dio.put(
-      url,
-      data: body,
-      options: Options(
-        headers: authHeaders,
-      ),
-    );
-  }
-
-  Future<Response> patchData({
-    required String url,
-    Map<String, dynamic>? body,
-  }) async {
-    return await dio.patch(
-      url,
-      data: body,
-      options: Options(
-        headers: authHeaders,
-      ),
-    );
-  }
-
-  Future<Response> deleteFromCart({
-    required String url,
-    Map<String, dynamic>? body,
-  }) async {
-    return await dio.put(
-      url,
-      data: body,
-      options: Options(
-        headers: authHeaders,
-      ),
-    );
-  }
-
-  Future<Response> deleteData({
-    required String url,
-    Map<String, dynamic>? body,
-    // String? token,
-  }) async {
-    return await dio.delete(
-      url,
-      data: body,
-      options: Options(
-        headers: authHeaders,
-      ),
-    );
+    return headers;
   }
 }

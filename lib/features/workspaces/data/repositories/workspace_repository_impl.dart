@@ -27,7 +27,7 @@ class WorkspaceRepositoryImpl implements WorkspaceRepository {
         final result = await remoteDataSource.getWorkspaces(filter: filter);
         await localDataSource.cacheWorkspaces(result);
         return Right(result);
-      } on ServerFailure catch (failure) {
+      } on Failure catch (failure) {
         final cached = await _getCachedWorkspaces(filter: filter);
         return cached.fold((_) => Left(failure), Right.new);
       } catch (e) {

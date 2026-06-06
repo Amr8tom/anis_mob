@@ -25,7 +25,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
         final result = await remoteDataSource.getProfile();
         await localDataSource.cacheProfile(result);
         return Right(result);
-      } on ServerFailure catch (failure) {
+      } on Failure catch (failure) {
         final cached = await _getCachedProfile();
         return cached.fold((_) => Left(failure), Right.new);
       } catch (e) {

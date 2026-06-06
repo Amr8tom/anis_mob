@@ -33,7 +33,7 @@ class BuddyRepositoryImpl implements BuddyRepository {
         );
         await localDataSource.cacheBuddySessions(result);
         return Right(result);
-      } on ServerFailure catch (failure) {
+      } on Failure catch (failure) {
         final cached = await _getCachedSessions(
           university: university,
           subject: subject,

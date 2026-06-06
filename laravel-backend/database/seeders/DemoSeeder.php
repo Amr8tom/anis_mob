@@ -77,26 +77,117 @@ class DemoSeeder extends Seeder
         ]);
 
         // A handful of other members to populate sessions/buddies.
-        $members = User::factory()->count(6)->create();
+        $members = User::factory()->count(8)->create();
 
-        // ---- Workspaces (+ drinks). First one has a known QR token for manual testing. ----
-        $primary = Workspace::factory()->create(['qr_token' => 'ws_demo_qr', 'name' => 'Anis Central']);
-        $workspaces = collect([$primary])->merge(Workspace::factory()->count(3)->create());
-        foreach ($workspaces as $workspace) {
-            WorkspaceDrink::factory()->count(3)->create(['workspace_id' => $workspace->id]);
-        }
+        // ---- Workspaces (rich, realistic Cairo data). First has the demo QR token. ----
+        $definitions = [
+            [
+                'qr_token' => 'ws_demo_qr', 'name' => 'Anis Central', 'status' => 'OPEN',
+                'address' => 'وسط البلد، القاهرة', 'lat' => 30.0444, 'lng' => 31.2357,
+                'capacity' => 80, 'amenities' => ['wifi', 'ac', 'coffee', 'quiet'],
+            ],
+            [
+                'qr_token' => 'ws_maadi', 'name' => 'StudyHub المعادي', 'status' => 'BUSY',
+                'address' => 'شارع 9، المعادي', 'lat' => 29.9602, 'lng' => 31.2569,
+                'capacity' => 50, 'amenities' => ['wifi', 'ac', 'printing'],
+            ],
+            [
+                'qr_token' => 'ws_nasr', 'name' => 'Focus Space مدينة نصر', 'status' => 'OPEN',
+                'address' => 'عباس العقاد، مدينة نصر', 'lat' => 30.0566, 'lng' => 31.3300,
+                'capacity' => 120, 'amenities' => ['wifi', 'ac', 'coffee', 'printing', 'quiet'],
+            ],
+            [
+                'qr_token' => 'ws_giza', 'name' => 'Quiet Corner الجيزة', 'status' => 'FULL',
+                'address' => 'شارع الهرم، الجيزة', 'lat' => 30.0131, 'lng' => 31.2089,
+                'capacity' => 40, 'amenities' => ['wifi', 'quiet'],
+            ],
+            [
+                'qr_token' => 'ws_zamalek', 'name' => 'BrainPark الزمالك', 'status' => 'OPEN',
+                'address' => 'شارع 26 يوليو، الزمالك', 'lat' => 30.0614, 'lng' => 31.2200,
+                'capacity' => 60, 'amenities' => ['wifi', 'ac', 'coffee'],
+            ],
+            [
+                'qr_token' => 'ws_helio', 'name' => 'The Library مصر الجديدة', 'status' => 'CLOSED',
+                'address' => 'شارع الميرغني، مصر الجديدة', 'lat' => 30.0880, 'lng' => 31.3220,
+                'capacity' => 70, 'amenities' => ['wifi', 'ac', 'printing', 'quiet'],
+            ],
+        ];
 
-        // ---- Sessions hosted by the demo user, with participants ----
-        $first = $workspaces->first();
-        StudySession::factory()->count(3)->create([
-            'workspace_id' => $first->id,
-            'host_id' => $demo->id,
-            'status' => SessionStatus::UPCOMING,
-        ])->each(function (StudySession $session) use ($members) {
-            $session->participants()->attach(
-                $members->random(3)->pluck('id')->all(),
-                ['joined_at' => now()]
-            );
+        $drinkMenu = [
+            ['name' => 'قهوة', 'icon' => 'coffee', 'price_cents' => 2500],
+            ['name' => 'شاي', 'icon' => 'tea', 'price_cents' => 1500],
+            ['name' => 'عصير برتقال', 'icon' => 'juice', 'price_cents' => 3000],
+            ['name' => 'مياه', 'icon' => 'water', 'price_cents' => 1000],
+        ];
+
+        $workspaces = collect($definitions)->map(function (array $def) use ($drinkMenu): Workspace {
+            $slug = str_replace('ws_', '', $def['qr_token']);
+            $workspace = Workspace::create([
+                'qr_token' => $def['qr_token'],
+                'name' => $def['name'],
+                'description' => 'مساحة عمل ومذاكرة مشتركة بخدمات متكاملة.',
+                'address' => $def['address'],
+                'latitude' => $def['lat'],
+                'longitude' => $def['lng'],
+                'cover_image_url' => "https://picsum.photos/seed/$slug/800/500",
+                'gallery_images' => [
+                    "https://picsum.photos/seed/$slug-1/800/500",
+                    "https://picsum.photos/seed/$slug-2/800/500",
+                    "https://picsum.photos/seed/$slug-3/800/500",
+                ],
+                'amenities' => $def['amenities'],
+                'status' => $def['status'],
+                'capacity' => $def['capacity'],
+                'open_time' => '08:00',
+                'close_time' => '23:00',
+                'day_calculation_hours' => 8,
+                'is_active' => true,
+            ]);
+
+            foreach ($drinkMenu as $drink) {
+                WorkspaceDrink::create(['workspace_id' => $workspace->id] + $drink);
+            }
+
+            return $workspace;
         });
+
+        // ---- Buddy / study sessions across workspaces (varied hosts & subjects) ----
+        $hosts = collect([$demo])->merge($members);
+        $subjects = [
+            ['title' => 'الفيزياء — الفصل 4', 'subject' => 'فيزياء', 'tag' => 'فيز', 'color' => 'blue'],
+            ['title' => 'مراجعة التفاضل والتكامل', 'subject' => 'رياضيات', 'tag' => 'ريض', 'color' => 'green'],
+            ['title' => 'English Speaking Club', 'subject' => 'لغة إنجليزية', 'tag' => 'إنج', 'color' => 'yellow'],
+            ['title' => 'هياكل البيانات', 'subject' => 'حاسبات', 'tag' => 'حاس', 'color' => 'pink'],
+            ['title' => 'الكيمياء العضوية', 'subject' => 'كيمياء', 'tag' => 'كيم', 'color' => 'blue'],
+            ['title' => 'مراجعة الأحياء', 'subject' => 'أحياء', 'tag' => 'حيا', 'color' => 'green'],
+        ];
+
+        foreach ($subjects as $index => $meta) {
+            $host = $hosts[$index % $hosts->count()];
+            $workspace = $workspaces[$index % $workspaces->count()];
+            $start = now()->addHours($index + 1);
+
+            $session = StudySession::create([
+                'workspace_id' => $workspace->id,
+                'host_id' => $host->id,
+                'title' => $meta['title'],
+                'subject' => $meta['subject'],
+                'description' => 'جلسة مذاكرة جماعية. الانضمام مفتوح.',
+                'rules' => ['الالتزام بالهدوء', 'الحضور في الميعاد'],
+                'type' => 'STUDY_GROUP',
+                'status' => $index === 0 ? SessionStatus::IN_PROGRESS : SessionStatus::UPCOMING,
+                'start_time' => $start,
+                'end_time' => (clone $start)->addHours(2),
+                'max_seats' => 6,
+                'time_label' => $start->format('g:i A'),
+                'tag_label' => $meta['tag'],
+                'tag_color_key' => $meta['color'],
+            ]);
+
+            $session->participants()->attach(
+                $members->random(min(3, $members->count()))->pluck('id')->all(),
+                ['joined_at' => now()],
+            );
+        }
     }
 }

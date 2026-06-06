@@ -26,7 +26,7 @@ class HomeRepositoryImpl implements HomeRepository {
         final result = await remoteDataSource.getUserProfile();
         await localDataSource.cacheUserProfile(result);
         return Right(result);
-      } on ServerFailure catch (failure) {
+      } on Failure catch (failure) {
         final cached = await _getCachedUserProfile();
         return cached.fold((_) => Left(failure), Right.new);
       } catch (e) {
@@ -48,7 +48,7 @@ class HomeRepositoryImpl implements HomeRepository {
         final result = await remoteDataSource.getTodaySessions();
         await localDataSource.cacheTodaySessions(result);
         return Right(result);
-      } on ServerFailure catch (failure) {
+      } on Failure catch (failure) {
         final cached = await _getCachedTodaySessions();
         return cached.fold((_) => Left(failure), Right.new);
       } catch (e) {

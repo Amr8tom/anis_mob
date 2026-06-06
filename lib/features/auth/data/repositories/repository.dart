@@ -29,11 +29,12 @@ class AuthRepositoryImp extends AuthRepository {
           await _localDataSource.clearGuestFlag();
         }
         return Right(result);
-      } on ServerFailure catch (e) {
-        return Left(ServerFailure(message: e.message));
+      } on Failure catch (failure) {
+        // Preserve the typed failure (Validation/Unauthorized/…) as-is.
+        return Left(failure);
       }
     }
-    return Left(CacheFailure());
+    return Left(const CacheFailure());
   }
 
   @override
@@ -47,11 +48,11 @@ class AuthRepositoryImp extends AuthRepository {
           await _localDataSource.clearGuestFlag();
         }
         return Right(result);
-      } on ServerFailure catch (e) {
-        return Left(ServerFailure(message: e.message));
+      } on Failure catch (failure) {
+        return Left(failure);
       }
     }
-    return Left(CacheFailure());
+    return Left(const CacheFailure());
   }
 
   @override
@@ -85,11 +86,20 @@ class AuthRepositoryImp extends AuthRepository {
   @override
   Future<Either<Failure, void>> signOut() async {
     try {
+      // Best-effort server-side token revocation; local sign-out must always
+      // succeed even if the network call fails.
+      if (await _networkInfo.isConnected) {
+        try {
+          await _remoteDataSource.signOut();
+        } on Failure catch (_) {
+          // Ignore remote logout errors — proceed to clear local session.
+        }
+      }
       await _localDataSource.clearToken();
       await _localDataSource.clearGuestFlag();
       return const Right(null);
     } catch (_) {
-      return Left(CacheFailure());
+      return Left(const CacheFailure());
     }
   }
 
