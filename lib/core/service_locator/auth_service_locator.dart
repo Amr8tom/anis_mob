@@ -4,7 +4,6 @@ import '../../features/auth/data/data_sources/local_data_sources.dart';
 import '../../features/auth/data/data_sources/remote_data_sources.dart';
 import '../../features/auth/data/repositories/repository.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
-import '../../features/auth/domain/use_cases/cache_user_info_draft_use_case.dart';
 import '../../features/auth/domain/use_cases/create_user_use_case.dart';
 import '../../features/auth/domain/use_cases/get_auth_token_use_case.dart';
 import '../../features/auth/domain/use_cases/get_guest_status_use_case.dart';
@@ -52,16 +51,12 @@ class AuthServiceLocator {
     serviceLocator.registerLazySingleton(
       () => SignOutUseCase(serviceLocator()),
     );
-    serviceLocator.registerLazySingleton(
-      () => CacheUserInfoDraftUseCase(serviceLocator()),
-    );
-
     // ── Cubits (factories — new instance per screen) ──────────────────────────
     serviceLocator.registerFactory(
       () => LoginCubit(serviceLocator(), serviceLocator()),
     );
     serviceLocator.registerFactory(
-      () => UserInfoCubit(serviceLocator(), serviceLocator()),
+      () => UserInfoCubit(serviceLocator()),
     );
   }
 }

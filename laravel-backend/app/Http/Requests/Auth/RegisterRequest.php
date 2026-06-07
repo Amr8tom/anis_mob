@@ -25,8 +25,8 @@ final class RegisterRequest extends FormRequest
             // email/gender/study_field optional: current Flutter omits them, future builds will send them.
             'email' => ['nullable', 'email', 'max:120', 'unique:users,email'],
             'whatsapp_number' => ['required', 'string', 'max:30'],
-            'password' => ['required', 'string', Password::min(6)->max(72)],
-            'password_confirmation' => ['nullable', 'same:password'],
+            'password' => ['required', 'string', 'confirmed', Password::min(8)->max(72)->mixedCase()->numbers()],
+            'password_confirmation' => ['required', 'string'],
             'gender' => ['nullable', 'string', 'in:male,female,MALE,FEMALE'],
             'study_field' => ['nullable', 'string', 'max:120'],
         ];

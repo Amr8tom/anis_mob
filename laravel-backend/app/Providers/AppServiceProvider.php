@@ -53,5 +53,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Throttle auth endpoints: 10 attempts/min per IP.
         RateLimiter::for('auth', fn (Request $request): Limit => Limit::perMinute(10)->by((string) $request->ip()));
+        RateLimiter::for('public', fn (Request $request): Limit => Limit::perMinute(60)->by(
+            (string) $request->ip().'|'.substr((string) $request->userAgent(), 0, 80)
+        ));
+        RateLimiter::for('api', fn (Request $request): Limit => Limit::perMinute(120)->by(
+            (string) ($request->user()?->id ?? $request->ip())
+        ));
     }
 }

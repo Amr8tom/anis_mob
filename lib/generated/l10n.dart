@@ -5009,10 +5009,10 @@ class S {
     );
   }
 
-  /// `Password must be at least 6 characters`
+  /// `Password must be at least 8 characters`
   String get passwordTooShortError {
     return Intl.message(
-      'Password must be at least 6 characters',
+      'Password must be at least 8 characters',
       name: 'passwordTooShortError',
       desc: '',
       args: [],
@@ -8729,6 +8729,206 @@ class S {
     return Intl.message(
       'Your Profile',
       name: 'yourProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add`
+  String get add {
+    return Intl.message('Add', name: 'add', desc: '', args: []);
+  }
+
+  /// `Add another interest`
+  String get addAnotherInterest {
+    return Intl.message(
+      'Add another interest',
+      name: 'addAnotherInterest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose at least one interest`
+  String get addInterestError {
+    return Intl.message(
+      'Choose at least one interest',
+      name: 'addInterestError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Make Anis feel like yours`
+  String get completeProfileTitle {
+    return Intl.message(
+      'Make Anis feel like yours',
+      name: 'completeProfileTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tell us a little about your studies so we can recommend better sessions and study buddies.`
+  String get completeProfileSubtitle {
+    return Intl.message(
+      'Tell us a little about your studies so we can recommend better sessions and study buddies.',
+      name: 'completeProfileSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do it later`
+  String get doItLater {
+    return Intl.message('Do it later', name: 'doItLater', desc: '', args: []);
+  }
+
+  /// `Engineering`
+  String get interestEngineering {
+    return Intl.message(
+      'Engineering',
+      name: 'interestEngineering',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For example: Design`
+  String get interestHint {
+    return Intl.message(
+      'For example: Design',
+      name: 'interestHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Languages`
+  String get interestLanguages {
+    return Intl.message(
+      'Languages',
+      name: 'interestLanguages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mathematics`
+  String get interestMathematics {
+    return Intl.message(
+      'Mathematics',
+      name: 'interestMathematics',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Medicine`
+  String get interestMedicine {
+    return Intl.message(
+      'Medicine',
+      name: 'interestMedicine',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Programming`
+  String get interestProgramming {
+    return Intl.message(
+      'Programming',
+      name: 'interestProgramming',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Study interests`
+  String get interests {
+    return Intl.message(
+      'Study interests',
+      name: 'interests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `you@university.edu.eg`
+  String get profileEmailHint {
+    return Intl.message(
+      'you@university.edu.eg',
+      name: 'profileEmailHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Helps personalize your profile and recommendations.`
+  String get profileGenderReason {
+    return Intl.message(
+      'Helps personalize your profile and recommendations.',
+      name: 'profileGenderReason',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose topics you would enjoy studying with others.`
+  String get profileInterestsReason {
+    return Intl.message(
+      'Choose topics you would enjoy studying with others.',
+      name: 'profileInterestsReason',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your university or institute`
+  String get profileUniversityHint {
+    return Intl.message(
+      'Your university or institute',
+      name: 'profileUniversityHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save and continue`
+  String get saveAndContinue {
+    return Intl.message(
+      'Save and continue',
+      name: 'saveAndContinue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in to build your study profile`
+  String get signInToSeeProfile {
+    return Intl.message(
+      'Sign in to build your study profile',
+      name: 'signInToSeeProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your profile, progress, badges, and subscription details are available after signing in.`
+  String get signInToSeeProfileSubtitle {
+    return Intl.message(
+      'Your profile, progress, badges, and subscription details are available after signing in.',
+      name: 'signInToSeeProfileSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use at least 8 characters with uppercase, lowercase, and a number.`
+  String get strongPasswordHint {
+    return Intl.message(
+      'Use at least 8 characters with uppercase, lowercase, and a number.',
+      name: 'strongPasswordHint',
       desc: '',
       args: [],
     );

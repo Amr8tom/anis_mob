@@ -6,6 +6,7 @@ class LoginModel extends Login {
     required super.fullName,
     required super.role,
     required super.success,
+    required super.profileCompleted,
   });
 
   factory LoginModel.fromJson(Map<String, dynamic> json) {
@@ -16,6 +17,7 @@ class LoginModel extends Login {
       fullName: user?['full_name'] as String?,
       role: user?['role'] as String?,
       success: json['success'] as bool? ?? false,
+      profileCompleted: user?['profile_completed'] as bool? ?? false,
     );
   }
 
@@ -24,5 +26,6 @@ class LoginModel extends Login {
         'fullName': fullName,
         'role': role,
         'success': success,
+        'profileCompleted': profileCompleted,
       };
 }

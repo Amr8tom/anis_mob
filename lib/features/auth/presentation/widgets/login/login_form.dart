@@ -23,7 +23,12 @@ class LoginForm extends StatelessWidget {
   void _handleState(BuildContext context, LoginState state) {
     // Authenticated user
     if (state.status.isLoggedIn) {
-      context.pushReplacementNamed(DRoutesName.navigationMenuRoute);
+      context.pushReplacementNamed(
+        state.profileCompleted
+            ? DRoutesName.navigationMenuRoute
+            : DRoutesName.profileCompletionRoute,
+        arguments: state.profileCompleted ? null : const {'afterSignup': true},
+      );
       return;
     }
     // Guest user — navigate to home but as guest

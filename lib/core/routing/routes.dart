@@ -11,6 +11,8 @@ import '../../features/buddy/presentation/screens/session_details_loader_screen.
 import '../../features/buddy/presentation/screens/session_details_screen.dart';
 import '../../features/navigation/presentation/screens/navigation_menu_screen.dart';
 import '../../features/profile/presentation/screens/plans_screen.dart';
+import '../../features/profile/presentation/controller/profile_completion_cubit.dart';
+import '../../features/profile/presentation/screens/profile_completion_screen.dart';
 import '../../features/workspaces/domain/entity/workspace_entity.dart';
 import '../../features/workspaces/presentation/controller/workspace_details_cubit.dart';
 import '../../features/workspaces/presentation/screens/workspace_details_loader_screen.dart';
@@ -294,6 +296,20 @@ class RouteGenerator {
         final currentPlan = args?['currentPlan'] as String? ?? 'free';
         return PageTransition(
           child: PlansScreen(currentPlan: currentPlan),
+          type: PageTransitionType.rightToLeft,
+          settings: settings,
+        );
+
+      /// Optional profile completion after first signup
+      case DRoutesName.profileCompletionRoute:
+        final args = settings.arguments as Map<String, dynamic>?;
+        return PageTransition(
+          child: BlocProvider(
+            create: (_) => serviceLocator<ProfileCompletionCubit>(),
+            child: ProfileCompletionScreen(
+              afterSignup: args?['afterSignup'] as bool? ?? false,
+            ),
+          ),
           type: PageTransitionType.rightToLeft,
           settings: settings,
         );

@@ -13,15 +13,5 @@ abstract class AuthRepository {
   Future<Either<Failure, String?>> getToken();
   Future<Either<Failure, bool>> isGuest();
   Future<Either<Failure, void>> loginAsGuest();
-  Future<Either<Failure, void>> cacheUserInfoDraft({
-    required String name,
-    required String email,
-    required String whatsAppNumber,
-    required String gender,
-    required String avatar,
-    required String university,
-    required String major,
-    required String year,
-  });
   Future<Either<Failure, void>> signOut();
 }

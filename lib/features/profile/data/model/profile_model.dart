@@ -5,7 +5,11 @@ class ProfileModel extends ProfileEntity {
     required super.id,
     required super.name,
     required super.initials,
+    super.email,
     required super.university,
+    super.studyField,
+    super.gender,
+    super.interests,
     required super.subscriptionType,
     required super.subscriptionDaysRemaining,
     required super.totalStudyHours,
@@ -13,6 +17,9 @@ class ProfileModel extends ProfileEntity {
     required super.totalSessions,
     required super.badges,
     super.avatarPath,
+    super.profileCompleted,
+    super.profileCompletionPercentage,
+    super.missingProfileFields,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
@@ -21,7 +28,11 @@ class ProfileModel extends ProfileEntity {
       id: json['id']?.toString() ?? '',
       name: json['name'] as String? ?? '',
       initials: json['initials'] as String? ?? '',
+      email: json['email'] as String? ?? '',
       university: json['university'] as String? ?? '',
+      studyField: json['studyField'] as String? ?? '',
+      gender: json['gender'] as String? ?? '',
+      interests: _stringList(json['interests']),
       subscriptionType: json['subscriptionType'] as String? ?? 'free',
       subscriptionDaysRemaining:
           (json['subscriptionDaysRemaining'] as num?)?.toInt() ?? 0,
@@ -34,6 +45,10 @@ class ProfileModel extends ProfileEntity {
               ))
           .toList(),
       avatarPath: json['avatarPath'] as String?,
+      profileCompleted: json['profileCompleted'] as bool? ?? false,
+      profileCompletionPercentage:
+          (json['profileCompletionPercentage'] as num?)?.toInt() ?? 0,
+      missingProfileFields: _stringList(json['missingProfileFields']),
     );
   }
 
@@ -41,7 +56,11 @@ class ProfileModel extends ProfileEntity {
         'id': id,
         'name': name,
         'initials': initials,
+        'email': email,
         'university': university,
+        'studyField': studyField,
+        'gender': gender,
+        'interests': interests,
         'subscriptionType': subscriptionType,
         'subscriptionDaysRemaining': subscriptionDaysRemaining,
         'totalStudyHours': totalStudyHours,
@@ -49,7 +68,13 @@ class ProfileModel extends ProfileEntity {
         'totalSessions': totalSessions,
         'badges': badges.map(ProfileBadgeModel.toJsonFromEntity).toList(),
         'avatarPath': avatarPath,
+        'profileCompleted': profileCompleted,
+        'profileCompletionPercentage': profileCompletionPercentage,
+        'missingProfileFields': missingProfileFields,
       };
+
+  static List<String> _stringList(dynamic value) =>
+      (value as List<dynamic>? ?? const []).map((item) => '$item').toList();
 }
 
 class ProfileBadgeModel extends ProfileBadge {

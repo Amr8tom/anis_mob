@@ -18,14 +18,13 @@ class DioHelper {
   final Dio dio;
 
   DioHelper(this.storage, {Dio? dio}) : dio = dio ?? Dio() {
-    // Logger stays in debug only and never prints headers or bodies, so
-    // Authorization tokens, passwords, and response tokens are not leaked.
+    // Keep debug diagnostics useful without leaking tokens, passwords, or PII.
     this.dio.interceptors.add(
           PrettyDioLogger(
-            requestHeader: true,
-            requestBody: true,
-            responseBody: true,
-            responseHeader: true,
+            requestHeader: false,
+            requestBody: false,
+            responseBody: false,
+            responseHeader: false,
             request: true,
             error: true,
             compact: true,

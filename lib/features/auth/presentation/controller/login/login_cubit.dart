@@ -49,7 +49,10 @@ class LoginCubit extends Cubit<LoginState> {
           loginErrorMassage: failure.message ?? S.current.generalError,
         ),
       ),
-      (_) => emit(state.copyWith(status: LoginStatus.loggedIn)),
+      (login) => emit(state.copyWith(
+        status: LoginStatus.loggedIn,
+        profileCompleted: login.profileCompleted,
+      )),
     );
   }
 

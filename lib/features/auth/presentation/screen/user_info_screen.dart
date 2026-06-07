@@ -15,7 +15,6 @@ import 'package:anis/generated/l10n.dart';
 
 import '../controller/user_info/user_info_cubit.dart';
 import '../widgets/user_info/step_account_widget.dart';
-import '../widgets/user_info/step_profile_widget.dart';
 
 class UserInfoScreen extends StatelessWidget {
   const UserInfoScreen({super.key});
@@ -47,7 +46,10 @@ class _UserInfoView extends StatelessWidget {
             cubit.clearStepError();
           }
           if (state.status.isSuccess) {
-            ctx.pushReplacementNamed(DRoutesName.navigationMenuRoute);
+            ctx.pushReplacementNamed(
+              DRoutesName.profileCompletionRoute,
+              arguments: const {'afterSignup': true},
+            );
           } else if (state.status.isError) {
             CustomUI.snackBarFailure(context: ctx, message: state.errorMessage);
             cubit.resetStatus();
@@ -74,7 +76,6 @@ class _UserInfoView extends StatelessWidget {
                       confirmPasswordController:
                           cubit.confirmPasswordController,
                     ),
-                    const StepProfileWidget(),
                   ],
                 ),
               ),
@@ -196,7 +197,7 @@ class _StepProgress extends StatelessWidget {
                 S.current.stepIndicator(
                   step + 1,
                   total,
-                  step == 0 ? S.current.yourAccount : S.current.yourProfile,
+                  S.current.yourAccount,
                 ),
                 style: tt.labelSmall?.copyWith(
                   color: ColorRes.anisTextMuted,

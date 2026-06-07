@@ -4,6 +4,7 @@ import '../../../../core/connection/check_network.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entity/profile_entity.dart';
 import '../../domain/repository/profile_repository.dart';
+import '../../domain/use_cases/update_profile_use_case.dart';
 import '../data_sources/profile_local_data_source.dart';
 import '../data_sources/profile_remote_data_source.dart';
 
@@ -38,6 +39,25 @@ class ProfileRepositoryImpl implements ProfileRepository {
     }
 
     return _getCachedProfile();
+  }
+
+  @override
+  Future<Either<Failure, ProfileEntity>> updateProfile(
+    UpdateProfileParams params,
+  ) async {
+    if (!await networkInfo.isConnected) {
+      return const Left(NetworkFailure());
+    }
+
+    try {
+      final result = await remoteDataSource.updateProfile(params);
+      await localDataSource.cacheProfile(result);
+      return Right(result);
+    } on Failure catch (failure) {
+      return Left(failure);
+    } catch (error) {
+      return Left(ServerFailure(message: error.toString()));
+    }
   }
 
   Future<Either<Failure, ProfileEntity>> _getCachedProfile() async {

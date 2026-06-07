@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Domain\Profile\Repositories;
 
 use App\Domain\Profile\Contracts\ProfileRepositoryInterface;
+use App\Domain\Profile\Data\UpdateProfileData;
 use App\Models\User;
+use DateTimeInterface;
 
 final class EloquentProfileRepository implements ProfileRepositoryInterface
 {
@@ -17,9 +19,17 @@ final class EloquentProfileRepository implements ProfileRepositoryInterface
             ->firstOrFail();
     }
 
-    public function update(User $user, array $attributes): User
+    public function update(User $user, UpdateProfileData $data): User
     {
-        $user->fill($attributes)->save();
+        $user->fill($data->toAttributes())->save();
+
+        return $user->load(['badges', 'activeSubscription.plan']);
+    }
+
+    public function setProfileCompletedAt(User $user, ?DateTimeInterface $completedAt): User
+    {
+        $user->profile_completed_at = $completedAt;
+        $user->save();
 
         return $user->load(['badges', 'activeSubscription.plan']);
     }

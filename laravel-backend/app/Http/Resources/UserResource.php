@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Domain\Profile\Support\ProfileCompletionSummary;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,6 +19,8 @@ final class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $completion = ProfileCompletionSummary::forUser($this->resource);
+
         return [
             'id' => $this->id,
             'full_name' => $this->full_name,
@@ -39,6 +42,9 @@ final class UserResource extends JsonResource
             'total_study_hours' => $this->total_study_hours,
             'streak_days' => $this->streak_days,
             'total_sessions' => $this->total_sessions,
+            'profile_completed' => $completion->completed,
+            'profile_completion_percentage' => $completion->percentage,
+            'missing_profile_fields' => $completion->missingFields,
         ];
     }
 }

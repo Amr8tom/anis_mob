@@ -29,6 +29,7 @@ extension LoginStatusX on LoginStatus {
 class LoginState extends Equatable {
   final LoginStatus status;
   final bool isPasswordHidden;
+  final bool profileCompleted;
 
   final String? loginErrorMassage;
 
@@ -36,16 +37,19 @@ class LoginState extends Equatable {
     this.status = LoginStatus.initialized,
     this.loginErrorMassage,
     this.isPasswordHidden = true,
+    this.profileCompleted = true,
   });
 
   LoginState copyWith({
     LoginStatus? status,
     bool? isPasswordHidden,
+    bool? profileCompleted,
     String? loginErrorMassage,
   }) {
     return LoginState(
       status: status ?? this.status,
       isPasswordHidden: isPasswordHidden ?? this.isPasswordHidden,
+      profileCompleted: profileCompleted ?? this.profileCompleted,
       loginErrorMassage: loginErrorMassage ?? this.loginErrorMassage,
     );
   }
@@ -55,5 +59,6 @@ class LoginState extends Equatable {
         status,
         loginErrorMassage,
         isPasswordHidden,
+        profileCompleted,
       ];
 }

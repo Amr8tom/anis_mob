@@ -19,14 +19,16 @@ Route::prefix('v1')->group(function (): void {
     Route::post('auth/login', [AuthController::class, 'login'])->middleware('throttle:auth');
 
     // Public catalog / discovery — redacted, read-only, paginated.
-    Route::get('workspaces', [WorkspaceController::class, 'index']);
-    Route::get('workspaces/{workspace}', [WorkspaceController::class, 'show']);
-    Route::get('buddy-sessions', [BuddySessionController::class, 'index']);
-    Route::get('buddy-sessions/{session}', [BuddySessionController::class, 'show']);
-    Route::get('plans', [PlanController::class, 'index']);
+    Route::middleware('throttle:public')->group(function (): void {
+        Route::get('workspaces', [WorkspaceController::class, 'index']);
+        Route::get('workspaces/{workspace}', [WorkspaceController::class, 'show']);
+        Route::get('buddy-sessions', [BuddySessionController::class, 'index']);
+        Route::get('buddy-sessions/{session}', [BuddySessionController::class, 'show']);
+        Route::get('plans', [PlanController::class, 'index']);
+    });
 
     // ============================ AUTHENTICATED ============================
-    Route::middleware('auth:sanctum')->group(function (): void {
+    Route::middleware(['auth:sanctum', 'throttle:api'])->group(function (): void {
         // Auth
         Route::get('auth/me', [AuthController::class, 'me']);
         Route::post('auth/logout', [AuthController::class, 'logout']);

@@ -8,6 +8,7 @@ use App\Enums\Availability;
 use App\Enums\Gender;
 use App\Enums\SubscriptionStatus;
 use App\Enums\UserRole;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,7 +20,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, HasUuids, Notifiable;
 
     protected $keyType = 'string';
@@ -35,6 +36,7 @@ class User extends Authenticatable
         'role',
         'gender',
         'is_guest',
+        'profile_completed_at',
         'avatar_url',
         'initials',
         'university',
@@ -62,6 +64,7 @@ class User extends Authenticatable
             'gender' => Gender::class,
             'availability' => Availability::class,
             'is_guest' => 'boolean',
+            'profile_completed_at' => 'datetime',
             'interests' => 'array',
             'rating' => 'decimal:2',
             'wallet_balance' => 'decimal:2',

@@ -20,15 +20,17 @@ class CreateUserUseCase extends UseCase<CreateUserInfo, CreateUserInfoParams> {
 
 class CreateUserInfoParams extends Equatable {
   final String fullName;
-  final String? password;
-  final String? phoneNumber;
-  final String? whatsAppNumber;
+  final String phoneNumber;
+  final String whatsAppNumber;
+  final String password;
+  final String passwordConfirmation;
 
   const CreateUserInfoParams({
     required this.fullName,
-    this.password,
-    this.phoneNumber,
-    this.whatsAppNumber,
+    required this.phoneNumber,
+    required this.whatsAppNumber,
+    required this.password,
+    required this.passwordConfirmation,
   });
 
   Map<String, dynamic> toMap() => {
@@ -36,13 +38,15 @@ class CreateUserInfoParams extends Equatable {
         'phone_number': phoneNumber,
         'whatsapp_number': whatsAppNumber,
         'password': password,
+        'password_confirmation': passwordConfirmation,
       };
 
   @override
   List<Object?> get props => [
         fullName,
-        password,
         phoneNumber,
         whatsAppNumber,
+        password,
+        passwordConfirmation,
       ];
 }

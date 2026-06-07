@@ -64,16 +64,6 @@ class StepAccountWidget extends StatelessWidget {
           ),
           const Sizer(height: 16),
 
-          // ── Email ──────────────────────────────────────────
-          SignupTextField(
-            label: S.current.email,
-            hint: 'you@university.edu.eg',
-            icon: Icons.email_outlined,
-            keyboardType: TextInputType.emailAddress,
-            onChanged: cubit.setEmail,
-          ),
-          const Sizer(height: 16),
-
           SignupTextField(
             label: S.current.phoneNumber,
             hint: S.current.phoneHint,
@@ -121,7 +111,7 @@ class StepAccountWidget extends StatelessWidget {
                 const Sizer(width: 6),
                 Expanded(
                   child: Text(
-                    S.current.passwordMissingUppercaseError,
+                    S.current.strongPasswordHint,
                     style: tt.bodySmall?.copyWith(
                       color: ColorRes.anisTextMuted,
                       fontSize: 12,

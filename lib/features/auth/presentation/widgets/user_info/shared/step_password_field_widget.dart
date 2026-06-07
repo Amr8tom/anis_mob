@@ -5,7 +5,6 @@ import 'package:anis/core/constants/app_sizes.dart';
 import 'package:anis/core/constants/colors.dart';
 
 /// Dark password input with visibility toggle + validity border colour.
-/// All toggle state stays in the parent [StepEmailPasswordWidget].
 class StepPasswordField extends StatelessWidget {
   final TextEditingController controller;
   final String label;

@@ -7,12 +7,14 @@ final class ProfileState extends Equatable {
   final ProfileEntity? profile;
   final String? errorMessage;
   final String? avatarPath; // locally picked image path
+  final bool isGuest;
 
   const ProfileState({
     this.status = ProfileStatus.initial,
     this.profile,
     this.errorMessage,
     this.avatarPath,
+    this.isGuest = false,
   });
 
   ProfileState copyWith({
@@ -20,6 +22,7 @@ final class ProfileState extends Equatable {
     ProfileEntity? profile,
     String? errorMessage,
     String? avatarPath,
+    bool? isGuest,
     bool clearAvatar = false,
   }) {
     return ProfileState(
@@ -27,9 +30,11 @@ final class ProfileState extends Equatable {
       profile: profile ?? this.profile,
       errorMessage: errorMessage ?? this.errorMessage,
       avatarPath: clearAvatar ? null : (avatarPath ?? this.avatarPath),
+      isGuest: isGuest ?? this.isGuest,
     );
   }
 
   @override
-  List<Object?> get props => [status, profile, errorMessage, avatarPath];
+  List<Object?> get props =>
+      [status, profile, errorMessage, avatarPath, isGuest];
 }

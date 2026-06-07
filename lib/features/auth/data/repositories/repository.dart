@@ -102,32 +102,4 @@ class AuthRepositoryImp extends AuthRepository {
       return Left(const CacheFailure());
     }
   }
-
-  @override
-  Future<Either<Failure, void>> cacheUserInfoDraft({
-    required String name,
-    required String email,
-    required String whatsAppNumber,
-    required String gender,
-    required String avatar,
-    required String university,
-    required String major,
-    required String year,
-  }) async {
-    try {
-      await _localDataSource.saveUserInfoDraft(
-        name: name,
-        email: email,
-        whatsAppNumber: whatsAppNumber,
-        gender: gender,
-        avatar: avatar,
-        university: university,
-        major: major,
-        year: year,
-      );
-      return const Right(null);
-    } catch (_) {
-      return Left(CacheFailure());
-    }
-  }
 }
