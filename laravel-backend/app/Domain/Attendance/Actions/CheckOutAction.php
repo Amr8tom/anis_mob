@@ -36,20 +36,46 @@ final readonly class CheckOutAction
             // Server time is authoritative — client-sent durations are ignored.
             // Whole elapsed minutes (floor) computed from seconds for deterministic results.
             $seconds = (int) abs($visit->check_in_at->diffInSeconds(now()));
-            $minutes = intdiv($seconds, 60);
+            $rawMinutes = intdiv($seconds, 60);
 
-            if ($subscription = $this->subscriptions->lockActiveForUser($userId)) {
-                $this->subscriptions->deduct($subscription, $minutes, $visit->id, $userId);
+            // Load workspace billing config
+            $workspace = $visit->workspace;
+            $multiplier = (float) ($workspace->hour_multiplier ?? 1.00);
+            $dailyCapMinutes = ($workspace->day_calculation_hours ?? 8) * 60;
+            $maxDeductedMinutes = (int) ceil($dailyCapMinutes * $multiplier);
+
+            // Sum of deducted_minutes for all checked-out visits today at this workspace
+            $alreadyDeductedToday = $this->visits->todayDeductedMinutesForUserInWorkspace($userId, $workspace->id);
+            $remainingDeduction = max(0, $maxDeductedMinutes - $alreadyDeductedToday);
+            $potentialDeduction = (int) ceil($rawMinutes * $multiplier);
+
+            $deductedMinutes = min($potentialDeduction, $remainingDeduction);
+            $billableMinutes = $multiplier > 0 ? (int) ceil($deductedMinutes / $multiplier) : $rawMinutes;
+
+            if ($deductedMinutes > 0) {
+                if ($subscription = $this->subscriptions->lockActiveForUser($userId)) {
+                    $this->subscriptions->deduct($subscription, $deductedMinutes, $visit->id, $userId);
+                }
             }
 
             $visit->update([
                 'status' => VisitStatus::CHECKED_OUT,
                 'check_out_at' => now(),
-                'duration_minutes' => $minutes,
+                'duration_minutes' => $rawMinutes,
+                'billable_minutes' => $billableMinutes,
+                'deducted_minutes' => $deductedMinutes,
+                'hour_multiplier_applied' => $multiplier,
                 'active_flag' => null,
             ]);
 
-            Log::info('visit.checked_out', ['visit_id' => $visit->id, 'user_id' => $userId, 'minutes' => $minutes]);
+            Log::info('visit.checked_out', [
+                'visit_id' => $visit->id,
+                'user_id' => $userId,
+                'raw' => $rawMinutes,
+                'billable' => $billableMinutes,
+                'deducted' => $deductedMinutes,
+                'multiplier' => $multiplier,
+            ]);
 
             return $visit->fresh()->load('workspace');
         });

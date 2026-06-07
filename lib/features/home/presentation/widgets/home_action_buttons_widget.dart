@@ -15,7 +15,7 @@ import '../../../../generated/l10n.dart';
 ///   Single full-width "Leave Workspace" button.
 class HomeActionButtonsWidget extends StatelessWidget {
   final VoidCallback onScanQr;
-  final VoidCallback onSearchAnis;
+  final VoidCallback onSubscribe;
   final VoidCallback onLeaveWorkspace;
   final bool isCheckedIn;
   final bool isLoading;
@@ -23,7 +23,7 @@ class HomeActionButtonsWidget extends StatelessWidget {
   const HomeActionButtonsWidget({
     super.key,
     required this.onScanQr,
-    required this.onSearchAnis,
+    required this.onSubscribe,
     required this.onLeaveWorkspace,
     this.isCheckedIn = false,
     this.isLoading = false,
@@ -63,11 +63,11 @@ class HomeActionButtonsWidget extends StatelessWidget {
                 const Sizer(width: 12),
                 Expanded(
                   child: HomeActionButton(
-                    label: S.current.searchForAnis,
-                    icon: Icons.people_alt_rounded,
+                    label: S.current.subscribe,
+                    icon: Icons.workspace_premium_rounded,
                     bgColor: ColorRes.anisChipBg,
                     fgColor: ColorRes.anisNavy,
-                    onTap: onSearchAnis,
+                    onTap: onSubscribe,
                   ),
                 ),
               ],

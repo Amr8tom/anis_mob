@@ -28,8 +28,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m3(remaining, total) => "${remaining}/${total} days";
 
-  static String m4(hours) =>
+  static String m4(capHours, realHours) =>
+      "Daily maximum deduction: ${capHours} subscription hours (equivalent to ${realHours} real hours)";
+
+  static String m5(hours) =>
       "One subscription day is counted after ${hours} hours or more in this workspace.";
+
+  static String m6(multiplier) =>
+      "1 real hour = ${multiplier} subscription hours";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -821,7 +827,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "later": MessageLookupByLibrary.simpleMessage("Later"),
     "leaveRequest": MessageLookupByLibrary.simpleMessage("Leave Request"),
     "leaveSession": MessageLookupByLibrary.simpleMessage("Leave Session"),
-    "leaveWorkspace": MessageLookupByLibrary.simpleMessage("Leave Workspace"),
+    "leaveWorkspace": MessageLookupByLibrary.simpleMessage(
+      "Logout from Workspace",
+    ),
     "letsStart": MessageLookupByLibrary.simpleMessage("Welcome Again"),
     "lightYourHeart": MessageLookupByLibrary.simpleMessage(
       "Lighten your heart with the remembrance of Allah",
@@ -1156,6 +1164,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "planFeatureBuddies": MessageLookupByLibrary.simpleMessage(
       "Up to 3 buddies",
     ),
+    "planFeatureGoldHours": MessageLookupByLibrary.simpleMessage(
+      "200 hours/month",
+    ),
     "planFeatureNoAds": MessageLookupByLibrary.simpleMessage("No ads"),
     "planFeaturePriority": MessageLookupByLibrary.simpleMessage(
       "Priority support",
@@ -1169,6 +1180,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "planFeatureSessionsUnlimited": MessageLookupByLibrary.simpleMessage(
       "Unlimited sessions",
     ),
+    "planFeatureSilverHours": MessageLookupByLibrary.simpleMessage(
+      "120 hours/month",
+    ),
     "planFeatureWorkspaces": MessageLookupByLibrary.simpleMessage(
       "Limited workspaces",
     ),
@@ -1179,8 +1193,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "planGoldTitle": MessageLookupByLibrary.simpleMessage("Gold"),
     "planMostPopular": MessageLookupByLibrary.simpleMessage("Most Popular"),
     "planPriceFree": MessageLookupByLibrary.simpleMessage("0 EGP"),
-    "planPriceGold": MessageLookupByLibrary.simpleMessage("199 EGP/mo"),
-    "planPriceSilver": MessageLookupByLibrary.simpleMessage("99 EGP/mo"),
+    "planPriceGold": MessageLookupByLibrary.simpleMessage("2,300 EGP/mo"),
+    "planPriceSilver": MessageLookupByLibrary.simpleMessage("1,700 EGP/mo"),
     "planSilverTitle": MessageLookupByLibrary.simpleMessage("Silver"),
     "plateNumber": MessageLookupByLibrary.simpleMessage("Plate Number"),
     "please": MessageLookupByLibrary.simpleMessage(
@@ -1624,6 +1638,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "submittedRequests": MessageLookupByLibrary.simpleMessage(
       "Submitted Requests",
     ),
+    "subscribe": MessageLookupByLibrary.simpleMessage("Subscribe Now"),
     "subscriptionDaysLeft": MessageLookupByLibrary.simpleMessage(
       "Subscription days left",
     ),
@@ -1854,11 +1869,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "workspaceCheckIn": MessageLookupByLibrary.simpleMessage(
       "Workspace Check-in",
     ),
-    "workspaceDayCalculationRule": m4,
+    "workspaceDailyCapText": m4,
+    "workspaceDayCalculationRule": m5,
     "workspaceDayCalculationTitle": MessageLookupByLibrary.simpleMessage(
       "How this workspace counts a day",
     ),
     "workspaceFull": MessageLookupByLibrary.simpleMessage("Full"),
+    "workspaceHourMultiplierCustom": m6,
+    "workspaceHourMultiplierFree": MessageLookupByLibrary.simpleMessage(
+      "Free workspace (1 real hour = 0 subscription hours)",
+    ),
+    "workspaceHourMultiplierPremium": MessageLookupByLibrary.simpleMessage(
+      "Premium workspace (1 real hour = 2 subscription hours)",
+    ),
+    "workspaceHourMultiplierStandard": MessageLookupByLibrary.simpleMessage(
+      "Standard workspace (1 real hour = 1 subscription hour)",
+    ),
     "workspaceOpen": MessageLookupByLibrary.simpleMessage("Available"),
     "workspacesSubtitle": MessageLookupByLibrary.simpleMessage(
       "Find the perfect spot to study with your buddy",

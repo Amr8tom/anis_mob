@@ -32,6 +32,9 @@ class WorkspaceEntity extends Equatable {
   /// Minimum study hours that count as one subscription day.
   final int dayCalculationHours;
 
+  /// Hour multiplier for this workspace (e.g. 1.0, 2.0, 0.5, 0.0)
+  final double hourMultiplier;
+
   /// Amenity icon keys: 'wifi' | 'ac' | 'coffee' | 'printing' | 'quiet'
   final List<String> amenities;
 
@@ -54,6 +57,7 @@ class WorkspaceEntity extends Equatable {
     required this.openTime,
     required this.closeTime,
     this.dayCalculationHours = 8,
+    this.hourMultiplier = 1.0,
     required this.amenities,
     this.sessions = const [],
   });
@@ -81,6 +85,7 @@ class WorkspaceEntity extends Equatable {
         openTime,
         closeTime,
         dayCalculationHours,
+        hourMultiplier,
         amenities,
         sessions,
       ];

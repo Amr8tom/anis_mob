@@ -27,6 +27,9 @@ final class WorkspaceVisitResource extends JsonResource
             'check_in_time' => $this->check_in_at?->toIso8601String(),
             'check_out_time' => $this->check_out_at?->toIso8601String(),
             'study_minutes' => $this->duration_minutes,
+            'billable_minutes' => $this->billable_minutes,
+            'deducted_minutes' => $this->deducted_minutes,
+            'hour_multiplier_applied' => $this->hour_multiplier_applied !== null ? (float) $this->hour_multiplier_applied : null,
         ];
     }
 }

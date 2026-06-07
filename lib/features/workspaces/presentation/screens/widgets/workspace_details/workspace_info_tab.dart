@@ -34,8 +34,8 @@ class WorkspaceInfoTab extends StatelessWidget {
             Sizer(height: AppSizes.md),
           ],
 
-          _WorkspaceDayCalculationSection(
-            hours: workspace.dayCalculationHours,
+          _WorkspaceBillingSection(
+            workspace: workspace,
           ),
           Sizer(height: AppSizes.md),
 
@@ -135,13 +135,30 @@ class _WorkspaceDescriptionSection extends StatelessWidget {
   }
 }
 
-class _WorkspaceDayCalculationSection extends StatelessWidget {
-  final int hours;
-  const _WorkspaceDayCalculationSection({required this.hours});
+class _WorkspaceBillingSection extends StatelessWidget {
+  final WorkspaceEntity workspace;
+  const _WorkspaceBillingSection({required this.workspace});
 
   @override
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
+    final multiplier = workspace.hourMultiplier;
+    final capHours =
+        (workspace.dayCalculationHours * multiplier).toStringAsFixed(0);
+    final realHours = workspace.dayCalculationHours.toString();
+
+    String multiplierText;
+    if (multiplier == 1.0) {
+      multiplierText = S.current.workspaceHourMultiplierStandard;
+    } else if (multiplier == 2.0) {
+      multiplierText = S.current.workspaceHourMultiplierPremium;
+    } else if (multiplier == 0.0) {
+      multiplierText = S.current.workspaceHourMultiplierFree;
+    } else {
+      multiplierText = S.current
+          .workspaceHourMultiplierCustom(multiplier.toStringAsFixed(1));
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: AppSizes.padding),
       child: Container(
@@ -183,12 +200,23 @@ class _WorkspaceDayCalculationSection extends StatelessWidget {
                   ),
                   Sizer(height: AppSizes.xs),
                   Text(
-                    S.current.workspaceDayCalculationRule(hours),
+                    multiplierText,
                     style: tt.bodySmall?.copyWith(
-                      color: ColorRes.anisTextMuted,
+                      fontWeight: FontWeight.w600,
+                      color: ColorRes.anisNavy,
                       height: 1.5,
                     ),
                   ),
+                  if (multiplier > 0.0) ...[
+                    Sizer(height: AppSizes.xs),
+                    Text(
+                      S.current.workspaceDailyCapText(capHours, realHours),
+                      style: tt.bodySmall?.copyWith(
+                        color: ColorRes.anisTextMuted,
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

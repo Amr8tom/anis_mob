@@ -36,6 +36,7 @@ final class WorkspaceResource extends JsonResource
             'openTime' => $this->open_time ?? '',
             'closeTime' => $this->close_time ?? '',
             'dayCalculationHours' => (int) $this->day_calculation_hours,
+            'hourMultiplier' => (float) ($this->hour_multiplier ?? 1.00),
             'amenities' => $this->amenities ?? [],
             'sessions' => SessionCardResource::collection($this->whenLoaded('sessions')),
         ];

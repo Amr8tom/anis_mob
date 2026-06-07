@@ -12,6 +12,4 @@ namespace App\Domain\Auth\Actions;
  * login endpoint. This class is retained only as an empty placeholder because
  * the file cannot be removed in this environment; it must not be wired to a route.
  */
-final class GuestLoginAction
-{
-}
+final class GuestLoginAction {}

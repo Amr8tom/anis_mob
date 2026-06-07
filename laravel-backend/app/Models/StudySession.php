@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\SessionStatus;
 use App\Enums\SessionType;
+use Database\Factories\StudySessionFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class StudySession extends Model
 {
-    /** @use HasFactory<\Database\Factories\StudySessionFactory> */
+    /** @use HasFactory<StudySessionFactory> */
     use HasFactory, HasUuids;
 
     protected $table = 'study_sessions';

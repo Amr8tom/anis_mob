@@ -21,6 +21,15 @@ class WorkspaceAttendanceEntity extends Equatable {
   /// Total study minutes as computed by the server after check-out.
   final int? studyMinutes;
 
+  /// Billed real minutes (after cap check)
+  final int? billableMinutes;
+
+  /// Deducted subscription minutes (after multiplier)
+  final int? deductedMinutes;
+
+  /// Multiplier snapshot applied
+  final double? hourMultiplierApplied;
+
   const WorkspaceAttendanceEntity({
     required this.attendanceId,
     required this.workspaceId,
@@ -28,6 +37,9 @@ class WorkspaceAttendanceEntity extends Equatable {
     required this.checkInTime,
     this.checkOutTime,
     this.studyMinutes,
+    this.billableMinutes,
+    this.deductedMinutes,
+    this.hourMultiplierApplied,
   });
 
   /// Whether the session is still active (no check-out yet).
@@ -44,5 +56,8 @@ class WorkspaceAttendanceEntity extends Equatable {
         checkInTime,
         checkOutTime,
         studyMinutes,
+        billableMinutes,
+        deductedMinutes,
+        hourMultiplierApplied,
       ];
 }

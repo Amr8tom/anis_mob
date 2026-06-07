@@ -29,8 +29,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m3(remaining, total) => "${remaining}/${total} يوم";
 
-  static String m4(hours) =>
+  static String m4(capHours, realHours) =>
+      "الحد الأقصى للخصم اليومي: ${capHours} ساعة اشتراك (ما يعادل ${realHours} ساعات حضور حقيقية)";
+
+  static String m5(hours) =>
       "يُحتسب يوم اشتراك واحد بعد ${hours} ساعات أو أكثر داخل هذه المساحة.";
+
+  static String m6(multiplier) => "ساعة الحضور = ${multiplier} ساعة اشتراك";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1103,6 +1108,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "تحليلات الدراسة",
     ),
     "planFeatureBuddies": MessageLookupByLibrary.simpleMessage("حتى 3 رفقاء"),
+    "planFeatureGoldHours": MessageLookupByLibrary.simpleMessage(
+      "٢٠٠ ساعة شهرياً",
+    ),
     "planFeatureNoAds": MessageLookupByLibrary.simpleMessage("بدون إعلانات"),
     "planFeaturePriority": MessageLookupByLibrary.simpleMessage(
       "دعم ذو أولوية",
@@ -1116,6 +1124,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "planFeatureSessionsUnlimited": MessageLookupByLibrary.simpleMessage(
       "جلسات غير محدودة",
     ),
+    "planFeatureSilverHours": MessageLookupByLibrary.simpleMessage(
+      "١٢٠ ساعة شهرياً",
+    ),
     "planFeatureWorkspaces": MessageLookupByLibrary.simpleMessage(
       "مساحات محدودة",
     ),
@@ -1126,8 +1137,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "planGoldTitle": MessageLookupByLibrary.simpleMessage("ذهبي"),
     "planMostPopular": MessageLookupByLibrary.simpleMessage("الأكثر شيوعاً"),
     "planPriceFree": MessageLookupByLibrary.simpleMessage("0 جنيه"),
-    "planPriceGold": MessageLookupByLibrary.simpleMessage("199 جنيه/شهر"),
-    "planPriceSilver": MessageLookupByLibrary.simpleMessage("99 جنيه/شهر"),
+    "planPriceGold": MessageLookupByLibrary.simpleMessage("٢,٣٠٠ جنيه/شهر"),
+    "planPriceSilver": MessageLookupByLibrary.simpleMessage("١,٧٠٠ جنيه/شهر"),
     "planSilverTitle": MessageLookupByLibrary.simpleMessage("فضي"),
     "plateNumber": MessageLookupByLibrary.simpleMessage("رقم اللوحة"),
     "please": MessageLookupByLibrary.simpleMessage("الرجاء تفعيل خدمة الموقع"),
@@ -1531,6 +1542,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "submittedRequests": MessageLookupByLibrary.simpleMessage(
       "الطلبات المقدمه",
     ),
+    "subscribe": MessageLookupByLibrary.simpleMessage("اشترك الآن"),
     "subscriptionDaysLeft": MessageLookupByLibrary.simpleMessage(
       "أيام الاشتراك المتبقية",
     ),
@@ -1751,11 +1763,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "workspaceCheckIn": MessageLookupByLibrary.simpleMessage(
       "تسجيل دخول المساحة",
     ),
-    "workspaceDayCalculationRule": m4,
+    "workspaceDailyCapText": m4,
+    "workspaceDayCalculationRule": m5,
     "workspaceDayCalculationTitle": MessageLookupByLibrary.simpleMessage(
       "طريقة احتساب اليوم في هذه المساحة",
     ),
     "workspaceFull": MessageLookupByLibrary.simpleMessage("ممتلئ"),
+    "workspaceHourMultiplierCustom": m6,
+    "workspaceHourMultiplierFree": MessageLookupByLibrary.simpleMessage(
+      "مساحة عمل مجانية (ساعة الحضور = ٠ ساعة اشتراك)",
+    ),
+    "workspaceHourMultiplierPremium": MessageLookupByLibrary.simpleMessage(
+      "مساحة عمل مميزة (ساعة الحضور = ساعتي اشتراك)",
+    ),
+    "workspaceHourMultiplierStandard": MessageLookupByLibrary.simpleMessage(
+      "مساحة عمل قياسية (ساعة الحضور = ساعة اشتراك)",
+    ),
     "workspaceOpen": MessageLookupByLibrary.simpleMessage("متاح"),
     "workspacesSubtitle": MessageLookupByLibrary.simpleMessage(
       "اعثر على المكان المثالي للدراسة مع رفيقك",

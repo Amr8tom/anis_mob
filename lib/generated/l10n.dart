@@ -3674,10 +3674,10 @@ class S {
     );
   }
 
-  /// `Leave Workspace`
+  /// `Logout from Workspace`
   String get leaveWorkspace {
     return Intl.message(
-      'Leave Workspace',
+      'Logout from Workspace',
       name: 'leaveWorkspace',
       desc: '',
       args: [],
@@ -5399,20 +5399,20 @@ class S {
     return Intl.message('0 EGP', name: 'planPriceFree', desc: '', args: []);
   }
 
-  /// `199 EGP/mo`
+  /// `2,300 EGP/mo`
   String get planPriceGold {
     return Intl.message(
-      '199 EGP/mo',
+      '2,300 EGP/mo',
       name: 'planPriceGold',
       desc: '',
       args: [],
     );
   }
 
-  /// `99 EGP/mo`
+  /// `1,700 EGP/mo`
   String get planPriceSilver {
     return Intl.message(
-      '99 EGP/mo',
+      '1,700 EGP/mo',
       name: 'planPriceSilver',
       desc: '',
       args: [],
@@ -6387,6 +6387,11 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Subscribe Now`
+  String get subscribe {
+    return Intl.message('Subscribe Now', name: 'subscribe', desc: '', args: []);
   }
 
   /// `Search Juz Index ...`
@@ -8931,6 +8936,76 @@ class S {
       name: 'strongPasswordHint',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `120 hours/month`
+  String get planFeatureSilverHours {
+    return Intl.message(
+      '120 hours/month',
+      name: 'planFeatureSilverHours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `200 hours/month`
+  String get planFeatureGoldHours {
+    return Intl.message(
+      '200 hours/month',
+      name: 'planFeatureGoldHours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Standard workspace (1 real hour = 1 subscription hour)`
+  String get workspaceHourMultiplierStandard {
+    return Intl.message(
+      'Standard workspace (1 real hour = 1 subscription hour)',
+      name: 'workspaceHourMultiplierStandard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Premium workspace (1 real hour = 2 subscription hours)`
+  String get workspaceHourMultiplierPremium {
+    return Intl.message(
+      'Premium workspace (1 real hour = 2 subscription hours)',
+      name: 'workspaceHourMultiplierPremium',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 real hour = {multiplier} subscription hours`
+  String workspaceHourMultiplierCustom(Object multiplier) {
+    return Intl.message(
+      '1 real hour = $multiplier subscription hours',
+      name: 'workspaceHourMultiplierCustom',
+      desc: '',
+      args: [multiplier],
+    );
+  }
+
+  /// `Free workspace (1 real hour = 0 subscription hours)`
+  String get workspaceHourMultiplierFree {
+    return Intl.message(
+      'Free workspace (1 real hour = 0 subscription hours)',
+      name: 'workspaceHourMultiplierFree',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily maximum deduction: {capHours} subscription hours (equivalent to {realHours} real hours)`
+  String workspaceDailyCapText(Object capHours, Object realHours) {
+    return Intl.message(
+      'Daily maximum deduction: $capHours subscription hours (equivalent to $realHours real hours)',
+      name: 'workspaceDailyCapText',
+      desc: '',
+      args: [capHours, realHours],
     );
   }
 }

@@ -6,6 +6,7 @@ namespace App\Domain\Attendance\Actions;
 
 use App\Domain\Attendance\Contracts\AttendanceRepositoryInterface;
 use App\Domain\Subscription\Contracts\SubscriptionRepositoryInterface;
+use App\Enums\PlanTier;
 use App\Exceptions\AlreadyCheckedInException;
 use App\Exceptions\InvalidQrCodeException;
 use App\Exceptions\NoActiveSubscriptionException;
@@ -28,16 +29,21 @@ final readonly class CheckInAction
             // Resolve the workspace securely from the QR token (never a client id).
             $workspace = $this->visits->findActiveWorkspaceByQrToken($qrToken);
             if ($workspace === null) {
-                throw new InvalidQrCodeException();
+                throw new InvalidQrCodeException;
             }
 
             $subscription = $this->subscriptions->activeForUser($userId);
-            if (! $this->isUsable($subscription)) {
-                throw new NoActiveSubscriptionException();
+            if ($workspace->hour_multiplier > 0.0) {
+                if ($subscription === null || $subscription->plan->tier === PlanTier::FREE) {
+                    throw new NoActiveSubscriptionException;
+                }
+                if (! $this->isUsable($subscription)) {
+                    throw new NoActiveSubscriptionException;
+                }
             }
 
             if ($this->visits->activeVisitForUser($userId) !== null) {
-                throw new AlreadyCheckedInException();
+                throw new AlreadyCheckedInException;
             }
 
             try {
@@ -45,7 +51,7 @@ final readonly class CheckInAction
             } catch (QueryException $e) {
                 // Unique(user_id, active_flag) — a concurrent check-in beat us to it.
                 if ($this->isUniqueViolation($e)) {
-                    throw new AlreadyCheckedInException();
+                    throw new AlreadyCheckedInException;
                 }
                 throw $e;
             }

@@ -26,16 +26,16 @@ class DemoSeeder extends Seeder
     {
         // ---- Plans (free/silver/gold) ----
         $free = Plan::create([
-            'name' => 'Free', 'tier' => PlanTier::FREE, 'price_cents' => 0,
-            'currency' => 'EGP', 'included_minutes' => 300, 'duration_days' => 30, 'is_active' => true,
+            'name' => 'الاشتراك المجاني', 'tier' => PlanTier::FREE, 'price_cents' => 0,
+            'currency' => 'EGP', 'included_minutes' => 0, 'duration_days' => 30, 'is_active' => true,
         ]);
         $silver = Plan::create([
-            'name' => 'Silver Monthly', 'tier' => PlanTier::SILVER, 'price_cents' => 19900,
-            'currency' => 'EGP', 'included_minutes' => 2400, 'duration_days' => 30, 'is_active' => true,
+            'name' => 'الاشتراك الفضي', 'tier' => PlanTier::SILVER, 'price_cents' => 170000, // 1,700 EGP
+            'currency' => 'EGP', 'included_minutes' => 7200, 'duration_days' => 30, 'is_active' => true, // 120 hours
         ]);
         Plan::create([
-            'name' => 'Gold Monthly', 'tier' => PlanTier::GOLD, 'price_cents' => 29900,
-            'currency' => 'EGP', 'included_minutes' => 6000, 'duration_days' => 30, 'is_active' => true,
+            'name' => 'الاشتراك الذهبي', 'tier' => PlanTier::GOLD, 'price_cents' => 230000, // 2,300 EGP
+            'currency' => 'EGP', 'included_minutes' => 12000, 'duration_days' => 30, 'is_active' => true, // 200 hours
         ]);
 
         // ---- Badges catalog ----
@@ -72,7 +72,7 @@ class DemoSeeder extends Seeder
             'status' => SubscriptionStatus::ACTIVE,
             'started_at' => now(),
             'expires_at' => now()->addDays(30),
-            'remaining_minutes' => 2400,
+            'remaining_minutes' => 7200, // 120 hours
             'active_flag' => 1,
         ]);
 
@@ -85,31 +85,37 @@ class DemoSeeder extends Seeder
                 'qr_token' => 'ws_demo_qr', 'name' => 'Anis Central', 'status' => 'OPEN',
                 'address' => 'وسط البلد، القاهرة', 'lat' => 30.0444, 'lng' => 31.2357,
                 'capacity' => 80, 'amenities' => ['wifi', 'ac', 'coffee', 'quiet'],
+                'hour_multiplier' => 1.00, 'day_calculation_hours' => 8,
             ],
             [
                 'qr_token' => 'ws_maadi', 'name' => 'StudyHub المعادي', 'status' => 'BUSY',
                 'address' => 'شارع 9، المعادي', 'lat' => 29.9602, 'lng' => 31.2569,
                 'capacity' => 50, 'amenities' => ['wifi', 'ac', 'printing'],
+                'hour_multiplier' => 1.50, 'day_calculation_hours' => 8,
             ],
             [
                 'qr_token' => 'ws_nasr', 'name' => 'Focus Space مدينة نصر', 'status' => 'OPEN',
                 'address' => 'عباس العقاد، مدينة نصر', 'lat' => 30.0566, 'lng' => 31.3300,
                 'capacity' => 120, 'amenities' => ['wifi', 'ac', 'coffee', 'printing', 'quiet'],
+                'hour_multiplier' => 2.00, 'day_calculation_hours' => 6,
             ],
             [
                 'qr_token' => 'ws_giza', 'name' => 'Quiet Corner الجيزة', 'status' => 'FULL',
                 'address' => 'شارع الهرم، الجيزة', 'lat' => 30.0131, 'lng' => 31.2089,
                 'capacity' => 40, 'amenities' => ['wifi', 'quiet'],
+                'hour_multiplier' => 0.50, 'day_calculation_hours' => 8,
             ],
             [
                 'qr_token' => 'ws_zamalek', 'name' => 'BrainPark الزمالك', 'status' => 'OPEN',
                 'address' => 'شارع 26 يوليو، الزمالك', 'lat' => 30.0614, 'lng' => 31.2200,
                 'capacity' => 60, 'amenities' => ['wifi', 'ac', 'coffee'],
+                'hour_multiplier' => 0.00, 'day_calculation_hours' => 8, // Free workspace!
             ],
             [
                 'qr_token' => 'ws_helio', 'name' => 'The Library مصر الجديدة', 'status' => 'CLOSED',
                 'address' => 'شارع الميرغني، مصر الجديدة', 'lat' => 30.0880, 'lng' => 31.3220,
                 'capacity' => 70, 'amenities' => ['wifi', 'ac', 'printing', 'quiet'],
+                'hour_multiplier' => 1.70, 'day_calculation_hours' => 8,
             ],
         ];
 
@@ -140,7 +146,8 @@ class DemoSeeder extends Seeder
                 'capacity' => $def['capacity'],
                 'open_time' => '08:00',
                 'close_time' => '23:00',
-                'day_calculation_hours' => 8,
+                'day_calculation_hours' => $def['day_calculation_hours'],
+                'hour_multiplier' => $def['hour_multiplier'],
                 'is_active' => true,
             ]);
 

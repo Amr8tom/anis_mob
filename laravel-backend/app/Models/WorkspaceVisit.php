@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\VisitStatus;
+use Database\Factories\WorkspaceVisitFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WorkspaceVisit extends Model
 {
-    /** @use HasFactory<\Database\Factories\WorkspaceVisitFactory> */
+    /** @use HasFactory<WorkspaceVisitFactory> */
     use HasFactory, HasUuids;
 
     protected $keyType = 'string';
@@ -28,6 +29,9 @@ class WorkspaceVisit extends Model
             'check_in_at' => 'datetime',
             'check_out_at' => 'datetime',
             'duration_minutes' => 'integer',
+            'billable_minutes' => 'integer',
+            'deducted_minutes' => 'integer',
+            'hour_multiplier_applied' => 'float',
         ];
     }
 

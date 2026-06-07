@@ -19,6 +19,7 @@ class WorkspaceModel extends WorkspaceEntity {
     required super.openTime,
     required super.closeTime,
     super.dayCalculationHours,
+    super.hourMultiplier,
     required super.amenities,
     super.sessions,
   });
@@ -46,6 +47,9 @@ class WorkspaceModel extends WorkspaceEntity {
       dayCalculationHours: (json['dayCalculationHours'] as num?)?.toInt() ??
           (json['day_calculation_hours'] as num?)?.toInt() ??
           8,
+      hourMultiplier: (json['hourMultiplier'] as num?)?.toDouble() ??
+          (json['hour_multiplier'] as num?)?.toDouble() ??
+          1.0,
       amenities: _stringList(json['amenities']),
       sessions: (json['sessions'] as List<dynamic>? ?? const [])
           .map((item) => StudySessionModel.fromJson(
@@ -72,6 +76,8 @@ class WorkspaceModel extends WorkspaceEntity {
         'closeTime': closeTime,
         'dayCalculationHours': dayCalculationHours,
         'day_calculation_hours': dayCalculationHours,
+        'hourMultiplier': hourMultiplier,
+        'hour_multiplier': hourMultiplier,
         'amenities': amenities,
         'sessions': sessions
             .map((item) => StudySessionModel.toJsonFromEntity(item))

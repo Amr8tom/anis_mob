@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\WorkspaceStatus;
+use Database\Factories\WorkspaceFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Workspace extends Model
 {
-    /** @use HasFactory<\Database\Factories\WorkspaceFactory> */
+    /** @use HasFactory<WorkspaceFactory> */
     use HasFactory, HasUuids;
 
     protected $keyType = 'string';
@@ -31,6 +32,7 @@ class Workspace extends Model
             'status' => WorkspaceStatus::class,
             'capacity' => 'integer',
             'day_calculation_hours' => 'integer',
+            'hour_multiplier' => 'float',
             'is_active' => 'boolean',
         ];
     }

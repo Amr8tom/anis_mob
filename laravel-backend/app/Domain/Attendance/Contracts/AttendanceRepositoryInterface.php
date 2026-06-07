@@ -19,4 +19,10 @@ interface AttendanceRepositoryInterface
      * Row-locked visit owned by the user, for safe check-out inside a transaction.
      */
     public function lockVisitForUser(string $visitId, string $userId): ?WorkspaceVisit;
+
+    /**
+     * Sum of deducted_minutes for all CHECKED_OUT visits by this user
+     * at this workspace on the current calendar day.
+     */
+    public function todayDeductedMinutesForUserInWorkspace(string $userId, string $workspaceId): int;
 }

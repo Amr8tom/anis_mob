@@ -666,8 +666,8 @@
   "planGoldTitle": "ذهبي",
   "planMostPopular": "الأكثر شيوعاً",
   "planPriceFree": "0 جنيه",
-  "planPriceGold": "199 جنيه/شهر",
-  "planPriceSilver": "99 جنيه/شهر",
+  "planPriceGold": "٢,٣٠٠ جنيه/شهر",
+  "planPriceSilver": "١,٧٠٠ جنيه/شهر",
   "planSilverTitle": "فضي",
   "plateNumber": "رقم اللوحة",
   "please": "الرجاء تفعيل خدمة الموقع",
@@ -790,6 +790,7 @@
   "schoolPermissionRequest": "طلب إذن مدارس",
   "search": "البحث عن طريق الكلمات الرئيسية",
   "searchForAnis": "ابحث عن أنيس",
+  "subscribe": "اشترك الآن",
   "searchJuzIndex": "ابحث عن رقم الجزء...",
   "searchPlaceholder": "بحــث ...",
   "searchSurahIndex": " ابحث في فهرس السور",
@@ -1094,5 +1095,12 @@
   "saveAndContinue": "حفظ ومتابعة",
   "signInToSeeProfile": "سجل الدخول لبناء ملفك الدراسي",
   "signInToSeeProfileSubtitle": "ملفك وتقدمك وشاراتك وتفاصيل اشتراكك متاحة بعد تسجيل الدخول.",
-  "strongPasswordHint": "استخدم 8 أحرف على الأقل مع حرف كبير وحرف صغير ورقم."
+  "strongPasswordHint": "استخدم 8 أحرف على الأقل مع حرف كبير وحرف صغير ورقم.",
+  "planFeatureSilverHours": "١٢٠ ساعة شهرياً",
+  "planFeatureGoldHours": "٢٠٠ ساعة شهرياً",
+  "workspaceHourMultiplierStandard": "مساحة عمل قياسية (ساعة الحضور = ساعة اشتراك)",
+  "workspaceHourMultiplierPremium": "مساحة عمل مميزة (ساعة الحضور = ساعتي اشتراك)",
+  "workspaceHourMultiplierCustom": "ساعة الحضور = {multiplier} ساعة اشتراك",
+  "workspaceHourMultiplierFree": "مساحة عمل مجانية (ساعة الحضور = ٠ ساعة اشتراك)",
+  "workspaceDailyCapText": "الحد الأقصى للخصم اليومي: {capHours} ساعة اشتراك (ما يعادل {realHours} ساعات حضور حقيقية)"
 }

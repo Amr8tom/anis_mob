@@ -25,7 +25,7 @@ final readonly class LoginAction
         if ($user === null || ! Hash::check($data->password, $user->password)) {
             // Never log raw phone/email/password — only a non-identifying event.
             Log::warning('auth.login_failed');
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException;
         }
 
         $token = $user->createToken('mobile')->plainTextToken;

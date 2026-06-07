@@ -3,9 +3,8 @@ import 'package:get_it/get_it.dart';
 import '../../features/home/data/data_sources/home_local_data_source.dart';
 import '../../features/home/data/data_sources/home_remote_data_source.dart';
 import '../../features/home/data/data_sources/workspace_attendance_remote_data_source.dart';
-import '../../features/home/data/repositories/home_dummy_repository.dart';
 import '../../features/home/data/repositories/home_repository_impl.dart';
-import '../../features/home/data/repositories/workspace_attendance_dummy_repository.dart';
+import '../../features/home/data/repositories/workspace_attendance_repository_impl.dart';
 import '../../features/home/domain/repository/home_repository.dart';
 import '../../features/home/domain/repository/workspace_attendance_repository.dart';
 import '../../features/home/domain/use_cases/check_in_workspace_use_case.dart';
@@ -18,28 +17,28 @@ class HomeServiceLocator {
   static Future<void> execute({required GetIt serviceLocator}) async {
     // Data sources
     serviceLocator.registerLazySingleton<HomeRemoteDataSource>(
-      () => HomeRemoteDataSourceImpl(),
+      () => HomeRemoteDataSourceImpl(serviceLocator()),
     );
     serviceLocator.registerLazySingleton<HomeLocalDataSource>(
       () => HomeLocalDataSourceImpl(serviceLocator()),
     );
     serviceLocator.registerLazySingleton<WorkspaceAttendanceRemoteDataSource>(
-      () => WorkspaceAttendanceDummyDataSourceImpl(),
+      () => WorkspaceAttendanceRemoteDataSourceImpl(serviceLocator()),
     );
 
     // Repositories
-    serviceLocator.registerLazySingleton<HomeRepositoryImpl>(
+    serviceLocator.registerLazySingleton<HomeRepository>(
       () => HomeRepositoryImpl(
         remoteDataSource: serviceLocator(),
         localDataSource: serviceLocator(),
         networkInfo: serviceLocator(),
       ),
     );
-    serviceLocator.registerLazySingleton<HomeRepository>(
-      () => HomeDummyRepository(),
-    );
     serviceLocator.registerLazySingleton<WorkspaceAttendanceRepository>(
-      () => WorkspaceAttendanceDummyRepository(serviceLocator()),
+      () => WorkspaceAttendanceRepositoryImpl(
+        remoteDataSource: serviceLocator(),
+        networkInfo: serviceLocator(),
+      ),
     );
 
     // Use cases

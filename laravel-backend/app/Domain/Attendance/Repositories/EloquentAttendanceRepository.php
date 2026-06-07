@@ -48,4 +48,14 @@ final class EloquentAttendanceRepository implements AttendanceRepositoryInterfac
             ->lockForUpdate()
             ->first();
     }
+
+    public function todayDeductedMinutesForUserInWorkspace(string $userId, string $workspaceId): int
+    {
+        return (int) WorkspaceVisit::query()
+            ->where('user_id', $userId)
+            ->where('workspace_id', $workspaceId)
+            ->where('status', VisitStatus::CHECKED_OUT->value)
+            ->whereDate('check_in_at', today())
+            ->sum('deducted_minutes');
+    }
 }

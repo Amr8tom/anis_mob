@@ -33,6 +33,7 @@ class WorkspaceDummyRepository implements WorkspaceRepository {
       openTime: '8:00 ص',
       closeTime: '11:00 م',
       dayCalculationHours: 8,
+      hourMultiplier: 1.0,
       amenities: ['wifi', 'ac', 'quiet'],
       sessions: [
         StudySessionEntity(
@@ -71,6 +72,7 @@ class WorkspaceDummyRepository implements WorkspaceRepository {
       openTime: '9:00 ص',
       closeTime: '10:00 م',
       dayCalculationHours: 6,
+      hourMultiplier: 2.0,
       amenities: ['wifi', 'coffee', 'printing'],
     ),
   ];

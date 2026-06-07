@@ -33,14 +33,14 @@ final readonly class JoinBuddySessionAction
             }
 
             if ($session->max_seats !== null && $this->sessions->participantCount($session) >= $session->max_seats) {
-                throw new SessionFullException();
+                throw new SessionFullException;
             }
 
             try {
                 $this->sessions->attachParticipant($session, $userId);
             } catch (QueryException $e) {
                 if ($this->isUniqueViolation($e)) {
-                    throw new AlreadyJoinedException();
+                    throw new AlreadyJoinedException;
                 }
                 throw $e;
             }

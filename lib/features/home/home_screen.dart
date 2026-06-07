@@ -11,6 +11,7 @@ import 'presentation/widgets/home_action_buttons_widget.dart';
 import 'presentation/widgets/home_header_widget.dart';
 import 'presentation/widgets/today_sessions_section.dart';
 import 'presentation/widgets/workspace_session_banner_widget.dart';
+import '../../core/routing/route_names.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -59,7 +60,10 @@ class HomeScreen extends StatelessWidget {
               SliverToBoxAdapter(
                 child: HomeActionButtonsWidget(
                   onScanQr: () => _onScanQr(context),
-                  onSearchAnis: () => _onSearchAnis(context),
+                  onSubscribe: () => _onSubscribe(
+                    context,
+                    state.userProfile?.subscriptionType ?? 'free',
+                  ),
                   onLeaveWorkspace: () => context.read<HomeCubit>().checkOut(),
                   isCheckedIn: state.isCheckedIn,
                   isLoading: state.attendanceStatus.isBusy,
@@ -96,8 +100,11 @@ class HomeScreen extends StatelessWidget {
     _showSnackBar(context, S.current.checkInSuccess, ColorRes.anisGreen);
   }
 
-  void _onSearchAnis(BuildContext context) {
-    _showSnackBar(context, S.current.searchForAnis, ColorRes.anisGreen);
+  void _onSubscribe(BuildContext context, String currentPlan) {
+    Navigator.of(context).pushNamed(
+      DRoutesName.plansRoute,
+      arguments: {'currentPlan': currentPlan},
+    );
   }
 
   void _showSnackBar(BuildContext context, String message, Color color) {

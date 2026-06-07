@@ -22,7 +22,7 @@ class PlanFactory extends Factory
     {
         return [
             'name' => fake()->randomElement(['Monthly', '20 Hours', 'Weekly']),
-            'tier' => fake()->randomElement(PlanTier::cases()),
+            'tier' => PlanTier::SILVER,
             'description' => fake()->sentence(),
             'price_cents' => fake()->randomElement([0, 9900, 19900, 29900]),
             'currency' => 'EGP',

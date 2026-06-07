@@ -60,10 +60,10 @@ List<PlanData> buildPlans() => [
         icon: Icons.workspace_premium_rounded,
         badge: S.current.planMostPopular,
         features: [
+          PlanFeature(S.current.planFeatureSilverHours),
           PlanFeature(S.current.planFeatureWorkspacesUnlimited),
-          PlanFeature(S.current.planFeatureSessions10),
-          PlanFeature(S.current.planFeatureNoAds),
           PlanFeature(S.current.planFeatureBuddies),
+          PlanFeature(S.current.planFeatureNoAds),
           PlanFeature(S.current.planFeatureAnalytics, included: false),
           PlanFeature(S.current.planFeaturePriority, included: false),
         ],
@@ -78,14 +78,13 @@ List<PlanData> buildPlans() => [
         icon: Icons.emoji_events_rounded,
         badge: S.current.planBestValue,
         features: [
+          PlanFeature(S.current.planFeatureGoldHours),
           PlanFeature(S.current.planFeatureWorkspacesUnlimited),
-          PlanFeature(S.current.planFeatureSessionsUnlimited),
-          PlanFeature(S.current.planFeatureNoAds),
           PlanFeature(S.current.planFeatureBuddies),
+          PlanFeature(S.current.planFeatureNoAds),
           PlanFeature(S.current.planFeatureAnalytics),
           PlanFeature(S.current.planFeaturePriority),
         ],
         ctaLabel: S.current.planCtaGold,
       ),
     ];
-

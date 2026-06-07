@@ -1,15 +1,14 @@
+import '../../../../core/constants/api_constants.dart';
+import '../../../../core/dio/dio_helper.dart';
+import '../../../../core/error/failure.dart';
 import '../model/workspace_attendance_model.dart';
 
-/// Contract for workspace attendance remote API calls.
-/// When the real API is ready: inject DioHelper, replace method bodies.
 abstract class WorkspaceAttendanceRemoteDataSource {
-  /// POST /workspace/check-in  { qr_payload }
   Future<WorkspaceAttendanceModel> checkIn({
     required String qrPayload,
     required DateTime checkInTime,
   });
 
-  /// POST /workspace/check-out  { attendance_id }
   Future<WorkspaceAttendanceModel> checkOut({
     required String attendanceId,
     required String workspaceId,
@@ -19,29 +18,22 @@ abstract class WorkspaceAttendanceRemoteDataSource {
   });
 }
 
-/// Dummy implementation.
-/// Returns hardcoded data. When real API is ready:
-///   1. Inject DioHelper
-///   2. Replace each method body with an actual HTTP call
-///   3. No other layer needs to change.
-///
-class WorkspaceAttendanceDummyDataSourceImpl
-    implements WorkspaceAttendanceRemoteDataSource {
+class WorkspaceAttendanceRemoteDataSourceImpl implements WorkspaceAttendanceRemoteDataSource {
+  final DioHelper _dio;
+
+  const WorkspaceAttendanceRemoteDataSourceImpl(this._dio);
+
   @override
   Future<WorkspaceAttendanceModel> checkIn({
     required String qrPayload,
     required DateTime checkInTime,
   }) async {
-    await Future.delayed(const Duration(milliseconds: 900));
-    if (qrPayload.trim().isEmpty || qrPayload.trim().length < 4) {
-      throw const FormatException('invalidWorkspaceQr');
-    }
-    return WorkspaceAttendanceModel(
-      attendanceId: 'att_${DateTime.now().millisecondsSinceEpoch}',
-      workspaceId: qrPayload.trim(),
-      workspaceName: 'StudyHub Cairo',
-      checkInTime: checkInTime,
+    final response = await _dio.post(
+      url: URL.checkIn,
+      data: {'qr_payload': qrPayload},
+      requiresAuth: true,
     );
+    return WorkspaceAttendanceModel.fromJson(_extractObject(response));
   }
 
   @override
@@ -52,15 +44,20 @@ class WorkspaceAttendanceDummyDataSourceImpl
     required DateTime checkInTime,
     required Duration elapsedTime,
   }) async {
-    await Future.delayed(const Duration(milliseconds: 900));
-    final checkOut = DateTime.now();
-    return WorkspaceAttendanceModel(
-      attendanceId: attendanceId,
-      workspaceId: workspaceId,
-      workspaceName: workspaceName,
-      checkInTime: checkInTime,
-      checkOutTime: checkOut,
-      studyMinutes: elapsedTime.inMinutes.clamp(1, 24 * 60),
+    final response = await _dio.post(
+      url: URL.checkOut(attendanceId),
+      requiresAuth: true,
+    );
+    return WorkspaceAttendanceModel.fromJson(_extractObject(response));
+  }
+
+  Map<String, dynamic> _extractObject(dynamic response) {
+    if (response is Map<String, dynamic>) {
+      final data = response['data'];
+      if (data is Map<String, dynamic>) return data;
+    }
+    throw const ServerFailure(
+      message: 'Unexpected attendance response shape',
     );
   }
 }
