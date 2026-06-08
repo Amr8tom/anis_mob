@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:anis/common/custom_ui.dart';
 import 'package:anis/common/widgets/sizeboxs/sizer.dart';
 import 'package:anis/core/constants/app_sizes.dart';
@@ -28,8 +27,44 @@ class UserInfoScreen extends StatelessWidget {
   }
 }
 
-class _UserInfoView extends StatelessWidget {
+class _UserInfoView extends StatefulWidget {
   const _UserInfoView();
+
+  @override
+  State<_UserInfoView> createState() => _UserInfoViewState();
+}
+
+class _UserInfoViewState extends State<_UserInfoView> {
+  late final PageController _pageController;
+  late final TextEditingController _passwordController;
+  late final TextEditingController _confirmPasswordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+    _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _onNext(UserInfoCubit cubit) {
+    cubit.nextStep(
+      password: _passwordController.text,
+      confirmPassword: _confirmPasswordController.text,
+    );
+  }
+
+  void _onBack(UserInfoCubit cubit) {
+    cubit.backStep();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +74,7 @@ class _UserInfoView extends StatelessWidget {
       value: SystemUiOverlayStyle.dark,
       child: BlocListener<UserInfoCubit, UserInfoState>(
         listenWhen: (p, c) =>
-            p.stepError != c.stepError || p.status != c.status,
+            p.stepError != c.stepError || p.status != c.status || p.step != c.step,
         listener: (ctx, state) {
           if (state.stepError.isNotEmpty) {
             CustomUI.snackBarFailure(context: ctx, message: state.stepError);
@@ -53,6 +88,14 @@ class _UserInfoView extends StatelessWidget {
           } else if (state.status.isError) {
             CustomUI.snackBarFailure(context: ctx, message: state.errorMessage);
             cubit.resetStatus();
+          }
+
+          if (_pageController.hasClients && _pageController.page?.round() != state.step) {
+            _pageController.animateToPage(
+              state.step,
+              duration: const Duration(milliseconds: 380),
+              curve: Curves.easeInOutCubic,
+            );
           }
         },
         child: Scaffold(
@@ -68,20 +111,22 @@ class _UserInfoView extends StatelessWidget {
               // ── Page content ──────────────────────────────
               Expanded(
                 child: PageView(
-                  controller: cubit.pageController,
+                  controller: _pageController,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
                     StepAccountWidget(
-                      passwordController: cubit.passwordController,
-                      confirmPasswordController:
-                          cubit.confirmPasswordController,
+                      passwordController: _passwordController,
+                      confirmPasswordController: _confirmPasswordController,
                     ),
                   ],
                 ),
               ),
 
               // ── Footer: back + next ───────────────────────
-              const _SignUpFooter(),
+              _SignUpFooter(
+                onNext: () => _onNext(cubit),
+                onBack: () => _onBack(cubit),
+              ),
             ],
           ),
         ),
@@ -104,16 +149,16 @@ class _SignUpHeader extends StatelessWidget {
       color: ColorRes.anisGreen,
       padding: EdgeInsets.fromLTRB(
         AppSizes.padding,
-        MediaQuery.of(context).padding.top + 16.h,
+        MediaQuery.of(context).padding.top + 16,
         AppSizes.padding,
-        20.h,
+        20,
       ),
       child: Row(
         children: [
           // App icon
           Container(
-            width: 40.w,
-            height: 40.w,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: ColorRes.white,
               shape: BoxShape.circle,
@@ -216,11 +261,16 @@ class _StepProgress extends StatelessWidget {
 // ── Footer ────────────────────────────────────────────────────────────────────
 
 class _SignUpFooter extends StatelessWidget {
-  const _SignUpFooter();
+  final VoidCallback onNext;
+  final VoidCallback onBack;
+
+  const _SignUpFooter({
+    required this.onNext,
+    required this.onBack,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<UserInfoCubit>();
     final tt = Theme.of(context).textTheme;
 
     return BlocBuilder<UserInfoCubit, UserInfoState>(
@@ -246,7 +296,7 @@ class _SignUpFooter extends StatelessWidget {
                   // Back button (only shown on step > 0)
                   if (state.step > 0) ...[
                     _BackButton(
-                      onTap: isLoading ? null : cubit.backStep,
+                      onTap: isLoading ? null : onBack,
                     ),
                     const Sizer(width: 12),
                   ],
@@ -256,7 +306,7 @@ class _SignUpFooter extends StatelessWidget {
                     child: SizedBox(
                       height: AppSizes.buttonHeight,
                       child: ElevatedButton(
-                        onPressed: isLoading ? null : cubit.nextStep,
+                        onPressed: isLoading ? null : onNext,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ColorRes.anisGreen,
                           foregroundColor: ColorRes.white,

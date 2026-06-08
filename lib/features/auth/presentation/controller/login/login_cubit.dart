@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../generated/l10n.dart';
@@ -12,10 +11,7 @@ class LoginCubit extends Cubit<LoginState> {
   final LoginUserUseCase _loginUserUseCase;
   final GuestLoginUseCase _guestLoginUseCase;
 
-  // Controllers live here so the form widget stays stateless
-  final phoneController = TextEditingController();
-  final passwordController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+
 
   LoginCubit(
     this._loginUserUseCase,
@@ -30,15 +26,16 @@ class LoginCubit extends Cubit<LoginState> {
 
   // ── Login ──────────────────────────────────────────────────────────────────
 
-  Future<void> login() async {
-    if (!(formKey.currentState?.validate() ?? false)) return;
-
+  Future<void> login({
+    required String phoneNumber,
+    required String password,
+  }) async {
     emit(state.copyWith(status: LoginStatus.loginLoading));
 
     final result = await _loginUserUseCase.call(
       params: LoginUserParams(
-        phoneNumber: phoneController.text.trim(),
-        password: passwordController.text.trim(),
+        phoneNumber: phoneNumber.trim(),
+        password: password.trim(),
       ),
     );
 
@@ -82,11 +79,4 @@ class LoginCubit extends Cubit<LoginState> {
           loginErrorMassage: '',
         ),
       );
-
-  @override
-  Future<void> close() {
-    phoneController.dispose();
-    passwordController.dispose();
-    return super.close();
-  }
 }

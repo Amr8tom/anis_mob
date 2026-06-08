@@ -36,6 +36,13 @@ final class WorkspaceUpdateRequest extends FormRequest
             'gallery_images.*' => ['image', 'max:5120'],
             'retained_gallery_images' => ['nullable', 'array'],
             'retained_gallery_images.*' => ['string'],
+            'manual_occupancy' => ['nullable', 'integer', 'min:0'],
+            'status' => ['required', 'string', 'in:OPEN,BUSY,FULL,CLOSED'],
+            'drinks' => ['nullable', 'array'],
+            'drinks.*.id' => ['nullable', 'uuid'],
+            'drinks.*.name' => ['required', 'string', 'max:255'],
+            'drinks.*.icon' => ['required', 'string', 'max:50'],
+            'drinks.*.price_cents' => ['required', 'integer', 'min:0'],
         ];
     }
 }

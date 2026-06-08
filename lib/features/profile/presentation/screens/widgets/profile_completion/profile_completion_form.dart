@@ -9,15 +9,35 @@ import '../../../controller/profile_completion_cubit.dart';
 
 class ProfileCompletionForm extends StatelessWidget {
   final ProfileCompletionState state;
+  final GlobalKey<FormState> formKey;
+  final TextEditingController emailController;
+  final TextEditingController universityController;
+  final TextEditingController studyFieldController;
+  final TextEditingController interestController;
 
-  const ProfileCompletionForm({super.key, required this.state});
+  const ProfileCompletionForm({
+    super.key,
+    required this.state,
+    required this.formKey,
+    required this.emailController,
+    required this.universityController,
+    required this.studyFieldController,
+    required this.interestController,
+  });
+
+  void _addCustomInterest(BuildContext context) {
+    final interest = interestController.text.trim();
+    if (interest.isEmpty) return;
+    context.read<ProfileCompletionCubit>().addSuggestedInterest(interest);
+    interestController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<ProfileCompletionCubit>();
 
     return Form(
-      key: cubit.formKey,
+      key: formKey,
       child: ListView(
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.fromLTRB(
@@ -28,7 +48,7 @@ class ProfileCompletionForm extends StatelessWidget {
         ),
         children: [
           _ProfileTextField(
-            controller: cubit.emailController,
+            controller: emailController,
             label: S.current.email,
             hint: S.current.profileEmailHint,
             icon: Icons.alternate_email_rounded,
@@ -43,7 +63,7 @@ class ProfileCompletionForm extends StatelessWidget {
           ),
           const Sizer(height: 16),
           _ProfileTextField(
-            controller: cubit.universityController,
+            controller: universityController,
             label: S.current.university,
             hint: S.current.profileUniversityHint,
             icon: Icons.account_balance_outlined,
@@ -51,7 +71,7 @@ class ProfileCompletionForm extends StatelessWidget {
           ),
           const Sizer(height: 16),
           _ProfileTextField(
-            controller: cubit.studyFieldController,
+            controller: studyFieldController,
             label: S.current.specialization,
             hint: S.current.specializationHint,
             icon: Icons.school_outlined,
@@ -101,12 +121,12 @@ class ProfileCompletionForm extends StatelessWidget {
             children: [
               Expanded(
                 child: _ProfileTextField(
-                  controller: cubit.interestController,
+                  controller: interestController,
                   label: S.current.addAnotherInterest,
                   hint: S.current.interestHint,
                   icon: Icons.add_circle_outline_rounded,
                   textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => cubit.addCustomInterest(),
+                  onSubmitted: (_) => _addCustomInterest(context),
                 ),
               ),
               const Sizer(width: 8),
@@ -114,7 +134,7 @@ class ProfileCompletionForm extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 28),
                 child: IconButton.filled(
                   tooltip: S.current.add,
-                  onPressed: cubit.addCustomInterest,
+                  onPressed: () => _addCustomInterest(context),
                   style: IconButton.styleFrom(
                     backgroundColor: ColorRes.anisGreen,
                     foregroundColor: ColorRes.white,

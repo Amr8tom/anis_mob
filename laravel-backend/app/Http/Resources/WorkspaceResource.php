@@ -29,7 +29,7 @@ final class WorkspaceResource extends JsonResource
             'longitude' => (float) ($this->longitude ?? 0),
             'galleryImages' => $this->gallery_images ?? [],
             'drinks' => WorkspaceDrinkResource::collection($this->whenLoaded('drinks')),
-            'currentOccupancy' => (int) ($this->current_occupancy ?? 0),
+            'currentOccupancy' => $this->computed_occupancy,
             'capacity' => (int) ($this->capacity ?? 0),
             'status' => strtolower($this->status->value),
             'distanceKm' => round((float) ($this->distance_km ?? 0), 2),

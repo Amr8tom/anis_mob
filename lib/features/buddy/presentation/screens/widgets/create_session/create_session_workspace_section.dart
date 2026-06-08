@@ -15,7 +15,12 @@ import 'session_styled_field.dart';
 /// Section 3 — searchable workspace picker backed by [WorkspaceEntity] data
 /// fetched from the workspaces repository (same dummy data workspaces feature uses).
 class CreateSessionWorkspaceSection extends StatefulWidget {
-  const CreateSessionWorkspaceSection({super.key});
+  final TextEditingController workspaceSearchCtrl;
+
+  const CreateSessionWorkspaceSection({
+    super.key,
+    required this.workspaceSearchCtrl,
+  });
 
   @override
   State<CreateSessionWorkspaceSection> createState() =>
@@ -55,7 +60,7 @@ class _CreateSessionWorkspaceSectionState
 
                 // ── Search field ────────────────────────────
                 SessionStyledField(
-                  controller: cubit.workspaceSearchCtrl,
+                  controller: widget.workspaceSearchCtrl,
                   hint: S.current.searchWorkspace,
                   prefixIcon: Icons.search_rounded,
                   onChanged: cubit.setWorkspaceSearch,

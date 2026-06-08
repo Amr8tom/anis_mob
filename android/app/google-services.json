@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "198528572554",
+    "project_id": "cement-tech-app",
+    "storage_bucket": "cement-tech-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198528572554:android:d79f11866df2c3316ce173",
+        "android_client_info": {
+          "package_name": "com.anisByAmrAlaa.anis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfbxujfBhetazhEEog2zFxfKkRmraD6QM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

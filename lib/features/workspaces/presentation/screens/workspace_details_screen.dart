@@ -38,8 +38,8 @@ class WorkspaceDetailsScreen extends StatelessWidget {
               child: TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  WorkspaceSessionsTab(workspace: workspace),
                   WorkspaceInfoTab(workspace: workspace),
+                  WorkspaceSessionsTab(workspace: workspace),
                 ],
               ),
             ),

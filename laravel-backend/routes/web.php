@@ -11,6 +11,7 @@ use App\Models\Plan;
 // Anis marketing / onboarding landing page.
 Route::get('/landing', function () {
     $plans = Plan::where('is_active', true)->orderBy('price_cents')->get();
+
     return view('landing', compact('plans'));
 })->name('landing');
 
@@ -30,7 +31,16 @@ Route::prefix('workspace')->name('workspace.')->group(function () {
     // Protected routes for owner
     Route::middleware('workspace.owner')->group(function () {
         Route::post('logout', [WorkspaceAuthController::class, 'logout'])->name('logout');
+        
+        // Settings
         Route::get('settings', [WorkspaceSettingsController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [WorkspaceSettingsController::class, 'update'])->name('settings.update');
+
+        // Sessions
+        Route::resource('sessions', \App\Http\Controllers\Web\WorkspaceSessionController::class);
+
+        // Clients
+        Route::get('clients', [\App\Http\Controllers\Web\WorkspaceClientController::class, 'index'])->name('clients.index');
+        Route::get('clients/{client}', [\App\Http\Controllers\Web\WorkspaceClientController::class, 'show'])->name('clients.show');
     });
 });

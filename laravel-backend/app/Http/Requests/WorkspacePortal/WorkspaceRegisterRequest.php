@@ -28,6 +28,19 @@ final class WorkspaceRegisterRequest extends FormRequest
             'latitude' => ['required', 'numeric', 'between:-90,90'],
             'longitude' => ['required', 'numeric', 'between:-180,180'],
             'day_calculation_hours' => ['required', 'integer', 'min:1', 'max:24'],
+            'description' => ['nullable', 'string', 'max:2000'],
+            'capacity' => ['nullable', 'integer', 'min:1'],
+            'open_time' => ['nullable', 'string', 'max:10'],
+            'close_time' => ['nullable', 'string', 'max:10'],
+            'amenities' => ['nullable', 'array'],
+            'amenities.*' => ['string'],
+            'cover_image' => ['nullable', 'image', 'max:5120'],
+            'gallery_images' => ['nullable', 'array', 'max:10'],
+            'gallery_images.*' => ['image', 'max:5120'],
+            'drinks' => ['nullable', 'array'],
+            'drinks.*.name' => ['required', 'string', 'max:255'],
+            'drinks.*.icon' => ['required', 'string', 'max:50'],
+            'drinks.*.price_cents' => ['required', 'integer', 'min:0'],
         ];
     }
 }

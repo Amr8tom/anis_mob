@@ -9,7 +9,12 @@ import '../../../controller/buddy_cubit.dart';
 
 /// Section 6 — submit button that reacts to [BuddyActionStatus.loading].
 class CreateSessionSubmitButton extends StatelessWidget {
-  const CreateSessionSubmitButton({super.key});
+  final VoidCallback onSubmit;
+
+  const CreateSessionSubmitButton({
+    super.key,
+    required this.onSubmit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +31,7 @@ class CreateSessionSubmitButton extends StatelessWidget {
                 : () => ActionGuard.run(
                       context,
                       isGuest: state.isGuest,
-                      action: () {
-                        final cubit = context.read<BuddyCubit>();
-                        if (cubit.state.selectedWorkspace == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(S.current.selectWorkspaceHint),
-                              backgroundColor: ColorRes.anisErrorRed,
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                          return;
-                        }
-                        cubit.createSession();
-                      },
+                      action: onSubmit,
                     ),
             style: ElevatedButton.styleFrom(
               backgroundColor: ColorRes.anisGreen,

@@ -113,7 +113,7 @@
         </p>
 
         <div class="card">
-            <form action="{{ route('workspace.register') }}" method="POST">
+            <form action="{{ route('workspace.register') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <!-- Owner Account Details -->
@@ -180,6 +180,92 @@
                         @enderror
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label for="description">وصف مساحة العمل</label>
+                    <textarea id="description" name="description" class="form-control" rows="3" placeholder="أخبرنا المزيد عن مساحتك ومميزاتها...">{{ old('description') }}</textarea>
+                    @error('description')
+                        <div class="form-error">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="capacity">الطاقة الاستيعابية (عدد الأفراد)</label>
+                        <input type="number" id="capacity" name="capacity" class="form-control" min="1" value="{{ old('capacity') }}">
+                        @error('capacity')
+                            <div class="form-error">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="grid-2" style="gap: 10px;">
+                        <div class="form-group">
+                            <label for="open_time">وقت الفتح</label>
+                            <input type="time" id="open_time" name="open_time" class="form-control" value="{{ old('open_time') }}">
+                            @error('open_time')
+                                <div class="form-error">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="close_time">وقت الإغلاق</label>
+                            <input type="time" id="close_time" name="close_time" class="form-control" value="{{ old('close_time') }}">
+                            @error('close_time')
+                                <div class="form-error">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Amenities -->
+                <div class="form-group">
+                    <label>المرافق المتاحة</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px;">
+                        @php $availableAmenities = ['wifi' => 'واي فاي سريع', 'ac' => 'تكييف مركزي', 'coffee' => 'مشروبات مجانية', 'printing' => 'طباعة وتصوير', 'quiet' => 'منطقة هادئة']; @endphp
+                        @foreach($availableAmenities as $key => $label)
+                            <label style="display: flex; align-items: center; gap: 5px; font-weight: normal; font-size: 14px; cursor: pointer;">
+                                <input type="checkbox" name="amenities[]" value="{{ $key }}" {{ in_array($key, old('amenities', [])) ? 'checked' : '' }}>
+                                {{ $label }}
+                            </label>
+                        @endforeach
+                    </div>
+                    @error('amenities')
+                        <div class="form-error">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Images -->
+                <div class="section-header" style="margin-top: 30px;">
+                    <i class="fa-solid fa-images"></i> صور مساحة العمل
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="cover_image">الصورة الرئيسية (Cover)</label>
+                        <input type="file" id="cover_image" name="cover_image" class="form-control" accept="image/*">
+                        @error('cover_image')
+                            <div class="form-error">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="gallery_images">صور أخرى (Gallery - يمكن تحديد أكثر من صورة)</label>
+                        <input type="file" id="gallery_images" name="gallery_images[]" class="form-control" accept="image/*" multiple>
+                        @error('gallery_images')
+                            <div class="form-error">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Drinks / Menu -->
+                <div class="section-header" style="margin-top: 30px;">
+                    <i class="fa-solid fa-mug-hot"></i> قائمة المشروبات
+                </div>
+                
+                <div id="drinks-container">
+                    <!-- Dynamic drinks will be appended here -->
+                </div>
+                <button type="button" class="btn-submit" id="add-drink-btn" style="background-color: var(--upwork-blue); padding: 8px 16px; font-size: 14px; width: auto; margin-bottom: 20px;">
+                    <i class="fa-solid fa-plus"></i> إضافة مشروب
+                </button>
 
                 <div class="form-group">
                     <label for="address">العنوان بالتفصيل</label>
@@ -269,6 +355,60 @@
 
             // Trigger initial state update
             updateCoordinates(initialLat, initialLng);
+
+            // Drinks Dynamic Section
+            let drinkIndex = 0;
+            const drinksContainer = document.getElementById('drinks-container');
+            const addDrinkBtn = document.getElementById('add-drink-btn');
+
+            function addDrinkRow(name = '', icon = '☕', priceCents = '') {
+                const row = document.createElement('div');
+                row.className = 'grid-2';
+                row.style.marginBottom = '15px';
+                row.style.alignItems = 'end';
+                row.innerHTML = `
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>اسم المشروب</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" name="drinks[${drinkIndex}][icon]" class="form-control" style="width: 60px; text-align: center;" value="${icon}" required placeholder="☕">
+                            <input type="text" name="drinks[${drinkIndex}][name]" class="form-control" style="flex: 1;" value="${name}" required placeholder="مثال: قهوة تركي">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0; display: flex; gap: 10px; align-items: flex-end;">
+                        <div style="flex: 1;">
+                            <label>السعر (بالقروش - مثال: 15 جنيه = 1500)</label>
+                            <input type="number" name="drinks[${drinkIndex}][price_cents]" class="form-control" value="${priceCents}" required min="0">
+                        </div>
+                        <button type="button" class="btn-remove-drink" style="background: none; border: none; color: var(--upwork-error); cursor: pointer; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--upwork-border); height: 45px;">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                row.querySelector('.btn-remove-drink').addEventListener('click', function() {
+                    row.remove();
+                });
+
+                drinksContainer.appendChild(row);
+                drinkIndex++;
+            }
+
+            addDrinkBtn.addEventListener('click', function() {
+                addDrinkRow();
+            });
+
+            // Restore old drinks input or initialize with one empty row
+            @if(old('drinks'))
+                @foreach(old('drinks') as $drink)
+                    addDrinkRow(
+                        {!! json_encode($drink['name'] ?? '') !!},
+                        {!! json_encode($drink['icon'] ?? '☕') !!},
+                        {!! json_encode($drink['price_cents'] ?? '') !!}
+                    );
+                @endforeach
+            @else
+                addDrinkRow();
+            @endif
         });
     </script>
 @endsection

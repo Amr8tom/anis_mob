@@ -27,7 +27,19 @@ final class EloquentWorkspacePortalRepository implements ContractInterface
                 'role' => UserRole::WORKSPACE_OWNER,
             ]);
 
-            return Workspace::create([
+            $coverImageUrl = null;
+            if ($data->coverImage) {
+                $coverImageUrl = '/storage/' . $data->coverImage->store('workspaces', 'public');
+            }
+
+            $galleryImagesUrls = [];
+            foreach ($data->galleryImages as $image) {
+                if ($image) {
+                    $galleryImagesUrls[] = '/storage/' . $image->store('workspaces', 'public');
+                }
+            }
+
+            $workspace = Workspace::create([
                 'owner_id' => $user->id,
                 'name' => $data->workspaceName,
                 'address' => $data->address,
@@ -37,19 +49,59 @@ final class EloquentWorkspacePortalRepository implements ContractInterface
                 'admin_phone' => $data->whatsappNumber,
                 'qr_token' => (string) Str::uuid(),
                 'is_active' => true,
+                'description' => $data->description,
+                'capacity' => $data->capacity,
+                'open_time' => $data->openTime,
+                'close_time' => $data->closeTime,
+                'amenities' => $data->amenities,
+                'cover_image_url' => $coverImageUrl,
+                'gallery_images' => $galleryImagesUrls,
             ]);
+
+            if (!empty($data->drinks)) {
+                $workspace->drinks()->createMany($data->drinks);
+            }
+
+            return $workspace;
         });
     }
 
     public function updateWorkspace(Workspace $workspace, WorkspaceUpdateData $data): Workspace
     {
-        // Text fields and attributes will be updated.
-        // File handling (uploading/deleting on disk) is coordinated by the Action,
-        // which calls save or passes the resolved file paths to this repository.
-        // Wait, to keep it clean, the Action will update file attributes on the model,
-        // and then call this repository method to save the model and basic data.
-        return DB::transaction(function () use ($workspace) {
+        return DB::transaction(function () use ($workspace, $data) {
+            $workspace->name = $data->name;
+            $workspace->description = $data->description;
+            $workspace->address = $data->address;
+            $workspace->latitude = $data->latitude;
+            $workspace->longitude = $data->longitude;
+            $workspace->capacity = $data->capacity;
+            $workspace->open_time = $data->openTime;
+            $workspace->close_time = $data->closeTime;
+            $workspace->admin_phone = $data->adminPhone;
+            $workspace->day_calculation_hours = $data->dayCalculationHours;
+            $workspace->amenities = $data->amenities;
+            $workspace->manual_occupancy = $data->manualOccupancy;
+            $workspace->status = $data->status;
+
             $workspace->save();
+
+            // Sync Drinks
+            $incomingIds = collect($data->drinks)->pluck('id')->filter()->toArray();
+            
+            // Delete removed drinks
+            $workspace->drinks()->whereNotIn('id', $incomingIds)->delete();
+            
+            // Create or update drinks
+            foreach ($data->drinks as $drinkData) {
+                $workspace->drinks()->updateOrCreate(
+                    ['id' => $drinkData['id'] ?? null],
+                    [
+                        'name' => $drinkData['name'],
+                        'icon' => $drinkData['icon'],
+                        'price_cents' => $drinkData['price_cents'],
+                    ]
+                );
+            }
 
             return $workspace->fresh();
         });

@@ -13,11 +13,17 @@ import 'session_styled_field.dart';
 
 /// Section 4 — attendance rules builder.
 class CreateSessionRulesSection extends StatelessWidget {
-  const CreateSessionRulesSection({super.key});
+  final TextEditingController ruleCtrl;
+  final VoidCallback onAddRule;
+
+  const CreateSessionRulesSection({
+    super.key,
+    required this.ruleCtrl,
+    required this.onAddRule,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<BuddyCubit>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -26,6 +32,7 @@ class CreateSessionRulesSection extends StatelessWidget {
         BlocBuilder<BuddyCubit, BuddyState>(
           buildWhen: (p, c) => p.createRules != c.createRules,
           builder: (context, state) {
+            final cubit = context.read<BuddyCubit>();
             return SessionFormCard(
               children: [
                 SessionFieldLabel(S.current.createSessionAddRule),
@@ -34,14 +41,14 @@ class CreateSessionRulesSection extends StatelessWidget {
                   children: [
                     Expanded(
                       child: SessionStyledField(
-                        controller: cubit.ruleCtrl,
+                        controller: ruleCtrl,
                         hint: S.current.createSessionRuleHint,
-                        onSubmitted: (_) => cubit.addRule(),
+                        onSubmitted: (_) => onAddRule(),
                       ),
                     ),
                     const Sizer(width: 8),
                     GestureDetector(
-                      onTap: cubit.addRule,
+                      onTap: onAddRule,
                       child: Container(
                         width: AppSizes.iconXLarge + AppSizes.sm,
                         height: AppSizes.iconXLarge + AppSizes.sm,

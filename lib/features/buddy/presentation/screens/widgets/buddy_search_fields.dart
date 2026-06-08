@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../common/widgets/sizeboxs/sizer.dart';
 import '../../../../../core/constants/app_sizes.dart';
@@ -107,7 +106,7 @@ class _SearchField extends StatelessWidget {
           // suffixIcon appears on the LEFT in RTL — the reading-start side
           suffixIcon: Padding(
             padding: EdgeInsets.symmetric(horizontal: AppSizes.sm),
-            child: Icon(icon, size: 20.r, color: iconColor),
+            child: Icon(icon, size: 20, color: iconColor),
           ),
           suffixIconConstraints: const BoxConstraints(),
           border: InputBorder.none,

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/utils/enums/general_status.dart';
@@ -13,36 +13,29 @@ class UserInfoCubit extends Cubit<UserInfoState> {
 
   static const int totalSteps = 1;
 
-  /// PageController lives here so every step screen stays stateless.
-  final PageController pageController = PageController();
-
-  /// Password controllers — owned by cubit, disposed in close().
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-
   UserInfoCubit(this._createUserUseCase) : super(const UserInfoState());
 
   // ── Step navigation ────────────────────────────────────────────────────────
 
-  void nextStep() {
-    final error = _validateAccountStep();
+  void nextStep({required String password, required String confirmPassword}) {
+    final error = _validateAccountStep(
+      password: password,
+      confirmPassword: confirmPassword,
+    );
     if (error != null) {
       emit(state.copyWith(stepError: error));
       return;
     }
-    _submitRegistration();
+    _submitRegistration(
+      password: password,
+      confirmPassword: confirmPassword,
+    );
   }
 
   void backStep() {
     if (state.step == 0) return;
     final prev = state.step - 1;
     emit(state.copyWith(step: prev, stepError: ''));
-    pageController.animateToPage(
-      prev,
-      duration: const Duration(milliseconds: 380),
-      curve: Curves.easeInOutCubic,
-    );
   }
 
   void clearStepError() => emit(state.copyWith(stepError: ''));
@@ -57,19 +50,22 @@ class UserInfoCubit extends Cubit<UserInfoState> {
 
   // ── Validators ─────────────────────────────────────────────────────────────
 
-  String? _validateAccountStep() {
+  String? _validateAccountStep({
+    required String password,
+    required String confirmPassword,
+  }) {
     if (state.name.trim().length < 2) return S.current.nameTooShortError;
     if (state.phone.trim().length < 7) return S.current.phoneRequired;
     if (state.whatsAppNumber.trim().length < 7) {
       return S.current.whatsAppNumberRequired;
     }
-    final pw = passwordController.text.trim();
+    final pw = password.trim();
     if (pw.isEmpty) return S.current.passwordEmptyError;
 
     if (!pw.contains(RegExp(r'[0-9]'))) {
       return S.current.passwordMissingNumberError;
     }
-    if (pw != confirmPasswordController.text.trim()) {
+    if (pw != confirmPassword.trim()) {
       return S.current.passwordsDoNotMatch;
     }
     return null;
@@ -77,7 +73,10 @@ class UserInfoCubit extends Cubit<UserInfoState> {
 
   // ── Submit ─────────────────────────────────────────────────────────────────
 
-  Future<void> _submitRegistration() async {
+  Future<void> _submitRegistration({
+    required String password,
+    required String confirmPassword,
+  }) async {
     emit(state.copyWith(status: GeneralStatus.loading));
 
     final result = await _createUserUseCase.call(
@@ -85,8 +84,8 @@ class UserInfoCubit extends Cubit<UserInfoState> {
         fullName: state.name,
         phoneNumber: state.phone.trim(),
         whatsAppNumber: state.whatsAppNumber.trim(),
-        password: passwordController.text.trim(),
-        passwordConfirmation: confirmPasswordController.text.trim(),
+        password: password.trim(),
+        passwordConfirmation: confirmPassword.trim(),
       ),
     );
 
@@ -97,13 +96,5 @@ class UserInfoCubit extends Cubit<UserInfoState> {
       )),
       (_) => emit(state.copyWith(status: GeneralStatus.success)),
     );
-  }
-
-  @override
-  Future<void> close() {
-    pageController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    return super.close();
   }
 }

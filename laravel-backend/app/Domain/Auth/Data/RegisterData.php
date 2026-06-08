@@ -34,7 +34,7 @@ final readonly class RegisterData
             phoneNumber: $request->string('phone_number')->trim()->value(),
             email: $email,
             whatsappNumber: $request->string('whatsapp_number')->trim()->value(),
-            password: $request->string('password')->value(),
+            password: $request->string('    ')->value(),
             gender: $gender,
             studyField: $request->filled('study_field')
                 ? $request->string('study_field')->trim()->value()

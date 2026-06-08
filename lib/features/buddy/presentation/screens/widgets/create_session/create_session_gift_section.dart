@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../common/widgets/sizeboxs/sizer.dart';
 import '../../../../../../generated/l10n.dart';
-import '../../../controller/buddy_cubit.dart';
 import 'session_field_label.dart';
 import 'session_form_card.dart';
 import 'session_section_label.dart';
@@ -11,11 +9,15 @@ import 'session_styled_field.dart';
 
 /// Section 5 — optional gift / reward field.
 class CreateSessionGiftSection extends StatelessWidget {
-  const CreateSessionGiftSection({super.key});
+  final TextEditingController giftCtrl;
+
+  const CreateSessionGiftSection({
+    super.key,
+    required this.giftCtrl,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<BuddyCubit>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -26,7 +28,7 @@ class CreateSessionGiftSection extends StatelessWidget {
             SessionFieldLabel(S.current.createSessionGiftLabel),
             const Sizer(height: 6),
             SessionStyledField(
-              controller: cubit.giftCtrl,
+              controller: giftCtrl,
               hint: S.current.createSessionGiftHint,
               prefixIcon: Icons.card_giftcard_rounded,
             ),

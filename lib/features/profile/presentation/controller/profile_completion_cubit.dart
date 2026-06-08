@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart'; // For @immutable in state
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../generated/l10n.dart';
@@ -12,12 +12,6 @@ part 'profile_completion_state.dart';
 class ProfileCompletionCubit extends Cubit<ProfileCompletionState> {
   final GetProfileUseCase getProfileUseCase;
   final UpdateProfileUseCase updateProfileUseCase;
-
-  final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final universityController = TextEditingController();
-  final studyFieldController = TextEditingController();
-  final interestController = TextEditingController();
 
   ProfileCompletionCubit({
     required this.getProfileUseCase,
@@ -36,9 +30,6 @@ class ProfileCompletionCubit extends Cubit<ProfileCompletionState> {
         errorMessage: failure.message,
       )),
       (profile) {
-        emailController.text = profile.email;
-        universityController.text = profile.university;
-        studyFieldController.text = profile.studyField;
         emit(state.copyWith(
           status: ProfileCompletionStatus.ready,
           profile: profile,
@@ -59,22 +50,18 @@ class ProfileCompletionCubit extends Cubit<ProfileCompletionState> {
     emit(state.copyWith(interests: [...state.interests, interest]));
   }
 
-  void addCustomInterest() {
-    final interest = interestController.text.trim();
-    if (interest.isEmpty) return;
-    addSuggestedInterest(interest);
-    interestController.clear();
-  }
-
   void removeInterest(String interest) {
     emit(state.copyWith(
       interests: state.interests.where((item) => item != interest).toList(),
     ));
   }
 
-  Future<void> saveProfile() async {
+  Future<void> saveProfile({
+    required String email,
+    required String university,
+    required String studyField,
+  }) async {
     if (state.status == ProfileCompletionStatus.saving) return;
-    if (!(formKey.currentState?.validate() ?? false)) return;
     if (state.gender.isEmpty) {
       emit(state.copyWith(errorMessage: S.current.selectGenderError));
       return;
@@ -91,9 +78,9 @@ class ProfileCompletionCubit extends Cubit<ProfileCompletionState> {
 
     final result = await updateProfileUseCase(
       UpdateProfileParams(
-        email: emailController.text,
-        university: universityController.text,
-        studyField: studyFieldController.text,
+        email: email,
+        university: university,
+        studyField: studyField,
         gender: state.gender,
         interests: state.interests,
       ),
@@ -112,14 +99,18 @@ class ProfileCompletionCubit extends Cubit<ProfileCompletionState> {
     );
   }
 
-  Future<void> saveDraftAndContinue() async {
+  Future<void> saveDraftAndContinue({
+    required String email,
+    required String university,
+    required String studyField,
+  }) async {
     if (state.status == ProfileCompletionStatus.saving) return;
 
-    final email = emailController.text.trim();
+    final trimmedEmail = email.trim();
     final params = UpdateProfileParams(
-      email: email.contains('@') ? email : null,
-      university: _nonEmpty(universityController.text),
-      studyField: _nonEmpty(studyFieldController.text),
+      email: trimmedEmail.contains('@') ? trimmedEmail : null,
+      university: _nonEmpty(university),
+      studyField: _nonEmpty(studyField),
       gender: _nonEmpty(state.gender),
       interests: state.interests.isEmpty ? null : state.interests,
     );
@@ -149,13 +140,4 @@ class ProfileCompletionCubit extends Cubit<ProfileCompletionState> {
   }
 
   void clearError() => emit(state.copyWith(clearError: true));
-
-  @override
-  Future<void> close() {
-    emailController.dispose();
-    universityController.dispose();
-    studyFieldController.dispose();
-    interestController.dispose();
-    return super.close();
-  }
 }

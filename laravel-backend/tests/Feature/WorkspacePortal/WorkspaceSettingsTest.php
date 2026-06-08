@@ -73,6 +73,7 @@ final class WorkspaceSettingsTest extends TestCase
             'cover_image' => $coverImage,
             'gallery_images' => [$galleryImage1],
             'retained_gallery_images' => [],
+            'status' => 'OPEN',
         ];
 
         $response = $this->actingAs($user)
@@ -144,6 +145,7 @@ final class WorkspaceSettingsTest extends TestCase
             'longitude' => 31.2357,
             'day_calculation_hours' => 8,
             'retained_gallery_images' => [$url1], // url2 is deleted
+            'status' => 'OPEN',
         ];
 
         $this->actingAs($user)

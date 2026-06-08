@@ -18,6 +18,14 @@ final readonly class WorkspaceRegistrationData
         public float $latitude,
         public float $longitude,
         public int $dayCalculationHours,
+        public ?string $description,
+        public ?int $capacity,
+        public ?string $openTime,
+        public ?string $closeTime,
+        public array $amenities,
+        public ?\Illuminate\Http\UploadedFile $coverImage,
+        public array $galleryImages,
+        public array $drinks,
     ) {}
 
     public static function fromRequest(WorkspaceRegisterRequest $request): self
@@ -32,6 +40,14 @@ final readonly class WorkspaceRegistrationData
             latitude: $request->float('latitude'),
             longitude: $request->float('longitude'),
             dayCalculationHours: $request->integer('day_calculation_hours', 8),
+            description: $request->input('description') ? trim((string) $request->input('description')) : null,
+            capacity: $request->input('capacity') !== null ? $request->integer('capacity') : null,
+            openTime: $request->input('open_time') ? trim((string) $request->input('open_time')) : null,
+            closeTime: $request->input('close_time') ? trim((string) $request->input('close_time')) : null,
+            amenities: $request->input('amenities', []),
+            coverImage: $request->file('cover_image'),
+            galleryImages: $request->file('gallery_images', []),
+            drinks: $request->input('drinks', []),
         );
     }
 }

@@ -243,6 +243,17 @@
             @auth
                 <div class="nav-user">
                     @if(Auth::user()->ownedWorkspace)
+                        <div style="display: flex; gap: 15px; margin-left: 20px;">
+                            <a href="{{ route('workspace.sessions.index') }}" style="color: var(--upwork-slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px;" class="{{ request()->routeIs('workspace.sessions.*') ? 'active-nav' : '' }}">
+                                <i class="fa-solid fa-chalkboard-user"></i> الجلسات
+                            </a>
+                            <a href="{{ route('workspace.clients.index') }}" style="color: var(--upwork-slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px;" class="{{ request()->routeIs('workspace.clients.*') ? 'active-nav' : '' }}">
+                                <i class="fa-solid fa-users-viewfinder"></i> الزوار
+                            </a>
+                            <a href="{{ route('workspace.settings.edit') }}" style="color: var(--upwork-slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px;" class="{{ request()->routeIs('workspace.settings*') ? 'active-nav' : '' }}">
+                                <i class="fa-solid fa-gear"></i> الإعدادات
+                            </a>
+                        </div>
                         <span class="workspace-badge">
                             <i class="fa-solid fa-store"></i>
                             {{ Auth::user()->ownedWorkspace->name }}

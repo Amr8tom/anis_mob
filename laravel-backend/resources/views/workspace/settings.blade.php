@@ -308,6 +308,8 @@
             <button type="button" class="tab-btn" onclick="switchTab(event, 'location-tab')">الموقع الجغرافي</button>
             <button type="button" class="tab-btn" onclick="switchTab(event, 'gallery-tab')">معرض الصور</button>
             <button type="button" class="tab-btn" onclick="switchTab(event, 'amenities-tab')">المميزات</button>
+            <button type="button" class="tab-btn" onclick="switchTab(event, 'drinks-tab')">قائمة المشروبات</button>
+            <button type="button" class="tab-btn" onclick="switchTab(event, 'occupancy-tab')">الحالة المباشرة</button>
             <button type="button" class="tab-btn" onclick="switchTab(event, 'qr-tab')">رمز الاستجابة السريعة (QR)</button>
         </div>
 
@@ -513,7 +515,83 @@
                 </div>
             </div>
 
-            <!-- Tab 5: QR Code Display -->
+            <!-- Tab 5: Drinks Menu -->
+            <div id="drinks-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-mug-hot" style="color: var(--upwork-green);"></i>
+                        <span>قائمة المشروبات</span>
+                    </div>
+
+                    <p style="color: var(--upwork-muted); font-size: 14px; margin-bottom: 20px;">
+                        أضف المشروبات المتاحة في مساحتك مع تحديد السعر.
+                    </p>
+
+                    <div id="drinks-container">
+                        @foreach($workspace->drinks as $index => $drink)
+                            <div class="grid-2 drink-row" style="margin-bottom: 15px; align-items: end;">
+                                <input type="hidden" name="drinks[{{ $index }}][id]" value="{{ $drink->id }}">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label>اسم المشروب</label>
+                                    <div style="display: flex; gap: 10px;">
+                                        <input type="text" name="drinks[{{ $index }}][icon]" class="form-control" style="width: 60px; text-align: center;" value="{{ $drink->icon }}" required placeholder="☕">
+                                        <input type="text" name="drinks[{{ $index }}][name]" class="form-control" style="flex: 1;" value="{{ $drink->name }}" required placeholder="مثال: قهوة تركي">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0; display: flex; gap: 10px; align-items: flex-end;">
+                                    <div style="flex: 1;">
+                                        <label>السعر (بالقروش)</label>
+                                        <input type="number" name="drinks[{{ $index }}][price_cents]" class="form-control" value="{{ $drink->price_cents }}" required min="0">
+                                    </div>
+                                    <button type="button" class="btn-remove-drink" onclick="this.closest('.drink-row').remove();" style="background: none; border: none; color: var(--upwork-error); cursor: pointer; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--upwork-border); height: 45px;">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    <button type="button" class="btn-submit" id="add-drink-btn" style="background-color: var(--upwork-blue); padding: 8px 16px; font-size: 14px; width: auto; margin-bottom: 20px; margin-top: 10px;">
+                        <i class="fa-solid fa-plus"></i> إضافة مشروب
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 6: Live Occupancy & Status -->
+            <div id="occupancy-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-users" style="color: var(--upwork-green);"></i>
+                        <span>الحالة المباشرة والإشغال</span>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="manual_occupancy">تعديل عدد العملاء الحاليين يدوياً</label>
+                            <input type="number" id="manual_occupancy" name="manual_occupancy" class="form-control" min="0" value="{{ old('manual_occupancy', $workspace->manual_occupancy) }}" placeholder="اتركه فارغاً للاعتماد على التطبيق">
+                            <small style="color: var(--upwork-muted); font-size: 12px; display: block; margin-top: 4px;">إذا تم إدخال رقم هنا، سيتجاهل النظام العدد المحسوب تلقائياً من التطبيق.</small>
+                            @error('manual_occupancy')
+                                <div class="form-error">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">حالة المساحة الآن</label>
+                            <select id="status" name="status" class="form-control" required>
+                                <option value="OPEN" {{ old('status', $workspace->status->value) == 'OPEN' ? 'selected' : '' }}>مفتوح (OPEN)</option>
+                                <option value="BUSY" {{ old('status', $workspace->status->value) == 'BUSY' ? 'selected' : '' }}>مزدحم (BUSY)</option>
+                                <option value="FULL" {{ old('status', $workspace->status->value) == 'FULL' ? 'selected' : '' }}>ممتلئ (FULL)</option>
+                                <option value="CLOSED" {{ old('status', $workspace->status->value) == 'CLOSED' ? 'selected' : '' }}>مغلق (CLOSED)</option>
+                            </select>
+                            @error('status')
+                                <div class="form-error">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 7: QR Code Display -->
             <div id="qr-tab" class="tab-content">
                 <div class="card">
                     <div class="card-title">
@@ -613,6 +691,42 @@
                 }, 100);
             }
         }
+
+        // Drinks Dynamic Section
+        let drinkIndex = {{ count($workspace->drinks) }};
+        document.addEventListener('DOMContentLoaded', function() {
+            const drinksContainer = document.getElementById('drinks-container');
+            const addDrinkBtn = document.getElementById('add-drink-btn');
+
+            if (addDrinkBtn) {
+                addDrinkBtn.addEventListener('click', function() {
+                    const row = document.createElement('div');
+                    row.className = 'grid-2 drink-row';
+                    row.style.marginBottom = '15px';
+                    row.style.alignItems = 'end';
+                    row.innerHTML = `
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>اسم المشروب</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" name="drinks[${drinkIndex}][icon]" class="form-control" style="width: 60px; text-align: center;" value="☕" required placeholder="☕">
+                                <input type="text" name="drinks[${drinkIndex}][name]" class="form-control" style="flex: 1;" value="" required placeholder="مثال: قهوة تركي">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0; display: flex; gap: 10px; align-items: flex-end;">
+                            <div style="flex: 1;">
+                                <label>السعر (بالقروش - مثال: 15 جنيه = 1500)</label>
+                                <input type="number" name="drinks[${drinkIndex}][price_cents]" class="form-control" value="" required min="0">
+                            </div>
+                            <button type="button" class="btn-remove-drink" onclick="this.closest('.drink-row').remove();" style="background: none; border: none; color: var(--upwork-error); cursor: pointer; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--upwork-border); height: 45px;">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    drinksContainer.appendChild(row);
+                    drinkIndex++;
+                });
+            }
+        });
 
         // Delete gallery image handler
         function deleteGalleryImage(btn) {

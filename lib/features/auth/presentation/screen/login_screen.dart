@@ -5,7 +5,7 @@ import 'package:anis/core/constants/colors.dart';
 import 'package:anis/core/service_locator/service_locator.dart';
 
 import '../controller/login/login_cubit.dart';
-import '../widgets/login/login_form.dart';
+import '../widgets/login/login_form_section.dart';
 import '../widgets/login/login_logo_hero_widget.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -33,7 +33,7 @@ class LoginScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       LoginLogoHero(),
-                      Expanded(child: LoginForm()),
+                      Expanded(child: LoginFormSection()),
                     ],
                   ),
                 ),

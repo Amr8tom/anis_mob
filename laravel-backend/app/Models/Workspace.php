@@ -32,10 +32,43 @@ class Workspace extends Model
             'amenities' => 'array',
             'status' => WorkspaceStatus::class,
             'capacity' => 'integer',
+            'manual_occupancy' => 'integer',
             'day_calculation_hours' => 'integer',
             'hour_multiplier' => 'float',
             'is_active' => 'boolean',
         ];
+    }
+
+    protected $appends = ['is_full', 'computed_occupancy'];
+
+    /**
+     * Computed attribute: The effective occupancy. 
+     * Prioritizes manual override, falls back to counted visits.
+     */
+    public function getComputedOccupancyAttribute(): int
+    {
+        if ($this->manual_occupancy !== null) {
+            return $this->manual_occupancy;
+        }
+
+        // Falls back to the relation count if loaded, else 0
+        return (int) ($this->attributes['current_occupancy'] ?? 0);
+    }
+
+    /**
+     * Computed attribute: Is the workspace full?
+     */
+    public function getIsFullAttribute(): bool
+    {
+        if ($this->status === WorkspaceStatus::FULL) {
+            return true;
+        }
+
+        if (!$this->capacity) {
+            return false;
+        }
+
+        return $this->computed_occupancy >= $this->capacity;
     }
 
     /** @return HasMany<StudySession, $this> */

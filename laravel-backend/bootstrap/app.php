@@ -30,16 +30,46 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('visits:auto-checkout')->everyFiveMinutes();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*'),
-        );
+        // Map framework exceptions into the standard { success, message, errors, data } envelope for API requests.
+        $exceptions->render(function (ValidationException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return ApiResponse::error('The given data was invalid.', 422, $e->errors());
+            }
+            return null;
+        });
 
-        // Map framework exceptions into the standard { success, message, errors, data } envelope.
-        // (Domain ApiException subclasses render themselves via their own render() method.)
-        $exceptions->render(fn (ValidationException $e) => ApiResponse::error('The given data was invalid.', 422, $e->errors()));
-        $exceptions->render(fn (AuthenticationException $e) => ApiResponse::error('Unauthenticated.', 401));
-        $exceptions->render(fn (AuthorizationException $e) => ApiResponse::error($e->getMessage() ?: 'This action is unauthorized.', 403));
-        $exceptions->render(fn (ModelNotFoundException $e) => ApiResponse::error('Resource not found.', 404));
-        $exceptions->render(fn (NotFoundHttpException $e) => ApiResponse::error('Resource not found.', 404));
-        $exceptions->render(fn (ThrottleRequestsException $e) => ApiResponse::error('Too many requests. Please slow down.', 429));
+        $exceptions->render(function (AuthenticationException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return ApiResponse::error('Unauthenticated.', 401);
+            }
+            return null;
+        });
+
+        $exceptions->render(function (AuthorizationException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return ApiResponse::error($e->getMessage() ?: 'This action is unauthorized.', 403);
+            }
+            return null;
+        });
+
+        $exceptions->render(function (ModelNotFoundException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return ApiResponse::error('Resource not found.', 404);
+            }
+            return null;
+        });
+
+        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return ApiResponse::error('Resource not found.', 404);
+            }
+            return null;
+        });
+
+        $exceptions->render(function (ThrottleRequestsException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return ApiResponse::error('Too many requests. Please slow down.', 429);
+            }
+            return null;
+        });
     })->create();

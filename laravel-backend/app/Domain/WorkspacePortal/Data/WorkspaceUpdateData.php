@@ -29,6 +29,9 @@ final readonly class WorkspaceUpdateData
         public ?UploadedFile $coverImage,
         public array $galleryImages,
         public array $retainedGalleryImages,
+        public ?int $manualOccupancy,
+        public string $status,
+        public array $drinks,
     ) {}
 
     public static function fromRequest(WorkspaceUpdateRequest $request): self
@@ -48,6 +51,9 @@ final readonly class WorkspaceUpdateData
             coverImage: $request->file('cover_image'),
             galleryImages: $request->file('gallery_images', []),
             retainedGalleryImages: $request->input('retained_gallery_images', []),
+            manualOccupancy: $request->input('manual_occupancy') !== null ? $request->integer('manual_occupancy') : null,
+            status: $request->string('status')->value(),
+            drinks: $request->input('drinks', []),
         );
     }
 }

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../workspaces/domain/entity/workspace_entity.dart';
@@ -102,8 +101,12 @@ class BuddyCubit extends Cubit<BuddyState> {
 
   // ── Create session ─────────────────────────────────────────────────────────
 
-  Future<void> createSession() async {
-    if (!createFormKey.currentState!.validate()) return;
+  Future<void> createSession({
+    required String topic,
+    required String subject,
+    required String description,
+    required String? gift,
+  }) async {
     final workspace = state.selectedWorkspace;
     if (workspace == null) {
       emit(state.copyWith(createStatus: BuddyActionStatus.failure));
@@ -112,16 +115,16 @@ class BuddyCubit extends Cubit<BuddyState> {
 
     emit(state.copyWith(createStatus: BuddyActionStatus.loading));
     final result = await createBuddySessionUseCase({
-      'topic': topicCtrl.text.trim(),
-      'subject': subjectCtrl.text.trim(),
-      'description': descCtrl.text.trim(),
+      'topic': topic,
+      'subject': subject,
+      'description': description,
       'rules': List<String>.from(state.createRules),
       'workspaceId': workspace.id,
       'workspaceName': workspace.name,
       'workspaceAddress': workspace.address,
       'startTime': effectiveStartTime.toIso8601String(),
       'maxCapacity': state.maxCapacity,
-      'gift': giftCtrl.text.trim().isEmpty ? null : giftCtrl.text.trim(),
+      'gift': gift,
     });
     result.fold(
       (failure) =>
@@ -148,16 +151,6 @@ class BuddyCubit extends Cubit<BuddyState> {
       )),
     );
   }
-
-  // ── Create-session form controllers ────────────────────────────────────────
-
-  final createFormKey = GlobalKey<FormState>();
-  final topicCtrl = TextEditingController();
-  final subjectCtrl = TextEditingController();
-  final descCtrl = TextEditingController();
-  final giftCtrl = TextEditingController();
-  final ruleCtrl = TextEditingController();
-  final workspaceSearchCtrl = TextEditingController();
 
   // ── Computed helpers ───────────────────────────────────────────────────────
 
@@ -211,11 +204,10 @@ class BuddyCubit extends Cubit<BuddyState> {
     }
   }
 
-  void addRule() {
-    final text = ruleCtrl.text.trim();
+  void addRule(String rule) {
+    final text = rule.trim();
     if (text.isEmpty) return;
     emit(state.copyWith(createRules: [...state.createRules, text]));
-    ruleCtrl.clear();
   }
 
   void removeRule(int index) {
@@ -224,12 +216,6 @@ class BuddyCubit extends Cubit<BuddyState> {
   }
 
   void resetCreateForm() {
-    topicCtrl.clear();
-    subjectCtrl.clear();
-    descCtrl.clear();
-    giftCtrl.clear();
-    ruleCtrl.clear();
-    workspaceSearchCtrl.clear();
     emit(state.copyWith(
       createRules: const [],
       workspaceSearchQuery: '',
@@ -238,18 +224,5 @@ class BuddyCubit extends Cubit<BuddyState> {
       clearSelectedWorkspace: true,
       clearCreateStartTime: true,
     ));
-  }
-
-  // ── Lifecycle ──────────────────────────────────────────────────────────────
-
-  @override
-  Future<void> close() {
-    topicCtrl.dispose();
-    subjectCtrl.dispose();
-    descCtrl.dispose();
-    giftCtrl.dispose();
-    ruleCtrl.dispose();
-    workspaceSearchCtrl.dispose();
-    return super.close();
   }
 }
