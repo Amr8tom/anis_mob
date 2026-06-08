@@ -65,13 +65,7 @@ class UserInfoCubit extends Cubit<UserInfoState> {
     }
     final pw = passwordController.text.trim();
     if (pw.isEmpty) return S.current.passwordEmptyError;
-    if (pw.length < 8) return S.current.passwordTooShortError;
-    if (!pw.contains(RegExp(r'[A-Z]'))) {
-      return S.current.passwordMissingUppercaseError;
-    }
-    if (!pw.contains(RegExp(r'[a-z]'))) {
-      return S.current.passwordMissingLowercaseError;
-    }
+
     if (!pw.contains(RegExp(r'[0-9]'))) {
       return S.current.passwordMissingNumberError;
     }

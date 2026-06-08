@@ -191,7 +191,7 @@
 <header class="nav"><div class="container nav-inner">
     <a href="#" class="brand"><span class="mark">أ</span> أنيس</a>
     <nav class="nav-links">
-        <a href="#why">ليه أنيس</a><a href="#features">المميزات</a><a href="#spaces">المساحات</a><a href="#plans">الأسعار</a><a href="#contact">تواصل</a>
+        <a href="#why">ليه أنيس</a><a href="#features">المميزات</a><a href="#spaces">المساحات</a><a href="#plans">الأسعار</a><a href="{{ route('workspace.register') }}" style="color: var(--green); font-weight: 700;">بوابة الشركاء</a><a href="#contact">تواصل</a>
     </nav>
     <a href="#download" class="btn btn-primary">حمّل التطبيق</a>
     <button class="menu-btn" onclick="location.href='#download'">☰</button>
@@ -277,11 +277,75 @@
 <section id="plans" class="spaces"><div class="container">
     <div class="sec-head reveal"><div class="tag">الأسعار</div><h2>باقات بسيطة وواضحة</h2><p>ابدأ مجانًا، ثم اختر الباقة التي تناسب ساعات مذاكرتك. كل الأسعار بالجنيه المصري.</p></div>
     <div class="plans reveal">
-        <div class="plan"><h3>مجاني</h3><div class="price">0 <small>ج.م</small></div><p style="color:var(--muted);font-size:14px">للتجربة والبداية</p><ul><li>تصفّح المساحات والجلسات</li><li>رصيد ساعات تجريبي</li><li>الانضمام لجلسة مذاكرة</li></ul><a href="#download" class="btn btn-outline">ابدأ مجانًا</a></div>
-        <div class="plan featured"><span class="ribbon">الأكثر شيوعًا</span><h3>Silver — شهري</h3><div class="price">199 <small>ج.م / شهر</small></div><p style="color:var(--muted);font-size:14px">للمذاكرة المنتظمة</p><ul><li>رصيد ساعات أكبر شهريًا</li><li>دخول كل المساحات الشريكة</li><li>إنشاء جلسات مذاكرة</li><li>مطابقة رفقاء المذاكرة</li></ul><a href="#download" class="btn btn-primary">اشترك الآن</a></div>
-        <div class="plan"><h3>Gold — شهري</h3><div class="price">299 <small>ج.م / شهر</small></div><p style="color:var(--muted);font-size:14px">للمذاكرة المكثّفة</p><ul><li>أكبر رصيد ساعات</li><li>أولوية في الجلسات الممتلئة</li><li>كل مزايا Silver</li></ul><a href="#download" class="btn btn-outline">اختر Gold</a></div>
+        @forelse($plans ?? [] as $plan)
+            <div class="plan {{ $plan->tier->value === 'SILVER' ? 'featured' : '' }}">
+                @if($plan->tier->value === 'SILVER')
+                    <span class="ribbon">الأكثر شيوعًا</span>
+                @endif
+                <h3>{{ $plan->name }}</h3>
+                <div class="price">
+                    {{ number_format($plan->price_cents / 100, 0) }}
+                    <small>ج.م / @if($plan->duration_days == 30) شهر @else {{ $plan->duration_days }} يوم @endif</small>
+                </div>
+                <p style="color:var(--muted);font-size:14px">
+                    @if($plan->tier->value === 'FREE')
+                        للتجربة والبداية
+                    @elseif($plan->tier->value === 'SILVER')
+                        للمذاكرة المنتظمة
+                    @else
+                        للمذاكرة المكثّفة
+                    @endif
+                </p>
+                <ul>
+                    @if($plan->tier->value === 'FREE')
+                        <li>تصفّح المساحات والجلسات</li>
+                        <li>رصيد ساعات تجريبي</li>
+                        <li>الانضمام لجلسة مذاكرة</li>
+                    @elseif($plan->tier->value === 'SILVER')
+                        <li>رصيد ساعات: {{ number_format($plan->included_minutes / 60, 0) }} ساعة شهرياً</li>
+                        <li>دخول كل المساحات الشريكة</li>
+                        <li>إنشاء جلسات مذاكرة</li>
+                        <li>مطابقة رفقاء المذاكرة</li>
+                    @else
+                        <li>رصيد ساعات: {{ number_format($plan->included_minutes / 60, 0) }} ساعة شهرياً</li>
+                        <li>أولوية في الجلسات الممتلئة</li>
+                        <li>كل مزايا Silver</li>
+                    @endif
+                </ul>
+                <a href="#download" class="btn {{ $plan->tier->value === 'SILVER' ? 'btn-primary' : 'btn-outline' }}">
+                    @if($plan->tier->value === 'FREE')
+                        ابدأ مجانًا
+                    @else
+                        اشترك الآن
+                    @endif
+                </a>
+            </div>
+        @empty
+            <div class="plan"><h3>مجاني</h3><div class="price">0 <small>ج.م</small></div><p style="color:var(--muted);font-size:14px">للتجربة والبداية</p><ul><li>تصفّح المساحات والجلسات</li><li>رصيد ساعات تجريبي</li><li>الانضمام لجلسة مذاكرة</li></ul><a href="#download" class="btn btn-outline">ابدأ مجانًا</a></div>
+            <div class="plan featured"><span class="ribbon">الأكثر شيوعًا</span><h3>Silver — شهري</h3><div class="price">199 <small>ج.م / شهر</small></div><p style="color:var(--muted);font-size:14px">للمذاكرة المنتظمة</p><ul><li>رصيد ساعات أكبر شهريًا</li><li>دخول كل المساحات الشريكة</li><li>إنشاء جلسات مذاكرة</li><li>مطابقة رفقاء المذاكرة</li></ul><a href="#download" class="btn btn-primary">اشترك الآن</a></div>
+            <div class="plan"><h3>Gold — شهري</h3><div class="price">299 <small>ج.م / شهر</small></div><p style="color:var(--muted);font-size:14px">للمذاكرة المكثّفة</p><ul><li>أكبر رصيد ساعات</li><li>أولوية في الجلسات الممتلئة</li><li>كل مزايا Silver</li></ul><a href="#download" class="btn btn-outline">اختر Gold</a></div>
+        @endforelse
     </div>
 </div></section>
+
+<!-- PARTNER CTA -->
+<section style="background:var(--cream); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 80px 0;"><div class="container"><div class="cta reveal" style="background:linear-gradient(135deg,var(--ink),#0c2516); color:#fff; text-align:center; padding:50px 30px; border-radius:24px;">
+    <div class="tag" style="color:var(--green); font-weight:800; font-size:14px; margin-bottom:12px;">شركاء أنيس</div>
+    <h2 style="font-size:32px; font-weight:900; margin-bottom:14px; color:#fff;">أنت صاحب مساحة عمل أو مذاكرة؟</h2>
+    <p style="font-size:18px; opacity:0.9; margin-bottom:28px; max-width:640px; margin-left:auto; margin-right:auto; color:#dff3e8;">
+        انضم إلى شبكتنا وسجل مساحتك وتفاصيلها ومعرض صورها لجذب آلاف الطلاب والباحثين والمستقلين يومياً وزيادة عوائدك.
+    </p>
+    <a href="{{ route('workspace.register') }}" class="btn btn-primary" style="background:var(--green); border-color:var(--green);">سجل مساحتك كشريك معنا</a>
+</div></div></section>
+
+<!-- CTA -->
+<section id="download"><div class="container"><div class="cta reveal">
+    <h2>جاهز تبدأ مذاكرتك مع أنيس؟</h2><p>حمّل التطبيق، اشترك مرة واحدة، ولاقِ مساحتك ورفيقك.</p>
+    <div class="store-badges">
+        <a href="#" class="store"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 1.6c.1 1-.3 2-1 2.8-.7.8-1.8 1.4-2.8 1.3-.1-1 .4-2 1-2.7.7-.8 1.9-1.4 2.8-1.4zM19 17.2c-.5 1.1-.7 1.6-1.3 2.6-.9 1.4-2.1 3.1-3.7 3.1-1.4 0-1.7-.9-3.6-.9-1.9 0-2.3.9-3.6.9-1.6 0-2.8-1.6-3.6-2.9C.9 16.7.7 12.4 2.3 10c.9-1.3 2.3-2.1 3.7-2.1 1.4 0 2.3.9 3.5.9 1.1 0 1.8-.9 3.5-.9 1.2 0 2.5.7 3.4 1.8-3 1.6-2.5 5.9.1 7.5z"/></svg><span><span class="s-small">حمّله من</span><span class="s-big">App Store</span></span></a>
+        <a href="#" class="store"><svg viewBox="0 0 24 24"><path fill="#14a800" d="M3.6 2.3 13 11.7l-2.6 2.6L3.6 2.3z"/><path fill="#60a5fa" d="M3.6 21.7 10.4 9.7 13 12.3 3.6 21.7z"/><path fill="#fbbf24" d="m16.2 8.9 3.1 1.8c1 .6 1 1.9 0 2.5l-3.1 1.8-2.8-2.8 2.8-3.3z"/></svg><span><span class="s-small">حمّله من</span><span class="s-big">Google Play</span></span></a>
+    </div>
+</div></div></section>
 
 <!-- TESTIMONIALS -->
 <section><div class="container">

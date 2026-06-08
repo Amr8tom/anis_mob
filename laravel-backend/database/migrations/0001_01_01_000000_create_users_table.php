@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->nullable()->unique();  // optional alternate login identifier
             $table->string('whatsapp_number');              // shown for out-of-app contact
             $table->string('password');                     // hashed
-            $table->enum('role', ['USER', 'ADMIN'])->default('USER');
+            $table->enum('role', ['USER', 'ADMIN', 'WORKSPACE_OWNER'])->default('USER');
             $table->enum('gender', ['MALE', 'FEMALE'])->nullable();
             $table->boolean('is_guest')->default(false);
 

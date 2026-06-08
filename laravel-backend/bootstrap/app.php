@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureWorkspaceOwner;
 use App\Support\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -21,7 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'workspace.owner' => EnsureWorkspaceOwner::class,
+        ]);
     })
     ->withSchedule(function (Schedule $schedule): void {
         $schedule->command('visits:auto-checkout')->everyFiveMinutes();

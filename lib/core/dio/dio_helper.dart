@@ -21,9 +21,9 @@ class DioHelper {
     // Keep debug diagnostics useful without leaking tokens, passwords, or PII.
     this.dio.interceptors.add(
           PrettyDioLogger(
-            requestHeader:true,
-            requestBody:true,
-            responseBody:true,
+            requestHeader: true,
+            requestBody: true,
+            responseBody: true,
             responseHeader: true,
             request: true,
             error: true,

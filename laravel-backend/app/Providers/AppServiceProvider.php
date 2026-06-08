@@ -18,6 +18,8 @@ use App\Domain\Subscription\Repositories\EloquentPlanRepository;
 use App\Domain\Subscription\Repositories\EloquentSubscriptionRepository;
 use App\Domain\Workspace\Contracts\WorkspaceRepositoryInterface;
 use App\Domain\Workspace\Repositories\EloquentWorkspaceRepository;
+use App\Domain\WorkspacePortal\Contracts\WorkspacePortalRepositoryInterface;
+use App\Domain\WorkspacePortal\Repositories\EloquentWorkspacePortalRepository;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -39,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         ProfileRepositoryInterface::class => EloquentProfileRepository::class,
         PlanRepositoryInterface::class => EloquentPlanRepository::class,
         SubscriptionRepositoryInterface::class => EloquentSubscriptionRepository::class,
+        WorkspacePortalRepositoryInterface::class => EloquentWorkspacePortalRepository::class,
     ];
 
     public function register(): void

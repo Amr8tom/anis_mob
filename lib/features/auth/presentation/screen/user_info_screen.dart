@@ -126,7 +126,7 @@ class _SignUpHeader extends StatelessWidget {
               ],
             ),
             padding: EdgeInsets.all(AppSizes.xs),
-            child: Image.asset(AssetRes.appIcon, fit: BoxFit.contain),
+            child: Image.asset(AssetRes.logo, fit: BoxFit.contain),
           ),
           const Sizer(width: 12),
           Column(

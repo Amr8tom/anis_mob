@@ -76,6 +76,12 @@ class User extends Authenticatable
 
     // ---- Relationships ----
 
+    /** @return HasOne<Workspace, $this> */
+    public function ownedWorkspace(): HasOne
+    {
+        return $this->hasOne(Workspace::class, 'owner_id');
+    }
+
     /** @return HasMany<Subscription, $this> */
     public function subscriptions(): HasMany
     {

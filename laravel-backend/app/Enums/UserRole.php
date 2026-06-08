@@ -8,4 +8,5 @@ enum UserRole: string
 {
     case USER = 'USER';
     case ADMIN = 'ADMIN';
+    case WORKSPACE_OWNER = 'WORKSPACE_OWNER';
 }

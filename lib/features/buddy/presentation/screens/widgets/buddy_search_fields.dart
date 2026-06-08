@@ -106,7 +106,7 @@ class _SearchField extends StatelessWidget {
           hintStyle: tt.bodyMedium?.copyWith(color: ColorRes.anisHintText),
           // suffixIcon appears on the LEFT in RTL — the reading-start side
           suffixIcon: Padding(
-            padding: EdgeInsets.only(right: AppSizes.sm),
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.sm),
             child: Icon(icon, size: 20.r, color: iconColor),
           ),
           suffixIconConstraints: const BoxConstraints(),
