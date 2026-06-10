@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../core/constants/colors.dart';
+import '../../core/device/device_utility.dart';
 import '../../core/routing/route_names.dart';
 import '../../core/routing/routes.dart';
 import '../../core/service_locator/service_locator.dart';
@@ -14,6 +16,8 @@ class AnisApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DDeviceUtils.setStatusBarColor(ColorRes.primary);
+    DDeviceUtils.setNavigationBarColor(ColorRes.primary);
     return MultiBlocProvider(
       providers: [
         BlocProvider<LanguageCubit>(

@@ -38,7 +38,6 @@ class _SplashScreenState extends State<SplashScreen>
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _bottomFade, curve: Curves.easeOutCubic));
 
-    _setSystemUIOverlayStyle();
     // Small delay so the bottom animates in after the logo
     Future.delayed(const Duration(milliseconds: 900), () {
       if (mounted) _bottomFade.forward();
@@ -46,28 +45,12 @@ class _SplashScreenState extends State<SplashScreen>
     _resolveStartupRoute();
   }
 
-  void _setSystemUIOverlayStyle() {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: ColorRes.anisAuthBgBottom,
-        systemNavigationBarIconBrightness: Brightness.light,
-      ),
-    );
-  }
+
 
   @override
   void dispose() {
     _bottomFade.dispose();
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: ColorRes.primary,
-        statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: ColorRes.primary,
-        systemNavigationBarIconBrightness: Brightness.light,
-      ),
-    );
+
     super.dispose();
   }
 
