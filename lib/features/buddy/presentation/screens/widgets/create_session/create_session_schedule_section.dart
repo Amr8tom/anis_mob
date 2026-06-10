@@ -10,6 +10,8 @@ import 'session_field_label.dart';
 import 'session_form_card.dart';
 import 'session_section_label.dart';
 
+import 'stepper_button.dart';
+
 /// Section 2 — date/time picker + capacity stepper.
 class CreateSessionScheduleSection extends StatelessWidget {
   const CreateSessionScheduleSection({super.key});
@@ -19,7 +21,7 @@ class CreateSessionScheduleSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SessionSectionLabel(S.current.createSessionSchedule),
+        SessionSectionLabel(S.current.sessionTime),
         const Sizer(height: 10),
         BlocBuilder<BuddyCubit, BuddyState>(
           buildWhen: (p, c) =>
@@ -29,23 +31,23 @@ class CreateSessionScheduleSection extends StatelessWidget {
             final cubit = context.read<BuddyCubit>();
             return SessionFormCard(
               children: [
-                // ── Date & time ─────────────────────────────
+                // ── Start date picker ───────────────────────
                 SessionFieldLabel(S.current.sessionTime),
                 const Sizer(height: 8),
-                GestureDetector(
+                InkWell(
                   onTap: () => _pickDateTime(context, cubit),
+                  borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
                   child: Container(
-                    width: double.infinity,
                     padding: EdgeInsets.all(AppSizes.md),
                     decoration: BoxDecoration(
                       color: ColorRes.anisChipBg,
                       borderRadius:
                           BorderRadius.circular(AppSizes.borderRadiusLg),
-                      border: Border.all(color: ColorRes.anisLine, width: 1),
+                      border: Border.all(color: ColorRes.anisLine),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.schedule_rounded,
+                        Icon(Icons.calendar_today_rounded,
                             size: AppSizes.iconSm, color: ColorRes.anisGreen),
                         const Sizer(width: 10),
                         Expanded(
@@ -74,7 +76,7 @@ class CreateSessionScheduleSection extends StatelessWidget {
                 const Sizer(height: 8),
                 Row(
                   children: [
-                    _StepperButton(
+                    StepperButton(
                       icon: Icons.remove_rounded,
                       onTap: cubit.decrementCapacity,
                     ),
@@ -99,7 +101,7 @@ class CreateSessionScheduleSection extends StatelessWidget {
                       ),
                     ),
                     const Sizer(width: 16),
-                    _StepperButton(
+                    StepperButton(
                       icon: Icons.add_rounded,
                       onTap: cubit.incrementCapacity,
                     ),
@@ -122,21 +124,30 @@ class CreateSessionScheduleSection extends StatelessWidget {
       initialDate: cubit.effectiveStartTime,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 30)),
-      builder: (ctx, child) => Theme(
-        data: Theme.of(ctx).copyWith(
-          colorScheme: ColorScheme.light(primary: ColorRes.anisGreen),
+      builder: (context, child) => Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: const ColorScheme.light(
+            primary: ColorRes.anisGreen,
+            onPrimary: ColorRes.white,
+            onSurface: ColorRes.anisNavy,
+          ),
         ),
         child: child!,
       ),
     );
-    if (date == null || !context.mounted) return;
+    if (date == null) return;
 
+    if (!context.mounted) return;
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.fromDateTime(cubit.effectiveStartTime),
-      builder: (ctx, child) => Theme(
-        data: Theme.of(ctx).copyWith(
-          colorScheme: ColorScheme.light(primary: ColorRes.anisGreen),
+      builder: (context, child) => Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: const ColorScheme.light(
+            primary: ColorRes.anisGreen,
+            onPrimary: ColorRes.white,
+            onSurface: ColorRes.anisNavy,
+          ),
         ),
         child: child!,
       ),
@@ -145,30 +156,6 @@ class CreateSessionScheduleSection extends StatelessWidget {
 
     cubit.setStartTime(
       DateTime(date.year, date.month, date.day, time.hour, time.minute),
-    );
-  }
-}
-
-class _StepperButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-  const _StepperButton({required this.icon, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: AppSizes.iconXLarge + AppSizes.sm,
-        height: AppSizes.iconXLarge + AppSizes.sm,
-        decoration: BoxDecoration(
-          color: ColorRes.anisGreen.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-          border: Border.all(
-              color: ColorRes.anisGreen.withValues(alpha: 0.3), width: 1),
-        ),
-        child: Icon(icon, size: AppSizes.iconSm, color: ColorRes.anisGreen),
-      ),
     );
   }
 }

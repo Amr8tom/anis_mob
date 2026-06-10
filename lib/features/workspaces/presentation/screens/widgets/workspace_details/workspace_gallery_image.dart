@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../core/constants/colors.dart';
 
+import 'gallery_image_placeholder.dart';
+
 class WorkspaceGalleryImage extends StatelessWidget {
   final String source;
   final BoxFit fit;
@@ -32,31 +34,14 @@ class WorkspaceGalleryImage extends StatelessWidget {
             ),
           );
         },
-        errorBuilder: (_, __, ___) => const _GalleryImagePlaceholder(),
+        errorBuilder: (_, __, ___) => const GalleryImagePlaceholder(),
       );
     }
 
     return Image.asset(
       source,
       fit: fit,
-      errorBuilder: (_, __, ___) => const _GalleryImagePlaceholder(),
-    );
-  }
-}
-
-class _GalleryImagePlaceholder extends StatelessWidget {
-  const _GalleryImagePlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return const ColoredBox(
-      color: ColorRes.accent,
-      child: Center(
-        child: Icon(
-          Icons.image_not_supported_outlined,
-          color: ColorRes.anisHintText,
-        ),
-      ),
+      errorBuilder: (_, __, ___) => const GalleryImagePlaceholder(),
     );
   }
 }

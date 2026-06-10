@@ -17,6 +17,7 @@ import 'widgets/buddy_results_count_row.dart';
 import 'widgets/buddy_search_fields.dart';
 import 'widgets/buddy_session_card.dart';
 import 'widgets/buddy_skeleton_session.dart';
+import 'widgets/create_session_fab.dart';
 
 class BuddyScreen extends StatelessWidget {
   const BuddyScreen({super.key});
@@ -25,7 +26,7 @@ class BuddyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorRes.white,
-      floatingActionButton: _CreateSessionFab(),
+      floatingActionButton: const CreateSessionFab(),
       body: SafeArea(
         child: RefreshIndicator(
           color: ColorRes.anisGreen,
@@ -164,37 +165,6 @@ class BuddyScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-// ── FAB ────────────────────────────────────────────────────────────────────────
-
-class _CreateSessionFab extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<BuddyCubit, BuddyState>(
-      buildWhen: (previous, current) => previous.isGuest != current.isGuest,
-      builder: (context, state) {
-        return FloatingActionButton.extended(
-          onPressed: () => ActionGuard.run(
-            context,
-            isGuest: state.isGuest,
-            action: () => context.pushNamed(DRoutesName.createSessionRoute),
-          ),
-          backgroundColor: ColorRes.anisGreen,
-          foregroundColor: ColorRes.white,
-          elevation: 4,
-          icon: const Icon(Icons.add_rounded),
-          label: Text(
-            S.current.createSession,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: ColorRes.white,
-                ),
-          ),
-        );
-      },
     );
   }
 }

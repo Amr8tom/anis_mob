@@ -30,6 +30,11 @@ final class HomeState extends Equatable {
   final WorkspaceAttendanceEntity? activeSession;
   final String? attendanceError;
 
+  // Location Selector
+  final String? locationName;
+  final double? latitude;
+  final double? longitude;
+
   const HomeState({
     this.status = HomeStatus.initial,
     this.userProfile,
@@ -38,6 +43,9 @@ final class HomeState extends Equatable {
     this.attendanceStatus = AttendanceStatus.idle,
     this.activeSession,
     this.attendanceError,
+    this.locationName,
+    this.latitude,
+    this.longitude,
   });
 
   bool get isCheckedIn => activeSession != null && activeSession!.isActive;
@@ -52,6 +60,9 @@ final class HomeState extends Equatable {
     bool clearSession = false,
     String? attendanceError,
     bool clearAttendanceError = false,
+    String? locationName,
+    double? latitude,
+    double? longitude,
   }) {
     return HomeState(
       status: status ?? this.status,
@@ -64,6 +75,9 @@ final class HomeState extends Equatable {
       attendanceError: clearAttendanceError
           ? null
           : (attendanceError ?? this.attendanceError),
+      locationName: locationName ?? this.locationName,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
     );
   }
 
@@ -76,5 +90,8 @@ final class HomeState extends Equatable {
         attendanceStatus,
         activeSession,
         attendanceError,
+        locationName,
+        latitude,
+        longitude,
       ];
 }

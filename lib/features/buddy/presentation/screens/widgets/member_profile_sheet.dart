@@ -5,6 +5,7 @@ import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/colors.dart';
 import '../../../../../generated/l10n.dart';
 import '../../../domain/entity/buddy_member_entity.dart';
+import 'stat_bubble.dart';
 
 class MemberProfileSheet extends StatelessWidget {
   final BuddyMemberEntity member;
@@ -19,37 +20,21 @@ class MemberProfileSheet extends StatelessWidget {
     );
   }
 
-  Color _avatarBg() {
-    switch (member.avatarColorKey) {
-      case 'red':
-        return ColorRes.anisAvatarD;
-      case 'blue':
-        return ColorRes.anisAvatarA;
-      case 'purple':
-        return ColorRes.anisAvatarC;
-      case 'orange':
-        return ColorRes.anisAvatarB;
-      default:
-        return ColorRes.anisAvatarA;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
-    final avatarSize = AppSizes.iconXLarge * 1.6;
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: ColorRes.white,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(AppSizes.borderRadiusXXLg),
-          topRight: Radius.circular(AppSizes.borderRadiusXXLg),
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
         ),
       ),
       padding: EdgeInsets.fromLTRB(
         AppSizes.padding,
-        AppSizes.sm,
+        AppSizes.xl,
         AppSizes.padding,
         AppSizes.xl,
       ),
@@ -58,24 +43,24 @@ class MemberProfileSheet extends StatelessWidget {
         children: [
           // Drag handle
           Container(
-            width: AppSizes.xl + AppSizes.md,
-            height: AppSizes.xs,
+            width: 40,
+            height: 4,
             decoration: BoxDecoration(
               color: ColorRes.accent,
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusSm),
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
           const Sizer(height: 20),
 
-          // ── Avatar ───────────────────────────────────────
+          // ── Avatar with dynamic gold border ───────────────
           Stack(
             children: [
               Container(
-                width: avatarSize,
-                height: avatarSize,
+                width: 90,
+                height: 90,
                 decoration: BoxDecoration(
-                  color: _avatarBg(),
                   shape: BoxShape.circle,
+                  color: ColorRes.anisChipBg,
                   border: member.isFounder
                       ? Border.all(color: ColorRes.anisGold, width: 2.5)
                       : null,
@@ -83,7 +68,7 @@ class MemberProfileSheet extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   member.initials,
-                  style: tt.headlineSmall?.copyWith(
+                  style: tt.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: ColorRes.anisGreen,
                   ),
@@ -91,10 +76,10 @@ class MemberProfileSheet extends StatelessWidget {
               ),
               if (member.isFounder)
                 Positioned(
-                  bottom: AppSizes.xs,
-                  right: AppSizes.xs,
+                  bottom: 0,
+                  right: 0,
                   child: Container(
-                    padding: EdgeInsets.all(AppSizes.xs),
+                    padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: ColorRes.anisGold,
                       shape: BoxShape.circle,
@@ -157,14 +142,14 @@ class MemberProfileSheet extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _StatBubble(
+              StatBubble(
                 icon: Icons.star_rounded,
                 color: ColorRes.anisGold,
                 value: member.rating.toStringAsFixed(1),
                 label: S.current.memberRating,
               ),
               const Sizer(width: 16),
-              _StatBubble(
+              StatBubble(
                 icon: Icons.calendar_today_rounded,
                 color: ColorRes.anisTagBlueTxt,
                 value: '${member.totalSessions}',
@@ -224,53 +209,6 @@ class MemberProfileSheet extends StatelessWidget {
             ),
           ),
           const Sizer(height: 8),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatBubble extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final String value;
-  final String label;
-  const _StatBubble({
-    required this.icon,
-    required this.color,
-    required this.value,
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.md + 4,
-        vertical: AppSizes.sm,
-      ),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, size: AppSizes.iconSm, color: color),
-          const Sizer(height: 4),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: ColorRes.anisNavy,
-                ),
-          ),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: ColorRes.anisHintText,
-                ),
-          ),
         ],
       ),
     );

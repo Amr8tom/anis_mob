@@ -16,6 +16,8 @@
 	<string>anis</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Anis uses the camera to scan workspace QR codes for study check-in.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires access to your location to find and sort nearby workspaces.</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

@@ -68,6 +68,48 @@ class WorkspaceEntity extends Equatable {
 
   bool get isOpen => status == WorkspaceStatus.open;
 
+  WorkspaceEntity copyWith({
+    String? id,
+    String? name,
+    String? address,
+    String? description,
+    double? latitude,
+    double? longitude,
+    List<String>? galleryImages,
+    List<WorkspaceDrinkEntity>? drinks,
+    int? currentOccupancy,
+    int? capacity,
+    WorkspaceStatus? status,
+    double? distanceKm,
+    String? openTime,
+    String? closeTime,
+    int? dayCalculationHours,
+    double? hourMultiplier,
+    List<String>? amenities,
+    List<StudySessionEntity>? sessions,
+  }) {
+    return WorkspaceEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      address: address ?? this.address,
+      description: description ?? this.description,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      galleryImages: galleryImages ?? this.galleryImages,
+      drinks: drinks ?? this.drinks,
+      currentOccupancy: currentOccupancy ?? this.currentOccupancy,
+      capacity: capacity ?? this.capacity,
+      status: status ?? this.status,
+      distanceKm: distanceKm ?? this.distanceKm,
+      openTime: openTime ?? this.openTime,
+      closeTime: closeTime ?? this.closeTime,
+      dayCalculationHours: dayCalculationHours ?? this.dayCalculationHours,
+      hourMultiplier: hourMultiplier ?? this.hourMultiplier,
+      amenities: amenities ?? this.amenities,
+      sessions: sessions ?? this.sessions,
+    );
+  }
+
   @override
   List<Object?> get props => [
         id,

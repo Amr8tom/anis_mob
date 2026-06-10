@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/widgets/sizeboxs/sizer.dart';
@@ -6,6 +7,8 @@ import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../generated/l10n.dart';
 import '../../domain/entity/user_profile_entity.dart';
+import '../controller/home_cubit.dart';
+import 'location_selector_bottom_sheet.dart';
 
 class HomeHeaderWidget extends StatelessWidget {
   final UserProfileEntity profile;
@@ -70,6 +73,63 @@ class HomeHeaderWidget extends StatelessWidget {
               // Avatar
               _ProfileAvatar(initials: profile.initials),
             ],
+          ),
+
+          const Sizer(height: 12),
+
+          // Location selector pill
+          BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              final locationText = state.locationName ?? 'تحديد الموقع الحالي';
+              return Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: InkWell(
+                  onTap: () => LocationSelectorBottomSheet.show(context),
+                  borderRadius: BorderRadius.circular(20.r),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 5.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: ColorRes.white.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(20.r),
+                      border: Border.all(
+                        color: ColorRes.white.withValues(alpha: 0.25),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.location_on_rounded,
+                          size: 14.r,
+                          color: ColorRes.anisGold,
+                        ),
+                        const Sizer(width: 5),
+                        Text(
+                          locationText,
+                          style: tt.bodySmall?.copyWith(
+                            color: ColorRes.white,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Cairo',
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const Sizer(width: 4),
+                        Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          size: 14.r,
+                          color: ColorRes.white.withValues(alpha: 0.8),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
 
           const Sizer(height: 20),

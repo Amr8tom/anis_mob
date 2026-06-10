@@ -6,6 +6,10 @@ import '../../../../../../core/constants/app_sizes.dart';
 import '../../../../../../core/constants/colors.dart';
 import '../../../../../../generated/l10n.dart';
 import '../../../controller/profile_completion_cubit.dart';
+import 'section_label.dart';
+import 'gender_selector.dart';
+import 'interest_suggestions.dart';
+import 'profile_text_field.dart';
 
 class ProfileCompletionForm extends StatelessWidget {
   final ProfileCompletionState state;
@@ -47,7 +51,7 @@ class ProfileCompletionForm extends StatelessWidget {
           AppSizes.xl,
         ),
         children: [
-          _ProfileTextField(
+          ProfileTextField(
             controller: emailController,
             label: S.current.email,
             hint: S.current.profileEmailHint,
@@ -62,7 +66,7 @@ class ProfileCompletionForm extends StatelessWidget {
             },
           ),
           const Sizer(height: 16),
-          _ProfileTextField(
+          ProfileTextField(
             controller: universityController,
             label: S.current.university,
             hint: S.current.profileUniversityHint,
@@ -70,7 +74,7 @@ class ProfileCompletionForm extends StatelessWidget {
             validator: _requiredValidator,
           ),
           const Sizer(height: 16),
-          _ProfileTextField(
+          ProfileTextField(
             controller: studyFieldController,
             label: S.current.specialization,
             hint: S.current.specializationHint,
@@ -78,19 +82,19 @@ class ProfileCompletionForm extends StatelessWidget {
             validator: _requiredValidator,
           ),
           const Sizer(height: 24),
-          _SectionLabel(
+          SectionLabel(
             title: S.current.chooseYourGender,
             subtitle: S.current.profileGenderReason,
           ),
           const Sizer(height: 10),
-          _GenderSelector(selected: state.gender),
+          GenderSelector(selected: state.gender),
           const Sizer(height: 24),
-          _SectionLabel(
+          SectionLabel(
             title: S.current.interests,
             subtitle: S.current.profileInterestsReason,
           ),
           const Sizer(height: 10),
-          const _InterestSuggestions(),
+          const InterestSuggestions(),
           if (state.interests.isNotEmpty) ...[
             const Sizer(height: 12),
             Wrap(
@@ -120,7 +124,7 @@ class ProfileCompletionForm extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: _ProfileTextField(
+                child: ProfileTextField(
                   controller: interestController,
                   label: S.current.addAnotherInterest,
                   hint: S.current.interestHint,
@@ -153,229 +157,5 @@ class ProfileCompletionForm extends StatelessWidget {
     return value == null || value.trim().isEmpty
         ? S.current.fieldRequired
         : null;
-  }
-}
-
-class _SectionLabel extends StatelessWidget {
-  final String title;
-  final String subtitle;
-
-  const _SectionLabel({required this.title, required this.subtitle});
-
-  @override
-  Widget build(BuildContext context) {
-    final tt = Theme.of(context).textTheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: tt.titleSmall?.copyWith(
-            color: ColorRes.anisNavy,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        const Sizer(height: 3),
-        Text(
-          subtitle,
-          style: tt.bodySmall?.copyWith(color: ColorRes.anisTextMuted),
-        ),
-      ],
-    );
-  }
-}
-
-class _GenderSelector extends StatelessWidget {
-  final String selected;
-
-  const _GenderSelector({required this.selected});
-
-  @override
-  Widget build(BuildContext context) {
-    final cubit = context.read<ProfileCompletionCubit>();
-    return Row(
-      children: [
-        Expanded(
-          child: _GenderOption(
-            label: S.current.male,
-            icon: Icons.male_rounded,
-            selected: selected == 'male',
-            onTap: () => cubit.selectGender('male'),
-          ),
-        ),
-        const Sizer(width: 10),
-        Expanded(
-          child: _GenderOption(
-            label: S.current.female,
-            icon: Icons.female_rounded,
-            selected: selected == 'female',
-            onTap: () => cubit.selectGender('female'),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _GenderOption extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _GenderOption({
-    required this.label,
-    required this.icon,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: EdgeInsets.symmetric(vertical: AppSizes.md),
-        decoration: BoxDecoration(
-          color: selected ? ColorRes.anisTagGreen : ColorRes.anisInputBg,
-          borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-          border: Border.all(
-            color: selected ? ColorRes.anisGreen : ColorRes.anisInputBorder,
-            width: selected ? 2 : 1,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: ColorRes.anisGreen),
-            const Sizer(width: 6),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: ColorRes.anisNavy,
-                    fontWeight: FontWeight.w700,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _InterestSuggestions extends StatelessWidget {
-  const _InterestSuggestions();
-
-  @override
-  Widget build(BuildContext context) {
-    final cubit = context.read<ProfileCompletionCubit>();
-    final suggestions = [
-      S.current.interestProgramming,
-      S.current.interestMathematics,
-      S.current.interestLanguages,
-      S.current.interestMedicine,
-      S.current.interestEngineering,
-    ];
-
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: suggestions
-          .map(
-            (interest) => ActionChip(
-              label: Text(interest),
-              avatar: const Icon(Icons.add_rounded, size: 16),
-              onPressed: () => cubit.addSuggestedInterest(interest),
-              backgroundColor: ColorRes.anisInputBg,
-              side: const BorderSide(color: ColorRes.anisInputBorder),
-              labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: ColorRes.anisTextDark,
-                    fontWeight: FontWeight.w600,
-                    overflow: TextOverflow.visible,
-                  ),
-            ),
-          )
-          .toList(),
-    );
-  }
-}
-
-class _ProfileTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final String hint;
-  final IconData icon;
-  final TextInputType? keyboardType;
-  final TextInputAction? textInputAction;
-  final String? Function(String?)? validator;
-  final ValueChanged<String>? onSubmitted;
-
-  const _ProfileTextField({
-    required this.controller,
-    required this.label,
-    required this.hint,
-    required this.icon,
-    this.keyboardType,
-    this.textInputAction,
-    this.validator,
-    this.onSubmitted,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final tt = Theme.of(context).textTheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: tt.bodySmall?.copyWith(
-            color: ColorRes.anisTextDark,
-            fontWeight: FontWeight.w700,
-            overflow: TextOverflow.visible,
-          ),
-        ),
-        const Sizer(height: 7),
-        TextFormField(
-          controller: controller,
-          keyboardType: keyboardType,
-          textInputAction: textInputAction,
-          validator: validator,
-          onFieldSubmitted: onSubmitted,
-          style: tt.bodyMedium?.copyWith(
-            color: ColorRes.anisTextDark,
-            overflow: TextOverflow.visible,
-          ),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: tt.bodyMedium?.copyWith(
-              color: ColorRes.anisTextMuted,
-              overflow: TextOverflow.visible,
-            ),
-            errorStyle: tt.bodySmall?.copyWith(
-              color: ColorRes.anisErrorRed,
-              overflow: TextOverflow.visible,
-            ),
-            prefixIcon: Icon(icon, color: ColorRes.anisGreen),
-            filled: true,
-            fillColor: ColorRes.anisInputBg,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-              borderSide: const BorderSide(color: ColorRes.anisInputBorder),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-              borderSide: const BorderSide(color: ColorRes.anisInputBorder),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-              borderSide: const BorderSide(color: ColorRes.anisGreen, width: 2),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }

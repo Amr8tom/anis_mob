@@ -10,6 +10,9 @@ import '../../domain/use_cases/check_out_workspace_use_case.dart';
 import '../../domain/use_cases/get_today_sessions_use_case.dart';
 import '../../domain/use_cases/get_user_profile_use_case.dart';
 
+import '../../../../core/local_storage/local_storage.dart';
+import '../../../../core/local_storage/storage_keys.dart';
+
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -17,14 +20,43 @@ class HomeCubit extends Cubit<HomeState> {
   final GetTodaySessionsUseCase getTodaySessionsUseCase;
   final CheckInWorkspaceUseCase checkInWorkspaceUseCase;
   final CheckOutWorkspaceUseCase checkOutWorkspaceUseCase;
+  final LocalStorage localStorage;
 
   HomeCubit({
     required this.getUserProfileUseCase,
     required this.getTodaySessionsUseCase,
     required this.checkInWorkspaceUseCase,
     required this.checkOutWorkspaceUseCase,
+    required this.localStorage,
   }) : super(const HomeState()) {
+    _initLocation();
     loadHomeData();
+  }
+
+  void _initLocation() {
+    final lat = localStorage.getDouble(key: StorageKeys.latitude.name, defaultValue: -999.0);
+    final lng = localStorage.getDouble(key: StorageKeys.longitude.name, defaultValue: -999.0);
+    final address = localStorage.getString(key: StorageKeys.address.name);
+
+    if (lat != -999.0 && lng != -999.0 && address != null) {
+      emit(state.copyWith(
+        latitude: lat,
+        longitude: lng,
+        locationName: address,
+      ));
+    }
+  }
+
+  Future<void> updateUserLocation(double lat, double lng, String name) async {
+    await localStorage.cacheDouble(key: StorageKeys.latitude.name, value: lat);
+    await localStorage.cacheDouble(key: StorageKeys.longitude.name, value: lng);
+    await localStorage.cacheString(key: StorageKeys.address.name, value: name);
+
+    emit(state.copyWith(
+      latitude: lat,
+      longitude: lng,
+      locationName: name,
+    ));
   }
 
   // Home data

@@ -10,7 +10,7 @@ class URL {
   ///   • Physical device                → http://[your-machine-LAN-IP]:8000/api/v1
   static const String baseUrl = String.fromEnvironment(
     'ANIS_API_BASE',
-    defaultValue: 'http://127.0.0.1:8000/api/v1',
+    defaultValue: 'https://hejaz2.com/api/v1',
   );
 
   // ── Auth ────────────────────────────────────────────────────────────────

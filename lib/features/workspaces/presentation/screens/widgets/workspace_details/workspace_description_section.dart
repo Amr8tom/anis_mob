@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-
-import '../../../../../../common/widgets/sizeboxs/sizer.dart';
 import '../../../../../../core/constants/app_sizes.dart';
 import '../../../../../../core/constants/colors.dart';
-import '../../../../../../generated/l10n.dart';
 
 class WorkspaceDescriptionSection extends StatelessWidget {
   final String description;
-
   const WorkspaceDescriptionSection({super.key, required this.description});
 
   @override
@@ -15,27 +11,33 @@ class WorkspaceDescriptionSection extends StatelessWidget {
     final tt = Theme.of(context).textTheme;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: AppSizes.padding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            S.current.description,
-            textAlign: TextAlign.start,
-            style: tt.titleMedium?.copyWith(
-              color: ColorRes.anisNavy,
-              fontWeight: FontWeight.w700,
+      child: Container(
+        padding: EdgeInsets.all(AppSizes.md),
+        decoration: BoxDecoration(
+          color: ColorRes.white,
+          border: const Border(
+            right: BorderSide(
+              color: ColorRes.anisGreen,
+              width: 4,
             ),
           ),
-          const Sizer(height: 8),
-          Text(
-            description.isEmpty ? S.current.noData : description,
-            textAlign: TextAlign.start,
-            style: tt.bodyMedium?.copyWith(
-              color: ColorRes.anisTextMuted,
-              height: 1.6,
+          borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+          boxShadow: [
+            BoxShadow(
+              color: ColorRes.anisNavy.withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
             ),
+          ],
+        ),
+        child: Text(
+          description,
+          textAlign: TextAlign.start,
+          style: tt.bodyMedium?.copyWith(
+            color: ColorRes.anisTextSecondary,
+            height: 1.6,
           ),
-        ],
+        ),
       ),
     );
   }

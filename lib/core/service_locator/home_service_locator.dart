@@ -62,6 +62,7 @@ class HomeServiceLocator {
         getTodaySessionsUseCase: serviceLocator(),
         checkInWorkspaceUseCase: serviceLocator(),
         checkOutWorkspaceUseCase: serviceLocator(),
+        localStorage: serviceLocator(),
       ),
     );
   }

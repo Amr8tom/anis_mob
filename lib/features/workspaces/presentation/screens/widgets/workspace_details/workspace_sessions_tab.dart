@@ -11,6 +11,8 @@ import '../../../../../../features/home/presentation/widgets/session_card_widget
 import '../../../../../../generated/l10n.dart';
 import '../../../../domain/entity/workspace_entity.dart';
 
+import 'section_header.dart';
+
 class WorkspaceSessionsTab extends StatelessWidget {
   final WorkspaceEntity workspace;
 
@@ -42,7 +44,7 @@ class WorkspaceSessionsTab extends StatelessWidget {
       ),
       children: [
         if (liveSessions.isNotEmpty) ...[
-          _SectionHeader(
+          SectionHeader(
             label: S.current.liveNow,
             color: ColorRes.anisGreen,
             icon: Icons.radio_button_checked_rounded,
@@ -60,7 +62,7 @@ class WorkspaceSessionsTab extends StatelessWidget {
           Sizer(height: AppSizes.md),
         ],
         if (upcomingSessions.isNotEmpty) ...[
-          _SectionHeader(
+          SectionHeader(
             label: S.current.upcomingSessions,
             color: ColorRes.anisTagBlueTxt,
             icon: Icons.schedule_rounded,
@@ -84,36 +86,6 @@ class WorkspaceSessionsTab extends StatelessWidget {
     context.pushNamed(
       DRoutesName.sessionDetailsRoute,
       arguments: {'sessionId': sessionId},
-    );
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  final String label;
-  final Color color;
-  final IconData icon;
-
-  const _SectionHeader({
-    required this.label,
-    required this.color,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final tt = Theme.of(context).textTheme;
-    return Row(
-      children: [
-        Icon(icon, size: AppSizes.iconSm, color: color),
-        Sizer(width: AppSizes.xs),
-        Text(
-          label,
-          style: tt.titleSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: color,
-          ),
-        ),
-      ],
     );
   }
 }

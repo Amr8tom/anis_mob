@@ -4,7 +4,11 @@ import '../../../../core/error/failure.dart';
 import '../model/workspace_model.dart';
 
 abstract class WorkspaceRemoteDataSource {
-  Future<List<WorkspaceModel>> getWorkspaces({String? filter});
+  Future<List<WorkspaceModel>> getWorkspaces({
+    String? filter,
+    double? latitude,
+    double? longitude,
+  });
   Future<WorkspaceModel> getWorkspaceDetails(String workspaceId);
 }
 
@@ -14,11 +18,19 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
   const WorkspaceRemoteDataSourceImpl(this._dio);
 
   @override
-  Future<List<WorkspaceModel>> getWorkspaces({String? filter}) async {
+  Future<List<WorkspaceModel>> getWorkspaces({
+    String? filter,
+    double? latitude,
+    double? longitude,
+  }) async {
     // Public, tokenless endpoint. DioHelper throws a typed Failure on error.
     final response = await _dio.get(
       url: URL.workspaces,
-      queryParameters: filter != null ? {'filter': filter} : null,
+      queryParameters: {
+        if (filter != null) 'filter': filter,
+        if (latitude != null) 'latitude': latitude,
+        if (longitude != null) 'longitude': longitude,
+      },
       requiresAuth: false,
     );
 

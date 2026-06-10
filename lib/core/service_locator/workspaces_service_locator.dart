@@ -32,7 +32,10 @@ class WorkspacesServiceLocator {
       () => GetWorkspaceDetailsUseCase(serviceLocator()),
     );
     serviceLocator.registerFactory<WorkspaceCubit>(
-      () => WorkspaceCubit(getWorkspacesUseCase: serviceLocator()),
+      () => WorkspaceCubit(
+        getWorkspacesUseCase: serviceLocator(),
+        localStorage: serviceLocator(),
+      ),
     );
     serviceLocator.registerFactoryParam<WorkspaceDetailsCubit, String, void>(
       (workspaceId, _) => WorkspaceDetailsCubit(

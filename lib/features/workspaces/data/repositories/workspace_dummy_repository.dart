@@ -80,6 +80,8 @@ class WorkspaceDummyRepository implements WorkspaceRepository {
   @override
   Future<Either<Failure, List<WorkspaceEntity>>> getWorkspaces({
     String? filter,
+    double? latitude,
+    double? longitude,
   }) async {
     await Future.delayed(const Duration(milliseconds: 300));
     var result = List<WorkspaceEntity>.from(_workspaces);

@@ -9,7 +9,7 @@ import 'widgets/profile_completion/profile_completion_footer.dart';
 import 'widgets/profile_completion/profile_completion_form.dart';
 import 'widgets/profile_completion/profile_completion_header.dart';
 
-class ProfileCompletionScreen extends StatelessWidget {
+class ProfileCompletionScreen extends StatefulWidget {
   final bool afterSignup;
 
   const ProfileCompletionScreen({
@@ -18,50 +18,100 @@ class ProfileCompletionScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorRes.white,
-      body: SafeArea(
-        child: _ProfileCompletionContent(afterSignup: afterSignup),
-      ),
-    );
-  }
+  State<ProfileCompletionScreen> createState() => _ProfileCompletionScreenState();
 }
 
-class _ProfileCompletionContent extends StatefulWidget {
-  final bool afterSignup;
-
-  const _ProfileCompletionContent({required this.afterSignup});
-
-  @override
-  State<_ProfileCompletionContent> createState() => _ProfileCompletionContentState();
-}
-
-class _ProfileCompletionContentState extends State<_ProfileCompletionContent> {
-  late final GlobalKey<FormState> _formKey;
-  late final TextEditingController _emailController;
-  late final TextEditingController _universityController;
-  late final TextEditingController _studyFieldController;
-  late final TextEditingController _interestController;
-  bool _isInitialized = false;
+class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
+  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _emailCtrl;
+  late final TextEditingController _universityCtrl;
+  late final TextEditingController _studyFieldCtrl;
+  late final TextEditingController _interestCtrl;
 
   @override
   void initState() {
     super.initState();
-    _formKey = GlobalKey<FormState>();
-    _emailController = TextEditingController();
-    _universityController = TextEditingController();
-    _studyFieldController = TextEditingController();
-    _interestController = TextEditingController();
+    final profile = context.read<ProfileCompletionCubit>().state.profile;
+    _emailCtrl = TextEditingController(text: profile?.email ?? '');
+    _universityCtrl = TextEditingController(text: profile?.university ?? '');
+    _studyFieldCtrl = TextEditingController(text: profile?.studyField ?? '');
+    _interestCtrl = TextEditingController();
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _universityController.dispose();
-    _studyFieldController.dispose();
-    _interestController.dispose();
+    _emailCtrl.dispose();
+    _universityCtrl.dispose();
+    _studyFieldCtrl.dispose();
+    _interestCtrl.dispose();
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<ProfileCompletionCubit, ProfileCompletionState>(
+      listenWhen: (previous, current) =>
+          previous.status != current.status ||
+          previous.errorMessage != current.errorMessage,
+      listener: (context, state) => _handleState(context, state, widget.afterSignup),
+      builder: (context, state) {
+        final cubit = context.read<ProfileCompletionCubit>();
+        final isSaving = state.status == ProfileCompletionStatus.saving;
+        final isLoading = state.status == ProfileCompletionStatus.loading ||
+            state.status == ProfileCompletionStatus.initial;
+
+        return Scaffold(
+          backgroundColor: ColorRes.white,
+          body: SafeArea(
+            child: Column(
+              children: [
+                ProfileCompletionHeader(
+                  percentage: state.profile?.profileCompletionPercentage ?? 0,
+                  onSkip: isSaving ? null : () => cubit.saveDraftAndContinue(
+                    email: _emailCtrl.text,
+                    university: _universityCtrl.text,
+                    studyField: _studyFieldCtrl.text,
+                  ),
+                ),
+                Expanded(
+                  child: isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: ColorRes.anisGreen,
+                          ),
+                        )
+                      : ProfileCompletionForm(
+                          state: state,
+                          formKey: _formKey,
+                          emailController: _emailCtrl,
+                          universityController: _universityCtrl,
+                          studyFieldController: _studyFieldCtrl,
+                          interestController: _interestCtrl,
+                        ),
+                ),
+                ProfileCompletionFooter(
+                  isSaving: isSaving,
+                  onSave: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      cubit.saveProfile(
+                        email: _emailCtrl.text,
+                        university: _universityCtrl.text,
+                        studyField: _studyFieldCtrl.text,
+                      );
+                    }
+                  },
+                  onSkip: isSaving ? null : () => cubit.saveDraftAndContinue(
+                    email: _emailCtrl.text,
+                    university: _universityCtrl.text,
+                    studyField: _studyFieldCtrl.text,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _handleState(
@@ -69,6 +119,18 @@ class _ProfileCompletionContentState extends State<_ProfileCompletionContent> {
     ProfileCompletionState state,
     bool afterSignup,
   ) {
+    if (state.status == ProfileCompletionStatus.ready && state.profile != null) {
+      if (_emailCtrl.text.isEmpty && state.profile!.email.isNotEmpty) {
+        _emailCtrl.text = state.profile!.email;
+      }
+      if (_universityCtrl.text.isEmpty && state.profile!.university.isNotEmpty) {
+        _universityCtrl.text = state.profile!.university;
+      }
+      if (_studyFieldCtrl.text.isEmpty && state.profile!.studyField.isNotEmpty) {
+        _studyFieldCtrl.text = state.profile!.studyField;
+      }
+    }
+
     if (state.status == ProfileCompletionStatus.success ||
         state.status == ProfileCompletionStatus.skipped) {
       if (afterSignup) {
@@ -93,81 +155,5 @@ class _ProfileCompletionContentState extends State<_ProfileCompletionContent> {
       ),
     );
     context.read<ProfileCompletionCubit>().clearError();
-  }
-
-  void _onSave(ProfileCompletionCubit cubit) {
-    if (_formKey.currentState?.validate() ?? false) {
-      cubit.saveProfile(
-        email: _emailController.text.trim(),
-        university: _universityController.text.trim(),
-        studyField: _studyFieldController.text.trim(),
-      );
-    }
-  }
-
-  void _onSkip(ProfileCompletionCubit cubit) {
-    cubit.saveDraftAndContinue(
-      email: _emailController.text.trim(),
-      university: _universityController.text.trim(),
-      studyField: _studyFieldController.text.trim(),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<ProfileCompletionCubit, ProfileCompletionState>(
-      listenWhen: (previous, current) =>
-          previous.status != current.status ||
-          previous.errorMessage != current.errorMessage ||
-          previous.profile != current.profile,
-      listener: (context, state) {
-        _handleState(context, state, widget.afterSignup);
-
-        if (state.status == ProfileCompletionStatus.ready &&
-            state.profile != null &&
-            !_isInitialized) {
-          _emailController.text = state.profile!.email;
-          _universityController.text = state.profile!.university;
-          _studyFieldController.text = state.profile!.studyField;
-          _isInitialized = true;
-        }
-      },
-      builder: (context, state) {
-        final cubit = context.read<ProfileCompletionCubit>();
-        final isSaving = state.status == ProfileCompletionStatus.saving;
-        final isLoading = state.status == ProfileCompletionStatus.loading ||
-            state.status == ProfileCompletionStatus.initial;
-
-        return Column(
-          children: [
-            ProfileCompletionHeader(
-              percentage: state.profile?.profileCompletionPercentage ?? 0,
-              onSkip: isSaving ? null : () => _onSkip(cubit),
-            ),
-            Expanded(
-              child: isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                        color: ColorRes.anisGreen,
-                      ),
-                    )
-                  : ProfileCompletionForm(
-                      state: state,
-                      formKey: _formKey,
-                      emailController: _emailController,
-                      universityController: _universityController,
-                      studyFieldController: _studyFieldController,
-                      interestController: _interestController,
-                    ),
-            ),
-            ProfileCompletionFooter(
-              isSaving: isSaving,
-              onSave: () => _onSave(cubit),
-              onSkip: isSaving ? null : () => _onSkip(cubit),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

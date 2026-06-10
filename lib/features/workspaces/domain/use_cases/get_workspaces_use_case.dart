@@ -8,6 +8,14 @@ class GetWorkspacesUseCase {
   final WorkspaceRepository repository;
   GetWorkspacesUseCase(this.repository);
 
-  Future<Either<Failure, List<WorkspaceEntity>>> call({String? filter}) =>
-      repository.getWorkspaces(filter: filter);
+  Future<Either<Failure, List<WorkspaceEntity>>> call({
+    String? filter,
+    double? latitude,
+    double? longitude,
+  }) =>
+      repository.getWorkspaces(
+        filter: filter,
+        latitude: latitude,
+        longitude: longitude,
+      );
 }

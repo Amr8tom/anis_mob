@@ -6,6 +6,9 @@ import '../../../../../../core/constants/colors.dart';
 import '../../../../../../generated/l10n.dart';
 import '../../../../domain/entity/workspace_entity.dart';
 
+import 'status_badge.dart';
+import 'meta_item.dart';
+
 /// Compact info strip shown between the AppBar and the TabBar:
 /// address · open/close time · distance · occupancy bar
 class WorkspaceHeaderSection extends StatelessWidget {
@@ -40,7 +43,7 @@ class WorkspaceHeaderSection extends StatelessWidget {
           // Status badge + address row
           Row(
             children: [
-              _StatusBadge(status: workspace.status),
+              StatusBadge(status: workspace.status),
               Sizer(width: AppSizes.sm),
               Expanded(
                 child: Text(
@@ -57,18 +60,18 @@ class WorkspaceHeaderSection extends StatelessWidget {
           // Meta row: open time · close time · distance
           Row(
             children: [
-              _MetaItem(
+              MetaItem(
                 icon: Icons.access_time_rounded,
                 label: '${workspace.openTime} – ${workspace.closeTime}',
               ),
               Sizer(width: AppSizes.md),
-              _MetaItem(
+              MetaItem(
                 icon: Icons.near_me_rounded,
                 label:
                     '${workspace.distanceKm.toStringAsFixed(1)} ${S.current.km}',
               ),
               Sizer(width: AppSizes.md),
-              _MetaItem(
+              MetaItem(
                 icon: Icons.people_outline_rounded,
                 label: '${workspace.currentOccupancy}/${workspace.capacity}',
               ),
@@ -97,77 +100,5 @@ class WorkspaceHeaderSection extends StatelessWidget {
     if (fraction >= 1.0) return ColorRes.error;
     if (fraction >= 0.8) return ColorRes.anisBusyAmber;
     return ColorRes.anisGreen;
-  }
-}
-
-class _StatusBadge extends StatelessWidget {
-  final WorkspaceStatus status;
-  const _StatusBadge({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final tt = Theme.of(context).textTheme;
-    final (label, bg, fg) = switch (status) {
-      WorkspaceStatus.open => (
-          S.current.workspaceOpen,
-          ColorRes.anisTagGreen,
-          ColorRes.anisTagGreenTxt
-        ),
-      WorkspaceStatus.busy => (
-          S.current.workspaceBusy,
-          ColorRes.anisTagYellow,
-          ColorRes.anisTagYellowTxt
-        ),
-      WorkspaceStatus.full => (
-          S.current.workspaceFull,
-          ColorRes.anisTagPink,
-          ColorRes.anisTagPinkTxt
-        ),
-      WorkspaceStatus.closed => (
-          S.current.closedNow,
-          ColorRes.accent,
-          ColorRes.anisChipText
-        ),
-    };
-
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.sm + 2,
-        vertical: AppSizes.xs,
-      ),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(AppSizes.borderRadiusXLg),
-      ),
-      child: Text(
-        label,
-        style: tt.bodySmall?.copyWith(
-          fontWeight: FontWeight.w700,
-          color: fg,
-        ),
-      ),
-    );
-  }
-}
-
-class _MetaItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  const _MetaItem({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    final tt = Theme.of(context).textTheme;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 13, color: ColorRes.anisHintText),
-        Sizer(width: 3),
-        Text(
-          label,
-          style: tt.bodySmall?.copyWith(color: ColorRes.anisTextMuted),
-        ),
-      ],
-    );
   }
 }
