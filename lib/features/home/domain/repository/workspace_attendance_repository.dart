@@ -23,4 +23,15 @@ abstract class WorkspaceAttendanceRepository {
     required DateTime checkInTime,
     required Duration elapsedTime,
   });
+
+  /// Ask the workspace owner to check the user out (approval-mode workspaces).
+  /// For free visits / direct-mode workspaces the server checks out immediately
+  /// and returns a completed [WorkspaceAttendanceEntity].
+  Future<Either<Failure, WorkspaceAttendanceEntity>> requestCheckout({
+    required String attendanceId,
+  });
+
+  /// Re-fetch the user's currently active visit (null if none). Used to detect
+  /// when an owner has approved a pending checkout request.
+  Future<Either<Failure, WorkspaceAttendanceEntity?>> getActiveVisit();
 }

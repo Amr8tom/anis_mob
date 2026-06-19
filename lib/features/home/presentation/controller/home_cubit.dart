@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,11 +9,14 @@ import '../../domain/entity/user_profile_entity.dart';
 import '../../domain/entity/workspace_attendance_entity.dart';
 import '../../domain/use_cases/check_in_workspace_use_case.dart';
 import '../../domain/use_cases/check_out_workspace_use_case.dart';
+import '../../domain/use_cases/get_active_visit_use_case.dart';
 import '../../domain/use_cases/get_today_sessions_use_case.dart';
 import '../../domain/use_cases/get_user_profile_use_case.dart';
+import '../../domain/use_cases/request_checkout_use_case.dart';
 
 import '../../../../core/local_storage/local_storage.dart';
 import '../../../../core/local_storage/storage_keys.dart';
+import '../../../../generated/l10n.dart';
 
 part 'home_state.dart';
 
@@ -20,17 +25,30 @@ class HomeCubit extends Cubit<HomeState> {
   final GetTodaySessionsUseCase getTodaySessionsUseCase;
   final CheckInWorkspaceUseCase checkInWorkspaceUseCase;
   final CheckOutWorkspaceUseCase checkOutWorkspaceUseCase;
+  final RequestCheckoutUseCase requestCheckoutUseCase;
+  final GetActiveVisitUseCase getActiveVisitUseCase;
   final LocalStorage localStorage;
+
+  /// Polls the active visit while a checkout request is pending owner approval.
+  Timer? _approvalPoll;
 
   HomeCubit({
     required this.getUserProfileUseCase,
     required this.getTodaySessionsUseCase,
     required this.checkInWorkspaceUseCase,
     required this.checkOutWorkspaceUseCase,
+    required this.requestCheckoutUseCase,
+    required this.getActiveVisitUseCase,
     required this.localStorage,
   }) : super(const HomeState()) {
     _initLocation();
     loadHomeData();
+  }
+
+  @override
+  Future<void> close() {
+    _approvalPoll?.cancel();
+    return super.close();
   }
 
   void _initLocation() {
@@ -92,7 +110,7 @@ class HomeCubit extends Cubit<HomeState> {
     } else {
       emit(state.copyWith(
         status: HomeStatus.failure,
-        errorMessage: error ?? 'حدث خطأ ما',
+        errorMessage: error ?? S.current.generalError,
       ));
     }
   }
@@ -131,12 +149,22 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  // Workspace check-out
+  // Workspace check-out / leave
 
-  Future<void> checkOut() async {
+  /// Single entry point for the "leave" button. Direct-checkout visits check out
+  /// immediately; approval-mode paid visits send a request for the owner instead.
+  Future<void> leaveWorkspace() async {
     final session = state.activeSession;
     if (session == null || state.attendanceStatus.isBusy) return;
 
+    if (session.canCheckOutDirectly) {
+      await _checkOutDirect(session);
+    } else {
+      await _requestCheckout(session);
+    }
+  }
+
+  Future<void> _checkOutDirect(WorkspaceAttendanceEntity session) async {
     emit(state.copyWith(
       attendanceStatus: AttendanceStatus.checkingOut,
       clearAttendanceError: true,
@@ -164,6 +192,72 @@ class HomeCubit extends Cubit<HomeState> {
         clearAttendanceError: true,
       )),
     );
+  }
+
+  Future<void> _requestCheckout(WorkspaceAttendanceEntity session) async {
+    emit(state.copyWith(
+      attendanceStatus: AttendanceStatus.requestingCheckout,
+      clearAttendanceError: true,
+    ));
+
+    final result = await requestCheckoutUseCase.call(
+      params: RequestCheckoutParams(attendanceId: session.attendanceId),
+    );
+
+    result.fold(
+      (failure) => emit(state.copyWith(
+        attendanceStatus: AttendanceStatus.checkedIn,
+        attendanceError: failure.message,
+      )),
+      (updated) {
+        if (!updated.isActive) {
+          // Edge case: server checked the user out directly (e.g. mode changed).
+          emit(state.copyWith(
+            attendanceStatus: AttendanceStatus.idle,
+            clearSession: true,
+            clearAttendanceError: true,
+          ));
+          return;
+        }
+        emit(state.copyWith(
+          attendanceStatus: AttendanceStatus.checkoutPending,
+          activeSession: updated,
+          clearAttendanceError: true,
+        ));
+        _startApprovalPolling();
+      },
+    );
+  }
+
+  /// While a request is pending, poll the active visit. When the owner approves,
+  /// the active visit disappears (null) and we transition to idle.
+  void _startApprovalPolling() {
+    _approvalPoll?.cancel();
+    _approvalPoll = Timer.periodic(const Duration(seconds: 20), (_) async {
+      if (!state.attendanceStatus.isCheckoutPending) {
+        _approvalPoll?.cancel();
+        return;
+      }
+
+      final result = await getActiveVisitUseCase.call();
+      result.fold(
+        (_) {}, // transient network error — keep polling
+        (active) {
+          if (active == null || !active.isActive) {
+            // Owner approved → the visit is closed.
+            _approvalPoll?.cancel();
+            emit(state.copyWith(
+              attendanceStatus: AttendanceStatus.idle,
+              clearSession: true,
+              clearAttendanceError: true,
+            ));
+          } else {
+            // Still pending — refresh the snapshot (timer, etc.).
+            emit(state.copyWith(activeSession: active));
+          }
+        },
+      );
+    });
   }
 
   void clearAttendanceError() =>

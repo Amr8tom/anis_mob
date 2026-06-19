@@ -48,29 +48,29 @@ class LocationSelectorBottomSheet extends StatefulWidget {
 class _LocationSelectorBottomSheetState extends State<LocationSelectorBottomSheet> {
   bool _isLoadingGps = false;
 
-  final List<PredefinedRegion> _regions = const [
+  List<PredefinedRegion> get _regions => [
     PredefinedRegion(
-      name: 'الدقي، الجيزة',
+      name: S.current.regionDokki,
       latitude: 30.0381,
       longitude: 31.2118,
     ),
     PredefinedRegion(
-      name: 'التجمع الخامس، القاهرة',
+      name: S.current.regionFifthSettlement,
       latitude: 30.0263,
       longitude: 31.4913,
     ),
     PredefinedRegion(
-      name: 'مدينة نصر، القاهرة',
+      name: S.current.regionNasrCity,
       latitude: 30.0571,
       longitude: 31.3415,
     ),
     PredefinedRegion(
-      name: '٦ أكتوبر، الجيزة',
+      name: S.current.regionOctober,
       latitude: 29.9734,
       longitude: 30.9481,
     ),
     PredefinedRegion(
-      name: 'سموحة، الإسكندرية',
+      name: S.current.regionSmouha,
       latitude: 31.2089,
       longitude: 29.9556,
     ),
@@ -195,7 +195,7 @@ class _LocationSelectorBottomSheetState extends State<LocationSelectorBottomShee
 
           // Title
           Text(
-            'تحديد موقعك',
+            S.current.locateYourself,
             textAlign: TextAlign.center,
             style: tt.headlineSmall?.copyWith(
               color: ColorRes.anisNavy,
@@ -205,7 +205,7 @@ class _LocationSelectorBottomSheetState extends State<LocationSelectorBottomShee
           ),
           const Sizer(height: 8),
           Text(
-            'اختر موقعك لنظهر لك المساحات الأقرب إليك ونحسب المسافات بدقة',
+            S.current.locateYourselfDesc,
             textAlign: TextAlign.center,
             style: tt.bodySmall?.copyWith(
               color: ColorRes.anisTextMuted,
@@ -242,7 +242,7 @@ class _LocationSelectorBottomSheetState extends State<LocationSelectorBottomShee
                   Icon(Icons.my_location_rounded, size: 20.r),
                 const Sizer(width: 8),
                 Text(
-                  _isLoadingGps ? 'جاري تحديد موقعك...' : 'تحديد الموقع عبر الـ GPS',
+                  _isLoadingGps ? S.current.locating : S.current.locateViaGps,
                   style: tt.bodyMedium?.copyWith(
                     color: ColorRes.white,
                     fontWeight: FontWeight.w700,
@@ -261,7 +261,7 @@ class _LocationSelectorBottomSheetState extends State<LocationSelectorBottomShee
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: Text(
-                  'أو اختر منطقة يدوياً',
+                  S.current.orChooseRegionManually,
                   style: tt.bodySmall?.copyWith(
                     color: ColorRes.anisTextMuted,
                     fontWeight: FontWeight.w600,

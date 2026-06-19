@@ -24,7 +24,7 @@ class WorkspaceStatusBadge extends StatelessWidget {
           ColorRes.anisBusyAmber,
         ),
       WorkspaceStatus.full => (
-          'ممتلئ',
+          S.current.workspaceFull,
           ColorRes.anisErrorRedBg,
           ColorRes.anisErrorRed,
         ),

@@ -11,7 +11,7 @@ class WorkspaceClosedLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = status == WorkspaceStatus.full ? 'ممتلئ' : S.current.closedNow;
+    final label = status == WorkspaceStatus.full ? S.current.workspaceFull : S.current.closedNow;
     return Text(
       label,
       style: Theme.of(context).textTheme.bodySmall?.copyWith(

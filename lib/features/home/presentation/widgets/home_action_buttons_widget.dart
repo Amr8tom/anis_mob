@@ -19,6 +19,7 @@ class HomeActionButtonsWidget extends StatelessWidget {
   final VoidCallback onLeaveWorkspace;
   final bool isCheckedIn;
   final bool isLoading;
+  final bool isCheckoutPending;
 
   const HomeActionButtonsWidget({
     super.key,
@@ -27,6 +28,7 @@ class HomeActionButtonsWidget extends StatelessWidget {
     required this.onLeaveWorkspace,
     this.isCheckedIn = false,
     this.isLoading = false,
+    this.isCheckoutPending = false,
   });
 
   @override
@@ -39,15 +41,25 @@ class HomeActionButtonsWidget extends StatelessWidget {
         AppSizes.xs,
       ),
       child: isCheckedIn
-          // Checked-in: leave workspace
-          ? HomeActionButton(
-              label:
-                  isLoading ? S.current.checkingOut : S.current.leaveWorkspace,
-              icon: Icons.logout_rounded,
-              bgColor: ColorRes.anisErrorRed,
-              fgColor: ColorRes.white,
-              onTap: isLoading ? null : onLeaveWorkspace,
-            )
+          // Pending owner approval: disabled amber "awaiting approval" button.
+          ? isCheckoutPending
+              ? HomeActionButton(
+                  label: S.current.awaitingCheckoutApproval,
+                  icon: Icons.hourglass_top_rounded,
+                  bgColor: ColorRes.anisChipBg,
+                  fgColor: ColorRes.anisNavy,
+                  onTap: null,
+                )
+              // Checked-in: leave workspace (or request to leave)
+              : HomeActionButton(
+                  label: isLoading
+                      ? S.current.checkingOut
+                      : S.current.leaveWorkspace,
+                  icon: Icons.logout_rounded,
+                  bgColor: ColorRes.anisErrorRed,
+                  fgColor: ColorRes.white,
+                  onTap: isLoading ? null : onLeaveWorkspace,
+                )
           // Idle: scan + find buddy
           : Row(
               children: [

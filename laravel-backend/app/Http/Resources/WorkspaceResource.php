@@ -27,7 +27,7 @@ final class WorkspaceResource extends JsonResource
             'description' => $this->description ?? '',
             'latitude' => (float) ($this->latitude ?? 0),
             'longitude' => (float) ($this->longitude ?? 0),
-            'galleryImages' => $this->gallery_images ?? [],
+            'galleryImages' => $this->gallery_urls,
             'drinks' => WorkspaceDrinkResource::collection($this->whenLoaded('drinks')),
             'currentOccupancy' => $this->computed_occupancy,
             'capacity' => (int) ($this->capacity ?? 0),

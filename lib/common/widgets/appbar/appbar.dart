@@ -156,7 +156,7 @@ class _BackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: AppSizes.sm),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.padding),
       child: Material(
         color: ColorRes.anisChipBg,
         borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),

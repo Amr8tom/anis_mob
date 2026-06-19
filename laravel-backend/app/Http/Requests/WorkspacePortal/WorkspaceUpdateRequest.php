@@ -31,18 +31,20 @@ final class WorkspaceUpdateRequest extends FormRequest
             'day_calculation_hours' => ['required', 'integer', 'min:1', 'max:24'],
             'amenities' => ['nullable', 'array'],
             'amenities.*' => ['string'],
-            'cover_image' => ['nullable', 'image', 'max:5120'],
+            'cover_image' => ['nullable', 'image', 'max:10240'],
             'gallery_images' => ['nullable', 'array'],
-            'gallery_images.*' => ['image', 'max:5120'],
+            'gallery_images.*' => ['image', 'max:10240'],
             'retained_gallery_images' => ['nullable', 'array'],
             'retained_gallery_images.*' => ['string'],
             'manual_occupancy' => ['nullable', 'integer', 'min:0'],
             'status' => ['required', 'string', 'in:OPEN,BUSY,FULL,CLOSED'],
+            'checkout_mode' => ['nullable', 'string', 'in:DIRECT,APPROVAL'],
             'drinks' => ['nullable', 'array'],
             'drinks.*.id' => ['nullable', 'uuid'],
             'drinks.*.name' => ['required', 'string', 'max:255'],
             'drinks.*.icon' => ['required', 'string', 'max:50'],
             'drinks.*.price_cents' => ['required', 'integer', 'min:0'],
+            'hour_multiplier' => ['sometimes', 'numeric', 'decimal:0,2', 'min:0', 'max:10'],
         ];
     }
 }

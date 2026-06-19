@@ -117,7 +117,7 @@ class ProfileSubscriptionCard extends StatelessWidget {
                     size: AppSizes.iconSm, color: ColorRes.anisGreen),
                 const Sizer(width: 6),
                 Text(
-                  S.current.daysLeft(daysLeft),
+                  S.current.subscriptionDaysAndHours(daysLeft, profile?.subscriptionRemainingHours ?? 0),
                   style: tt.bodySmall?.copyWith(color: ColorRes.anisHintText),
                 ),
               ],

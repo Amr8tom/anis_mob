@@ -191,7 +191,13 @@
 <header class="nav"><div class="container nav-inner">
     <a href="#" class="brand"><span class="mark">أ</span> أنيس</a>
     <nav class="nav-links">
-        <a href="#why">ليه أنيس</a><a href="#features">المميزات</a><a href="#spaces">المساحات</a><a href="#plans">الأسعار</a><a href="{{ route('workspace.register') }}" style="color: var(--green); font-weight: 700;">بوابة الشركاء</a><a href="#contact">تواصل</a>
+        <a href="#why">ليه أنيس</a><a href="#features">المميزات</a><a href="#spaces">المساحات</a><a href="#plans">الأسعار</a>
+        @auth
+            <a href="{{ route('workspace.settings.edit') }}" style="color: var(--green); font-weight: 700;">لوحة التحكم</a>
+        @else
+            <a href="{{ route('workspace.login') }}" style="color: var(--green); font-weight: 700;">بوابة الشركاء</a>
+        @endauth
+        <a href="#contact">تواصل</a>
     </nav>
     <a href="#download" class="btn btn-primary">حمّل التطبيق</a>
     <button class="menu-btn" onclick="location.href='#download'">☰</button>

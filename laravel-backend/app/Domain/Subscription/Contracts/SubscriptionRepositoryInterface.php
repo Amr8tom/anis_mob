@@ -16,6 +16,11 @@ interface SubscriptionRepositoryInterface
     public function lockActiveForUser(string $userId): ?Subscription;
 
     /**
+     * Row-locked specific subscription by ID.
+     */
+    public function lock(string $subscriptionId): ?Subscription;
+
+    /**
      * Deduct minutes from a time-balance subscription and write an immutable ledger row.
      * No-op for date-bound (remaining_minutes === null) plans. Returns the balance after.
      */

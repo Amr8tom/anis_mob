@@ -4,7 +4,10 @@ import '../../../../core/constants/colors.dart';
 import '../../../../core/extentions/navigation_extension.dart';
 import '../../../../core/routing/route_names.dart';
 import '../../../../generated/l10n.dart';
+import '../../../home/presentation/controller/home_cubit.dart';
+import '../../../home/presentation/screens/qr_scanner_screen.dart';
 import '../../domain/entity/workspace_entity.dart';
+
 import '../controller/workspace_cubit.dart';
 import 'widgets/workspace/workspace_divider_section.dart';
 import 'widgets/workspace/workspace_empty_section.dart';
@@ -68,11 +71,22 @@ class WorkspacesScreen extends StatelessWidget {
     );
   }
 
-  void _onCheckIn(BuildContext context, WorkspaceEntity w) {
+  Future<void> _onCheckIn(BuildContext context, WorkspaceEntity w) async {
+    final cubit = context.read<HomeCubit>();
+    final checkedIn = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => BlocProvider.value(
+          value: cubit,
+          child: const QrScannerScreen(),
+        ),
+      ),
+    );
+
+    if (!context.mounted || checkedIn != true) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          '${S.current.scanToCheckIn} — ${w.name}',
+          S.current.checkInSuccess,
           style: Theme.of(context)
               .textTheme
               .bodyMedium
@@ -80,7 +94,6 @@ class WorkspacesScreen extends StatelessWidget {
         ),
         backgroundColor: ColorRes.anisGreen,
         behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
       ),
     );
   }

@@ -37,6 +37,8 @@ final class ProfileResource extends JsonResource
             'interests' => $this->interests ?? [],
             'subscriptionType' => $summary->tier,
             'subscriptionDaysRemaining' => $summary->daysRemaining,
+            'subscriptionRemainingMinutes' => $summary->remainingMinutes,
+            'subscriptionRemainingHours' => (int) floor($summary->remainingMinutes / 60),
             'totalStudyHours' => (int) $this->total_study_hours,
             'streakDays' => (int) $this->streak_days,
             'totalSessions' => (int) $this->total_sessions,

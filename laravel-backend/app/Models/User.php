@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -21,7 +22,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, HasUuids, Notifiable;
+    use HasApiTokens, HasFactory, HasUuids, Notifiable, SoftDeletes;
 
     protected $keyType = 'string';
 
@@ -36,6 +37,11 @@ class User extends Authenticatable
         'role',
         'gender',
         'is_guest',
+        'admin_permissions',
+        'admin_mfa_secret',
+        'admin_mfa_enabled',
+        'admin_failed_login_attempts',
+        'admin_locked_until',
         'profile_completed_at',
         'avatar_url',
         'initials',
@@ -45,7 +51,6 @@ class User extends Authenticatable
         'avatar_color_key',
         'availability',
         'rating',
-        'wallet_balance',
         'total_study_hours',
         'streak_days',
         'total_sessions',
@@ -64,10 +69,14 @@ class User extends Authenticatable
             'gender' => Gender::class,
             'availability' => Availability::class,
             'is_guest' => 'boolean',
+            'admin_permissions' => 'array',
+            'admin_mfa_secret' => 'encrypted',
+            'admin_mfa_enabled' => 'boolean',
+            'admin_failed_login_attempts' => 'integer',
+            'admin_locked_until' => 'datetime',
             'profile_completed_at' => 'datetime',
             'interests' => 'array',
             'rating' => 'decimal:2',
-            'wallet_balance' => 'decimal:2',
             'total_study_hours' => 'integer',
             'streak_days' => 'integer',
             'total_sessions' => 'integer',
@@ -126,5 +135,11 @@ class User extends Authenticatable
     public function ledgers(): HasMany
     {
         return $this->hasMany(SubscriptionLedger::class);
+    }
+
+    /** @return HasMany<WorkspaceSubscription, $this> */
+    public function workspaceSubscriptions(): HasMany
+    {
+        return $this->hasMany(WorkspaceSubscription::class);
     }
 }

@@ -8,10 +8,10 @@ use App\Domain\WorkspacePortal\Contracts\WorkspacePortalRepositoryInterface as C
 use App\Domain\WorkspacePortal\Data\WorkspaceRegistrationData;
 use App\Domain\WorkspacePortal\Data\WorkspaceUpdateData;
 use App\Enums\UserRole;
+use App\Enums\WorkspaceLifecycleStatus;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 final class EloquentWorkspacePortalRepository implements ContractInterface
@@ -23,19 +23,20 @@ final class EloquentWorkspacePortalRepository implements ContractInterface
                 'full_name' => $data->fullName,
                 'phone_number' => $data->phoneNumber,
                 'whatsapp_number' => $data->whatsappNumber,
-                'password' => Hash::make($data->password),
+                'password' => $data->password,
                 'role' => UserRole::WORKSPACE_OWNER,
             ]);
 
+            $disk = (string) config('filesystems.workspace_media_disk');
             $coverImageUrl = null;
             if ($data->coverImage) {
-                $coverImageUrl = '/storage/' . $data->coverImage->store('workspaces', 'public');
+                $coverImageUrl = $data->coverImage->store('workspaces', $disk);
             }
 
             $galleryImagesUrls = [];
             foreach ($data->galleryImages as $image) {
                 if ($image) {
-                    $galleryImagesUrls[] = '/storage/' . $image->store('workspaces', 'public');
+                    $galleryImagesUrls[] = $image->store('workspaces', $disk);
                 }
             }
 
@@ -47,8 +48,11 @@ final class EloquentWorkspacePortalRepository implements ContractInterface
                 'longitude' => $data->longitude,
                 'day_calculation_hours' => $data->dayCalculationHours,
                 'admin_phone' => $data->whatsappNumber,
-                'qr_token' => (string) Str::uuid(),
-                'is_active' => true,
+                'qr_token' => (string) Str::uuid7(),
+                // Self-registrations are held for admin review: hidden from the
+                // mobile app and unable to accept check-ins until approved.
+                'lifecycle_status' => WorkspaceLifecycleStatus::PENDING,
+                'is_active' => false,
                 'description' => $data->description,
                 'capacity' => $data->capacity,
                 'open_time' => $data->openTime,
@@ -58,7 +62,7 @@ final class EloquentWorkspacePortalRepository implements ContractInterface
                 'gallery_images' => $galleryImagesUrls,
             ]);
 
-            if (!empty($data->drinks)) {
+            if (! empty($data->drinks)) {
                 $workspace->drinks()->createMany($data->drinks);
             }
 
@@ -79,6 +83,8 @@ final class EloquentWorkspacePortalRepository implements ContractInterface
             $workspace->close_time = $data->closeTime;
             $workspace->admin_phone = $data->adminPhone;
             $workspace->day_calculation_hours = $data->dayCalculationHours;
+            $workspace->hour_multiplier = $data->hourMultiplier;
+            $workspace->checkout_mode = $data->checkoutMode;
             $workspace->amenities = $data->amenities;
             $workspace->manual_occupancy = $data->manualOccupancy;
             $workspace->status = $data->status;
@@ -87,10 +93,10 @@ final class EloquentWorkspacePortalRepository implements ContractInterface
 
             // Sync Drinks
             $incomingIds = collect($data->drinks)->pluck('id')->filter()->toArray();
-            
+
             // Delete removed drinks
             $workspace->drinks()->whereNotIn('id', $incomingIds)->delete();
-            
+
             // Create or update drinks
             foreach ($data->drinks as $drinkData) {
                 $workspace->drinks()->updateOrCreate(

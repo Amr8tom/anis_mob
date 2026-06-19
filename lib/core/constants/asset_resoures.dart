@@ -198,6 +198,7 @@ class AssetRes {
   /// language
   static const String en = 'assets/images/svgs/english.svg';
   static const String ar = 'assets/images/pngs/ar.png';
+  static const String tr = 'assets/images/pngs/tr.png';
 
   /// navigation
   static const String meals = 'assets/images/pngs/meals.png';

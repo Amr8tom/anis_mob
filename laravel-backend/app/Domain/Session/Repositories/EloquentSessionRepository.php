@@ -16,10 +16,13 @@ final class EloquentSessionRepository implements SessionRepositoryInterface
 {
     public function todaySessions(int $perPage): LengthAwarePaginator
     {
+        $start = today()->startOfDay();
+
         return StudySession::query()
             ->with('host')
             ->withCount('participants')
-            ->whereDate('start_time', today())
+            ->where('start_time', '>=', $start)
+            ->where('start_time', '<', $start->copy()->addDay())
             ->whereIn('status', [SessionStatus::UPCOMING->value, SessionStatus::IN_PROGRESS->value])
             ->orderBy('start_time')
             ->paginate($perPage);
@@ -35,7 +38,10 @@ final class EloquentSessionRepository implements SessionRepositoryInterface
             ->when($university, fn (Builder $q, string $u) => $q->whereHas('host', fn (Builder $h) => $h->where('university', $u)))
             ->when($subject, fn (Builder $q, string $s) => $q->where('subject', $s))
             ->when($filter === 'open', fn (Builder $q) => $q->where('status', SessionStatus::UPCOMING->value))
-            ->when($filter === 'today', fn (Builder $q) => $q->whereDate('start_time', today()))
+            ->when($filter === 'today', function (Builder $query): void {
+                $start = today()->startOfDay();
+                $query->where('start_time', '>=', $start)->where('start_time', '<', $start->copy()->addDay());
+            })
             ->when($filter === 'thisWeek', fn (Builder $q) => $q->whereBetween('start_time', [now()->startOfWeek(), now()->endOfWeek()]))
             ->when($filter === 'availableNow', fn (Builder $q) => $q->whereHas('host', fn (Builder $h) => $h->where('availability', 'ONLINE')))
             ->orderBy('start_time')

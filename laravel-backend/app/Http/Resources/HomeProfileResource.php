@@ -30,7 +30,9 @@ final class HomeProfileResource extends JsonResource
             'subscriptionType' => $summary->tier,
             'subscriptionDaysRemaining' => $summary->daysRemaining,
             'subscriptionTotalDays' => $summary->totalDays,
-            'walletBalance' => (float) $this->wallet_balance,
+            'subscriptionRemainingMinutes' => $summary->remainingMinutes,
+            'subscriptionRemainingHours' => (int) floor($summary->remainingMinutes / 60),
+
             'totalStudyHours' => (int) $this->total_study_hours,
             'streakDays' => (int) $this->streak_days,
         ];

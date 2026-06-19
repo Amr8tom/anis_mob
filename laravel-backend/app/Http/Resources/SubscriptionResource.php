@@ -23,6 +23,8 @@ final class SubscriptionResource extends JsonResource
 
         return [
             'id' => $this->id,
+            // Discriminator: 'global' vs 'workspace' (workspace-scoped plans).
+            'scope' => 'global',
             'planName' => $this->plan?->name,
             'subscriptionType' => $summary->tier,
             'status' => strtolower($this->status->value),

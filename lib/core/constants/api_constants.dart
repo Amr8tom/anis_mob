@@ -8,10 +8,12 @@ class URL {
   ///   • iOS simulator / desktop / web  → http://127.0.0.1:8000/api/v1
   ///   • Android emulator               → http://10.0.2.2:8000/api/v1
   ///   • Physical device                → http://[your-machine-LAN-IP]:8000/api/v1
-  static const String baseUrl = String.fromEnvironment(
-    'ANIS_API_BASE',
-    defaultValue: 'https://hejaz2.com/api/v1',
-  );
+  // static const String baseUrl = String.fromEnvironment(
+    // 'ANIS_API_BASE',
+    // defaultValue:
+  static const String baseUrl='https://anis.hejaz2.com/api/v1';
+    // defaultValue: 'http://127.0.0.1:8000/api/v1',
+  // );
 
   // ── Auth ────────────────────────────────────────────────────────────────
   static const String login = '$baseUrl/auth/login';
@@ -35,6 +37,9 @@ class URL {
   static String checkOut(String visitId) =>
       '$baseUrl/workspace-visits/$visitId/check-out';
 
+  static String requestCheckout(String visitId) =>
+      '$baseUrl/workspace-visits/$visitId/request-checkout';
+
   // ── Buddy sessions ────────────────────────────────────────────────────────
   static const String buddySessions = '$baseUrl/buddy-sessions';
 
@@ -49,6 +54,7 @@ class URL {
   // ── Plans & subscriptions ─────────────────────────────────────────────────
   static const String plans = '$baseUrl/plans';
   static const String currentSubscription = '$baseUrl/subscriptions/current';
+  static const String activateSubscription = '$baseUrl/subscriptions/activate';
 
   // ── Misc ──────────────────────────────────────────────────────────────────
   static const String privacyPolicy =

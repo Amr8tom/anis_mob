@@ -11,8 +11,37 @@
             {{ mb_substr($client->full_name, 0, 1) }}
         </div>
         <div>
-            <h1 class="page-title" style="margin: 0 0 5px 0;">{{ $client->full_name }}</h1>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                <h1 class="page-title" style="margin: 0;">{{ $client->full_name }}</h1>
+                @if($type === 'user')
+                    <span style="background: var(--upwork-blue); color: white; padding: 4px 8px; border-radius: 20px; font-weight: bold; font-size: 12px;">مستخدم تطبيق</span>
+                @else
+                    <span style="background: var(--upwork-muted); color: white; padding: 4px 8px; border-radius: 20px; font-weight: bold; font-size: 12px;">زائر (Walk-in)</span>
+                @endif
+            </div>
             <p style="color: var(--upwork-muted); margin: 0; direction: ltr; text-align: right;">{{ $client->phone_number }}</p>
+        </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="grid-2" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 20px;">
+        <div class="card" style="text-align: center; padding: 15px;">
+            <div style="font-size: 24px; font-weight: 900; color: var(--upwork-green);">{{ $totalVisits }}</div>
+            <div style="color: var(--upwork-muted); font-size: 13px; margin-top: 4px; font-weight: bold;">إجمالي الزيارات</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 15px;">
+            <div style="font-size: 24px; font-weight: 900; color: var(--upwork-blue);">{{ number_format($totalMinutes / 60, 2) }}</div>
+            <div style="color: var(--upwork-muted); font-size: 13px; margin-top: 4px; font-weight: bold;">إجمالي الساعات</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 15px;">
+            <div style="font-size: 24px; font-weight: 900; color: var(--upwork-slate);">{{ $totalVisits > 0 ? number_format(($totalMinutes / 60) / $totalVisits, 1) : 0 }}</div>
+            <div style="color: var(--upwork-muted); font-size: 13px; margin-top: 4px; font-weight: bold;">متوسط الساعات/الزيارة</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 15px;">
+            <div style="font-size: 16px; font-weight: 900; color: var(--upwork-slate); direction: ltr;">
+                {{ $lastVisit ? \Carbon\Carbon::parse($lastVisit)->format('Y-m-d') : '--' }}
+            </div>
+            <div style="color: var(--upwork-muted); font-size: 13px; margin-top: 4px; font-weight: bold;">آخر زيارة</div>
         </div>
     </div>
 
@@ -36,8 +65,8 @@
                             <td style="padding: 12px;">
                                 {{ $visit->check_out_at ? \Carbon\Carbon::parse($visit->check_out_at)->format('Y-m-d h:i A') : '--' }}
                             </td>
-                            <td style="padding: 12px;">
-                                {{ $visit->deducted_minutes ?? '--' }}
+                            <td style="padding: 12px; font-weight: bold;">
+                                {{ $visit->duration_minutes ?? '--' }}
                             </td>
                             <td style="padding: 12px;">
                                 @if($visit->status->value === 'CHECKED_IN')
@@ -51,9 +80,7 @@
                 </tbody>
             </table>
             
-            <div style="margin-top: 20px;">
-                {{ $visits->links() }}
-            </div>
+            {{ $visits->links('vendor.pagination.upwork') }}
         @else
             <p style="text-align: center; color: var(--upwork-muted); padding: 40px;">لم يقم العميل بأي زيارات بعد.</p>
         @endif

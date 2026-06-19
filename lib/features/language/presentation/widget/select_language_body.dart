@@ -46,6 +46,19 @@ class SelectLanguageBody extends StatelessWidget {
                   },
                 ),
               ),
+              SizedBox(height: AppSizes.ld),
+              Expanded(
+                child: CustomLangWidget(
+                  imagPath: AssetRes.tr,
+                  langName: S.current.languageTurkish,
+                  hight: AppSizes.xxl * 8,
+                  onTab: () {
+                    controller.changeLanguage("tr");
+                    Navigator.popAndPushNamed(
+                        context, DRoutesName.navigationMenuRoute);
+                  },
+                ),
+              ),
             ],
           ),
         );

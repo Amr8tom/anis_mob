@@ -38,7 +38,6 @@ final class UserResource extends JsonResource
             'avatar_color_key' => $this->avatar_color_key,
             'availability' => $this->availability?->value,
             'rating' => (float) $this->rating,
-            'wallet_balance' => (float) $this->wallet_balance,
             'total_study_hours' => $this->total_study_hours,
             'streak_days' => $this->streak_days,
             'total_sessions' => $this->total_sessions,

@@ -63,4 +63,37 @@ class WorkspaceAttendanceRepositoryImpl
     }
     return const Left(NetworkFailure(message: 'No internet connection'));
   }
+
+  @override
+  Future<Either<Failure, WorkspaceAttendanceEntity>> requestCheckout({
+    required String attendanceId,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final result =
+            await remoteDataSource.requestCheckout(attendanceId: attendanceId);
+        return Right(result);
+      } on Failure catch (failure) {
+        return Left(failure);
+      } catch (e) {
+        return Left(ServerFailure(message: e.toString()));
+      }
+    }
+    return const Left(NetworkFailure(message: 'No internet connection'));
+  }
+
+  @override
+  Future<Either<Failure, WorkspaceAttendanceEntity?>> getActiveVisit() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await remoteDataSource.getActiveVisit();
+        return Right(result);
+      } on Failure catch (failure) {
+        return Left(failure);
+      } catch (e) {
+        return Left(ServerFailure(message: e.toString()));
+      }
+    }
+    return const Left(NetworkFailure(message: 'No internet connection'));
+  }
 }

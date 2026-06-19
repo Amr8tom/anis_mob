@@ -58,7 +58,7 @@ final class AutoCheckOutTest extends TestCase
         ]);
 
         $this->artisan('visits:auto-checkout')
-            ->expectsOutputToContain('Auto-checked-out 1 visits.')
+            ->expectsOutputToContain('Queued 1 visits for auto-checkout.')
             ->assertSuccessful();
 
         $this->assertSame(VisitStatus::CHECKED_OUT, $visit->refresh()->status);
@@ -80,7 +80,7 @@ final class AutoCheckOutTest extends TestCase
         ]);
 
         $this->artisan('visits:auto-checkout')
-            ->expectsOutputToContain('Auto-checked-out 0 visits.')
+            ->expectsOutputToContain('Queued 0 visits for auto-checkout.')
             ->assertSuccessful();
 
         $this->assertSame(VisitStatus::CHECKED_IN, $visit->refresh()->status);
@@ -106,7 +106,7 @@ final class AutoCheckOutTest extends TestCase
         ]);
 
         $this->artisan('visits:auto-checkout')
-            ->expectsOutputToContain('Auto-checked-out 0 visits.')
+            ->expectsOutputToContain('Queued 0 visits for auto-checkout.')
             ->assertSuccessful();
     }
 }

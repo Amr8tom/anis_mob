@@ -27,10 +27,25 @@ final class EnsureWorkspaceOwner
         }
 
         // Check if user has an associated workspace
-        if (! $user->ownedWorkspace()->exists()) {
+        $workspace = $user->ownedWorkspace()->first();
+
+        if ($workspace === null) {
             Auth::logout();
 
             return redirect()->route('workspace.login')->with('error', 'لم يتم العثور على مساحة عمل مرتبطة بهذا الحساب.');
+        }
+
+        // Only an APPROVED workspace may operate the portal. Pending registrations
+        // and admin-suspended workspaces are bounced back to login with a reason.
+        if (! $workspace->isApproved()) {
+            Auth::logout();
+
+            $message = $workspace->isSuspended()
+                ? 'تم إيقاف مساحة العمل مؤقتًا من قبل الإدارة'
+                    . ($workspace->suspension_reason ? ': ' . $workspace->suspension_reason : '.')
+                : 'حسابك قيد المراجعة من قبل الإدارة. سيتم إعلامك عند الموافقة.';
+
+            return redirect()->route('workspace.login')->with('error', $message);
         }
 
         return $next($request);

@@ -17,6 +17,7 @@ final readonly class SubscriptionSummary
         public string $tier,
         public int $daysRemaining,
         public int $totalDays,
+        public int $remainingMinutes,
     ) {}
 
     public static function forUser(User $user): self
@@ -31,7 +32,7 @@ final readonly class SubscriptionSummary
     public static function fromSubscription(?Subscription $subscription): self
     {
         if ($subscription === null) {
-            return new self('free', 0, 0);
+            return new self('free', 0, 0, 0);
         }
 
         $plan = $subscription->plan;
@@ -43,6 +44,8 @@ final readonly class SubscriptionSummary
             $daysRemaining = max(0, (int) ceil(now()->diffInDays($subscription->expires_at, false)));
         }
 
-        return new self($tier, $daysRemaining, $totalDays);
+        $remainingMinutes = (int) ($subscription->remaining_minutes ?? 0);
+
+        return new self($tier, $daysRemaining, $totalDays, $remainingMinutes);
     }
 }

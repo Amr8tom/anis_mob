@@ -25,6 +25,8 @@ class ProfileEntity extends Equatable {
   final List<String> interests;
   final String subscriptionType; // 'free' | 'silver' | 'gold'
   final int subscriptionDaysRemaining;
+  final int subscriptionRemainingMinutes;
+  final int subscriptionRemainingHours;
   final int totalStudyHours;
   final int streakDays;
   final int totalSessions;
@@ -45,6 +47,8 @@ class ProfileEntity extends Equatable {
     this.interests = const [],
     required this.subscriptionType,
     required this.subscriptionDaysRemaining,
+    required this.subscriptionRemainingMinutes,
+    required this.subscriptionRemainingHours,
     required this.totalStudyHours,
     required this.streakDays,
     required this.totalSessions,
@@ -67,6 +71,8 @@ class ProfileEntity extends Equatable {
         interests,
         subscriptionType,
         subscriptionDaysRemaining,
+        subscriptionRemainingMinutes,
+        subscriptionRemainingHours,
         totalStudyHours,
         streakDays,
         totalSessions,

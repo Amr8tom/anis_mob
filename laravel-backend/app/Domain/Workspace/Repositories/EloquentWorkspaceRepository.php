@@ -17,6 +17,8 @@ final class EloquentWorkspaceRepository implements WorkspaceRepositoryInterface
 {
     private const HAVERSINE = '(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))';
 
+    private const NEARBY_RADIUS_KM = 50;
+
     public function paginateActive(?string $filter, ?float $latitude, ?float $longitude, int $perPage): LengthAwarePaginator
     {
         $query = $this->baseQuery($latitude, $longitude);
@@ -26,12 +28,23 @@ final class EloquentWorkspaceRepository implements WorkspaceRepositoryInterface
         }
 
         if ($filter === 'nearby' && $latitude !== null && $longitude !== null) {
+            $this->applyBoundingBox($query, $latitude, $longitude, self::NEARBY_RADIUS_KM);
             $query->orderBy('distance_km');
         } else {
             $query->orderBy('name');
         }
 
         return $query->paginate($perPage);
+    }
+
+    private function applyBoundingBox(Builder $query, float $latitude, float $longitude, float $radiusKm): void
+    {
+        $latitudeDelta = $radiusKm / 111.0;
+        $longitudeDelta = $radiusKm / max(111.0 * cos(deg2rad($latitude)), 0.01);
+
+        $query
+            ->whereBetween('latitude', [$latitude - $latitudeDelta, $latitude + $latitudeDelta])
+            ->whereBetween('longitude', [$longitude - $longitudeDelta, $longitude + $longitudeDelta]);
     }
 
     public function findActiveWithDetails(string $id, ?float $latitude, ?float $longitude): Workspace
@@ -45,7 +58,7 @@ final class EloquentWorkspaceRepository implements WorkspaceRepositoryInterface
     private function baseQuery(?float $latitude, ?float $longitude): Builder
     {
         $query = Workspace::query()
-            ->where('is_active', true)
+            ->visibleToVisitors()
             ->withCount(['visits as current_occupancy' => fn (Builder $q) => $q->where('status', VisitStatus::CHECKED_IN->value)])
             ->with([
                 'drinks',

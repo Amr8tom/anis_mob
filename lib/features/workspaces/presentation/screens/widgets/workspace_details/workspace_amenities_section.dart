@@ -16,13 +16,22 @@ class WorkspaceAmenitiesSection extends StatelessWidget {
     'quiet': Icons.volume_off_rounded,
   };
 
-  static const _labels = <String, String>{
-    'wifi': 'واي فاي',
-    'ac': 'تكييف',
-    'coffee': 'قهوة',
-    'printing': 'طباعة',
-    'quiet': 'هادئ',
-  };
+  String _getLabel(String key) {
+    switch (key) {
+      case 'wifi':
+        return S.current.amenityWifi;
+      case 'ac':
+        return S.current.amenityAc;
+      case 'coffee':
+        return S.current.amenityCoffee;
+      case 'printing':
+        return S.current.amenityPrinting;
+      case 'quiet':
+        return S.current.amenityQuiet;
+      default:
+        return key;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +75,7 @@ class WorkspaceAmenitiesSection extends StatelessWidget {
                     ),
                     Sizer(width: AppSizes.xs),
                     Text(
-                      _labels[key] ?? key,
+                      _getLabel(key),
                       style: tt.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: ColorRes.anisTextDark,

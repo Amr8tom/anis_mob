@@ -35,6 +35,9 @@ class WorkspaceFactory extends Factory
             'open_time' => '08:00',
             'close_time' => '23:00',
             'day_calculation_hours' => 8,
+            'checkout_mode' => 'DIRECT',
+            'payout_rate_cents_per_hour' => 1500,
+            'payout_currency' => 'EGP',
             'is_active' => true,
         ];
     }

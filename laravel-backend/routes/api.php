@@ -10,7 +10,10 @@ use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\SubscriptionController;
 use App\Http\Controllers\Api\V1\WorkspaceController;
 use App\Http\Controllers\Api\V1\WorkspaceVisitController;
+use App\Http\Controllers\HealthController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('health/ready', [HealthController::class, 'ready'])->name('health.ready');
 
 Route::prefix('v1')->group(function (): void {
     // ============================ PUBLIC (tokenless) ============================
@@ -38,8 +41,10 @@ Route::prefix('v1')->group(function (): void {
         Route::get('home/today-sessions', [HomeController::class, 'todaySessions']);
 
         // QR workspace attendance
-        Route::post('workspace-visits/check-in', [WorkspaceVisitController::class, 'checkIn']);
-        Route::post('workspace-visits/{visit}/check-out', [WorkspaceVisitController::class, 'checkOut']);
+        Route::post('workspace-visits/check-in', [WorkspaceVisitController::class, 'checkIn'])->middleware('idempotent');
+        Route::post('workspace-visits/{visit}/check-out', [WorkspaceVisitController::class, 'checkOut'])->middleware('idempotent');
+        Route::post('workspace-visits/{visit}/request-checkout', [WorkspaceVisitController::class, 'requestCheckout']);
+        Route::delete('workspace-visits/{visit}/request-checkout', [WorkspaceVisitController::class, 'cancelCheckoutRequest']);
         Route::get('workspace-visits/active', [WorkspaceVisitController::class, 'active']);
 
         // Buddy sessions (write)
@@ -52,5 +57,6 @@ Route::prefix('v1')->group(function (): void {
 
         // Subscriptions
         Route::get('subscriptions/current', [SubscriptionController::class, 'current']);
+        Route::post('subscriptions/activate', [SubscriptionController::class, 'activate'])->middleware(['throttle:activation', 'idempotent']);
     });
 });

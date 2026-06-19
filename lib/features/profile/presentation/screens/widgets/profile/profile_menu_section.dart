@@ -28,8 +28,15 @@ class ProfileMenuSection extends StatelessWidget {
           BlocBuilder<LanguageCubit, LanguageState>(
             builder: (context, langState) {
               final cubit = context.read<LanguageCubit>();
-              final isArabic = cubit.currentLanguage.languageCode == 'ar';
-              final switchTo = isArabic ? 'EN' : 'ع';
+              final langCode = cubit.currentLanguage.languageCode;
+              String switchTo;
+              if (langCode == 'ar') {
+                switchTo = 'EN';
+              } else if (langCode == 'en') {
+                switchTo = 'TR';
+              } else {
+                switchTo = 'ع';
+              }
 
               return MenuTile(
                 icon: Icons.language_rounded,

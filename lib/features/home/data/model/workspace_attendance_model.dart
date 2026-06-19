@@ -11,6 +11,12 @@ class WorkspaceAttendanceModel extends WorkspaceAttendanceEntity {
     super.billableMinutes,
     super.deductedMinutes,
     super.hourMultiplierApplied,
+    super.billingSource,
+    super.workspaceSubscriptionRemainingMinutes,
+    super.workspaceSubscriptionExpiresAt,
+    super.checkoutMode,
+    super.checkoutRequestedAt,
+    super.canCheckOutDirectly,
   });
 
   factory WorkspaceAttendanceModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +33,20 @@ class WorkspaceAttendanceModel extends WorkspaceAttendanceEntity {
       deductedMinutes: json['deducted_minutes'] as int?,
       hourMultiplierApplied:
           (json['hour_multiplier_applied'] as num?)?.toDouble(),
+      billingSource: (json['billing_source'] as String?) ?? 'FREE',
+      workspaceSubscriptionRemainingMinutes:
+          json['workspace_subscription_remaining_minutes'] as int?,
+      workspaceSubscriptionExpiresAt:
+          json['workspace_subscription_expires_at'] != null
+              ? DateTime.tryParse(
+                  json['workspace_subscription_expires_at'] as String)
+              : null,
+      checkoutMode: (json['checkout_mode'] as String?) ?? 'DIRECT',
+      checkoutRequestedAt: json['checkout_requested_at'] != null
+          ? DateTime.tryParse(json['checkout_requested_at'] as String)
+          : null,
+      // Default true preserves legacy direct-checkout behaviour if absent.
+      canCheckOutDirectly: (json['can_check_out_directly'] as bool?) ?? true,
     );
   }
 
@@ -44,6 +64,14 @@ class WorkspaceAttendanceModel extends WorkspaceAttendanceEntity {
       'billable_minutes': entity.billableMinutes,
       'deducted_minutes': entity.deductedMinutes,
       'hour_multiplier_applied': entity.hourMultiplierApplied,
+      'billing_source': entity.billingSource,
+      'workspace_subscription_remaining_minutes':
+          entity.workspaceSubscriptionRemainingMinutes,
+      'workspace_subscription_expires_at':
+          entity.workspaceSubscriptionExpiresAt?.toIso8601String(),
+      'checkout_mode': entity.checkoutMode,
+      'checkout_requested_at': entity.checkoutRequestedAt?.toIso8601String(),
+      'can_check_out_directly': entity.canCheckOutDirectly,
     };
   }
 }

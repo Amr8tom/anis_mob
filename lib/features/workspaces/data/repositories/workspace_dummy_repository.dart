@@ -105,4 +105,5 @@ class WorkspaceDummyRepository implements WorkspaceRepository {
       return const Left(NotFoundFailure(message: 'Workspace not found'));
     }
   }
+
 }

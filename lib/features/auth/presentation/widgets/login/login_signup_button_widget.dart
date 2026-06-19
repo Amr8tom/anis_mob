@@ -15,10 +15,10 @@ class LoginSignupButton extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: AppSizes.buttonHeight,
+      // height: AppSizes.buttonHeight,
       child: OutlinedButton.icon(
         onPressed: () => context.pushNamed(DRoutesName.userInfoRoute),
-        icon: const Icon(Icons.person_add_alt_1_rounded, size: 18),
+        icon:  Icon(Icons.person_add_alt_1_rounded, size: AppSizes.iconSm*1.2),
         label: Text(
           S.current.createAccount,
           style: tt.bodyMedium?.copyWith(

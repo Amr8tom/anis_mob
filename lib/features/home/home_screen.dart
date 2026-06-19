@@ -21,8 +21,11 @@ class HomeScreen extends StatelessWidget {
     return BlocConsumer<HomeCubit, HomeState>(
       listenWhen: (previous, current) =>
           previous.attendanceError != current.attendanceError ||
-          (previous.attendanceStatus.isCheckedIn &&
-              current.attendanceStatus.isIdle),
+          ((previous.attendanceStatus.isCheckedIn ||
+                  previous.attendanceStatus.isCheckoutPending) &&
+              current.attendanceStatus.isIdle) ||
+          (!previous.attendanceStatus.isCheckoutPending &&
+              current.attendanceStatus.isCheckoutPending),
       listener: (context, state) {
         final error = state.attendanceError;
         if (error != null) {
@@ -32,6 +35,16 @@ class HomeScreen extends StatelessWidget {
             ColorRes.anisErrorRed,
           );
           context.read<HomeCubit>().clearAttendanceError();
+          return;
+        }
+
+        // Checkout request just sent → awaiting owner approval.
+        if (state.attendanceStatus.isCheckoutPending) {
+          _showSnackBar(
+            context,
+            S.current.checkoutRequestSent,
+            ColorRes.anisGreen,
+          );
           return;
         }
 
@@ -64,9 +77,12 @@ class HomeScreen extends StatelessWidget {
                     context,
                     state.userProfile?.subscriptionType ?? 'free',
                   ),
-                  onLeaveWorkspace: () => context.read<HomeCubit>().checkOut(),
+                  onLeaveWorkspace: () =>
+                      context.read<HomeCubit>().leaveWorkspace(),
                   isCheckedIn: state.isCheckedIn,
                   isLoading: state.attendanceStatus.isBusy,
+                  isCheckoutPending: state.attendanceStatus.isCheckoutPending ||
+                      (state.activeSession?.isCheckoutPending ?? false),
                 ),
               ),
               SliverToBoxAdapter(

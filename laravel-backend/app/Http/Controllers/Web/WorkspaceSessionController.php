@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\StudySession;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,12 +14,14 @@ class WorkspaceSessionController extends Controller
     {
         $workspace = Auth::user()->ownedWorkspace;
         $sessions = $workspace->sessions()->latest()->paginate(10);
+
         return view('workspace.sessions.index', compact('workspace', 'sessions'));
     }
 
     public function create()
     {
         $workspace = Auth::user()->ownedWorkspace;
+
         return view('workspace.sessions.create', compact('workspace'));
     }
 
@@ -45,7 +48,7 @@ class WorkspaceSessionController extends Controller
             'end_time' => $validated['end_time'],
             'max_seats' => $validated['max_participants'] ?? null,
             'price_cents' => $validated['price_cents'],
-            'time_label' => \Carbon\Carbon::parse($validated['start_time'])->format('g:i A'),
+            'time_label' => Carbon::parse($validated['start_time'])->format('g:i A'),
         ]);
 
         return redirect()->route('workspace.sessions.index')->with('success', 'تم إضافة الجلسة بنجاح.');
@@ -88,7 +91,7 @@ class WorkspaceSessionController extends Controller
             'end_time' => $validated['end_time'],
             'max_seats' => $validated['max_participants'] ?? null,
             'price_cents' => $validated['price_cents'],
-            'time_label' => \Carbon\Carbon::parse($validated['start_time'])->format('g:i A'),
+            'time_label' => Carbon::parse($validated['start_time'])->format('g:i A'),
         ]);
 
         return redirect()->route('workspace.sessions.index')->with('success', 'تم تحديث الجلسة بنجاح.');

@@ -33,8 +33,7 @@ return new class extends Migration
             $table->enum('availability', ['ONLINE', 'BUSY', 'OFFLINE'])->default('OFFLINE');
             $table->decimal('rating', 3, 2)->default(0);    // buddy rating 0.00..5.00
 
-            // ---- Wallet + gamification (profile & home) ----
-            $table->decimal('wallet_balance', 10, 2)->default(0);
+            // ---- Gamification (profile & home) ----
             $table->integer('total_study_hours')->default(0);
             $table->integer('streak_days')->default(0);
             $table->integer('total_sessions')->default(0);

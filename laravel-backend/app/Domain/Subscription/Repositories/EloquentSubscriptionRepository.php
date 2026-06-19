@@ -24,10 +24,20 @@ final class EloquentSubscriptionRepository implements SubscriptionRepositoryInte
     public function lockActiveForUser(string $userId): ?Subscription
     {
         return Subscription::query()
+            ->with('plan')
             ->where('user_id', $userId)
             ->where('status', SubscriptionStatus::ACTIVE->value)
             ->lockForUpdate()
             ->latest('started_at')
+            ->first();
+    }
+
+    public function lock(string $subscriptionId): ?Subscription
+    {
+        return Subscription::query()
+            ->with('plan')
+            ->where('id', $subscriptionId)
+            ->lockForUpdate()
             ->first();
     }
 

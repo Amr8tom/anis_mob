@@ -33,7 +33,9 @@ class ProfileTextField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: tt.bodySmall?.copyWith(
+          style: (tt.bodySmall ?? const TextStyle()).copyWith(
+            fontSize: 15,
+            height: 1.3,
             color: ColorRes.anisTextDark,
             fontWeight: FontWeight.w700,
             overflow: TextOverflow.visible,

@@ -12,6 +12,8 @@ class ProfileModel extends ProfileEntity {
     super.interests,
     required super.subscriptionType,
     required super.subscriptionDaysRemaining,
+    required super.subscriptionRemainingMinutes,
+    required super.subscriptionRemainingHours,
     required super.totalStudyHours,
     required super.streakDays,
     required super.totalSessions,
@@ -36,6 +38,10 @@ class ProfileModel extends ProfileEntity {
       subscriptionType: json['subscriptionType'] as String? ?? 'free',
       subscriptionDaysRemaining:
           (json['subscriptionDaysRemaining'] as num?)?.toInt() ?? 0,
+      subscriptionRemainingMinutes:
+          (json['subscriptionRemainingMinutes'] as num?)?.toInt() ?? 0,
+      subscriptionRemainingHours:
+          (json['subscriptionRemainingHours'] as num?)?.toInt() ?? 0,
       totalStudyHours: (json['totalStudyHours'] as num?)?.toInt() ?? 0,
       streakDays: (json['streakDays'] as num?)?.toInt() ?? 0,
       totalSessions: (json['totalSessions'] as num?)?.toInt() ?? 0,
@@ -44,7 +50,7 @@ class ProfileModel extends ProfileEntity {
                 item as Map<String, dynamic>,
               ))
           .toList(),
-      avatarPath: json['avatarPath'] as String?,
+      avatarPath: json['avatarPath'] as String? ?? json['avatar_path'] as String? ?? json['avatar'] as String?,
       profileCompleted: json['profileCompleted'] as bool? ?? false,
       profileCompletionPercentage:
           (json['profileCompletionPercentage'] as num?)?.toInt() ?? 0,
@@ -63,6 +69,8 @@ class ProfileModel extends ProfileEntity {
         'interests': interests,
         'subscriptionType': subscriptionType,
         'subscriptionDaysRemaining': subscriptionDaysRemaining,
+        'subscriptionRemainingMinutes': subscriptionRemainingMinutes,
+        'subscriptionRemainingHours': subscriptionRemainingHours,
         'totalStudyHours': totalStudyHours,
         'streakDays': streakDays,
         'totalSessions': totalSessions,

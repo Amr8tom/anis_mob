@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../../../common/widgets/sizeboxs/sizer.dart';
 import '../../../../core/constants/app_sizes.dart';
@@ -44,8 +43,6 @@ class _SplashScreenState extends State<SplashScreen>
     });
     _resolveStartupRoute();
   }
-
-
 
   @override
   void dispose() {

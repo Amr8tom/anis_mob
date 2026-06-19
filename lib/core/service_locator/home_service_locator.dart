@@ -9,8 +9,10 @@ import '../../features/home/domain/repository/home_repository.dart';
 import '../../features/home/domain/repository/workspace_attendance_repository.dart';
 import '../../features/home/domain/use_cases/check_in_workspace_use_case.dart';
 import '../../features/home/domain/use_cases/check_out_workspace_use_case.dart';
+import '../../features/home/domain/use_cases/get_active_visit_use_case.dart';
 import '../../features/home/domain/use_cases/get_today_sessions_use_case.dart';
 import '../../features/home/domain/use_cases/get_user_profile_use_case.dart';
+import '../../features/home/domain/use_cases/request_checkout_use_case.dart';
 import '../../features/home/presentation/controller/home_cubit.dart';
 
 class HomeServiceLocator {
@@ -54,6 +56,12 @@ class HomeServiceLocator {
     serviceLocator.registerLazySingleton<CheckOutWorkspaceUseCase>(
       () => CheckOutWorkspaceUseCase(serviceLocator()),
     );
+    serviceLocator.registerLazySingleton<RequestCheckoutUseCase>(
+      () => RequestCheckoutUseCase(serviceLocator()),
+    );
+    serviceLocator.registerLazySingleton<GetActiveVisitUseCase>(
+      () => GetActiveVisitUseCase(serviceLocator()),
+    );
 
     // Cubit factory: new instance per route
     serviceLocator.registerFactory<HomeCubit>(
@@ -62,6 +70,8 @@ class HomeServiceLocator {
         getTodaySessionsUseCase: serviceLocator(),
         checkInWorkspaceUseCase: serviceLocator(),
         checkOutWorkspaceUseCase: serviceLocator(),
+        requestCheckoutUseCase: serviceLocator(),
+        getActiveVisitUseCase: serviceLocator(),
         localStorage: serviceLocator(),
       ),
     );

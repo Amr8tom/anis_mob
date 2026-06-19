@@ -7,7 +7,8 @@ class UserProfileEntity extends Equatable {
   final String subscriptionType; // 'free' | 'silver' | 'gold'
   final int subscriptionDaysRemaining;
   final int subscriptionTotalDays;
-  final double walletBalance;
+  final int subscriptionRemainingMinutes;
+  final int subscriptionRemainingHours;
   final int totalStudyHours;
   final int streakDays;
 
@@ -18,7 +19,8 @@ class UserProfileEntity extends Equatable {
     required this.subscriptionType,
     required this.subscriptionDaysRemaining,
     required this.subscriptionTotalDays,
-    required this.walletBalance,
+    required this.subscriptionRemainingMinutes,
+    required this.subscriptionRemainingHours,
     required this.totalStudyHours,
     required this.streakDays,
   });
@@ -36,7 +38,8 @@ class UserProfileEntity extends Equatable {
         subscriptionType,
         subscriptionDaysRemaining,
         subscriptionTotalDays,
-        walletBalance,
+        subscriptionRemainingMinutes,
+        subscriptionRemainingHours,
         totalStudyHours,
         streakDays,
       ];

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\WorkspacePortal\Data;
 
 use App\Http\Requests\WorkspacePortal\WorkspaceRegisterRequest;
+use Illuminate\Http\UploadedFile;
 
 final readonly class WorkspaceRegistrationData
 {
@@ -23,7 +24,7 @@ final readonly class WorkspaceRegistrationData
         public ?string $openTime,
         public ?string $closeTime,
         public array $amenities,
-        public ?\Illuminate\Http\UploadedFile $coverImage,
+        public ?UploadedFile $coverImage,
         public array $galleryImages,
         public array $drinks,
     ) {}

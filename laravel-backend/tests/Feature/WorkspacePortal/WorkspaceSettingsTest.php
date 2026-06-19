@@ -37,7 +37,9 @@ final class WorkspaceSettingsTest extends TestCase
             ->get('/workspace/settings')
             ->assertOk()
             ->assertViewIs('workspace.settings')
-            ->assertSee('Original Name');
+            ->assertSee('Original Name')
+            ->assertSee('سعر الساعة الأساسي')
+            ->assertSee(number_format($workspace->effectiveHourlyRateEgp(), 2));
     }
 
     public function test_owner_can_update_workspace_details(): void
@@ -97,14 +99,14 @@ final class WorkspaceSettingsTest extends TestCase
 
         // Verify storage file names and URL structure
         $this->assertNotNull($workspace->cover_image_url);
-        $this->assertStringStartsWith('/storage/workspaces/'.$workspace->id, $workspace->cover_image_url);
+        $this->assertStringStartsWith('http', $workspace->cover_image_url);
 
         $this->assertCount(1, $workspace->gallery_images);
-        $this->assertStringStartsWith('/storage/workspaces/'.$workspace->id.'/gallery', $workspace->gallery_images[0]);
+        $this->assertStringStartsWith('workspaces/'.$workspace->id.'/gallery', $workspace->gallery_images[0]);
 
         // Assert files actually exist in fake storage
-        $coverDiskPath = str_replace('/storage/', '', $workspace->cover_image_url);
-        $galleryDiskPath = str_replace('/storage/', '', $workspace->gallery_images[0]);
+        $galleryDiskPath = $workspace->gallery_images[0];
+        $coverDiskPath = $workspace->getRawOriginal('cover_image_url');
 
         Storage::disk('public')->assertExists($coverDiskPath);
         Storage::disk('public')->assertExists($galleryDiskPath);
@@ -154,9 +156,9 @@ final class WorkspaceSettingsTest extends TestCase
 
         $workspace->refresh();
 
-        // Check DB update
-        $this->assertCount(1, $workspace->gallery_images);
-        $this->assertEquals([$url1], $workspace->gallery_images);
+        // We expect only the retained image to be in the gallery
+        $this->assertCount(1, $workspace->gallery_urls);
+        $this->assertStringStartsWith('http', $workspace->gallery_urls[0]);
 
         // Check filesystem cleanup: image 2 should be deleted
         Storage::disk('public')->assertExists($path1);

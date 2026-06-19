@@ -36,12 +36,15 @@ class LanguageCubit extends Cubit<LanguageState> {
   }
 
   void toggleLang() {
-    if (currentLanguage == const Locale("en")) {
+    if (currentLanguage == const Locale("ar")) {
       showLang = "EN";
-      changeLanguage("ar");
+      changeLanguage("en");
+    } else if (currentLanguage == const Locale("en")) {
+      showLang = "TR";
+      changeLanguage("tr");
     } else {
       showLang = "AR";
-      changeLanguage("en");
+      changeLanguage("ar");
     }
   }
 }

@@ -22,7 +22,7 @@ final class EloquentAuthRepository implements AuthRepositoryInterface
 
     public function create(RegisterData $data): User
     {
-        return User::create([
+        $attributes = [
             'full_name' => $data->fullName,
             'phone_number' => $data->phoneNumber,
             'email' => $data->email,
@@ -35,7 +35,9 @@ final class EloquentAuthRepository implements AuthRepositoryInterface
             'initials' => $this->initialsFrom($data->fullName),
             'avatar_color_key' => 'blue',
             'availability' => Availability::OFFLINE,
-        ]);
+        ];
+
+        return User::create($attributes);
     }
 
     private function initialsFrom(string $fullName): string

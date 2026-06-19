@@ -15,10 +15,24 @@ class ProfileHeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileCubit, ProfileState>(
+    return BlocConsumer<ProfileCubit, ProfileState>(
+      listenWhen: (p, c) => p.avatarUploadError != c.avatarUploadError,
+      listener: (ctx, state) {
+        if (state.avatarUploadError != null) {
+          ScaffoldMessenger.of(ctx).showSnackBar(
+            SnackBar(
+              content: Text(state.avatarUploadError!),
+              backgroundColor: ColorRes.anisErrorRed,
+            ),
+          );
+          ctx.read<ProfileCubit>().clearAvatarError();
+        }
+      },
       builder: (context, state) {
         final profile = state.profile;
-        final avatarPath = state.avatarPath ?? profile?.avatarPath;
+        final localPath = state.avatarPath;
+        // Prefer local path (optimistic) → fall back to server URL.
+        final avatarPath = localPath ?? profile?.avatarPath;
         final name = profile?.name ?? '████ █████ ████████';
         final uni = profile?.university ?? '████████████';
         final initials = profile?.initials ?? 'م.أ';
@@ -43,7 +57,9 @@ class ProfileHeaderSection extends StatelessWidget {
             children: [
               // ── Avatar with tap-to-upload ────────────────────
               GestureDetector(
-                onTap: () => context.read<ProfileCubit>().pickAvatar(),
+                onTap: state.avatarUploading
+                    ? null
+                    : () => context.read<ProfileCubit>().pickAvatar(),
                 child: Stack(
                   children: [
                     Container(
@@ -56,28 +72,44 @@ class ProfileHeaderSection extends StatelessWidget {
                           color: ColorRes.white.withValues(alpha: 0.3),
                           width: 2.5,
                         ),
-                        image: avatarPath != null
+                        // Local file (just-picked) takes priority.
+                        image: localPath != null
                             ? DecorationImage(
-                                image: FileImage(File(avatarPath)),
+                                image: FileImage(File(localPath)),
                                 fit: BoxFit.cover,
                               )
-                            : null,
+                            : (avatarPath != null
+                                ? DecorationImage(
+                                    image: NetworkImage(avatarPath),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null),
                       ),
                       alignment: Alignment.center,
-                      child: avatarPath == null
-                          ? Text(
-                              initials,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(
-                                    color: ColorRes.white,
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                      child: state.avatarUploading
+                          ? const SizedBox(
+                              width: 28,
+                              height: 28,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: ColorRes.white,
+                              ),
                             )
-                          : null,
+                          : (avatarPath == null
+                              ? Text(
+                                  initials,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall
+                                      ?.copyWith(
+                                        color: ColorRes.white,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                )
+                              : null),
                     ),
-                    // Camera badge
+                    // Camera badge (hidden while uploading)
+                    if (!state.avatarUploading)
                     Positioned(
                       bottom: 0,
                       right: 0,

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Feature\WorkspacePortal;
 
 use App\Enums\UserRole;
+use App\Models\StudySession;
 use App\Models\User;
 use App\Models\Workspace;
-use App\Models\StudySession;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

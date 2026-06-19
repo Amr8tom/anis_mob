@@ -30,6 +30,24 @@ class WorkspaceAttendanceEntity extends Equatable {
   /// Multiplier snapshot applied
   final double? hourMultiplierApplied;
 
+  /// Captured server funding source for this visit.
+  final String billingSource;
+
+  /// Remaining balance of the workspace-scoped subscription, when applicable.
+  final int? workspaceSubscriptionRemainingMinutes;
+
+  final DateTime? workspaceSubscriptionExpiresAt;
+
+  /// Workspace checkout mode: 'DIRECT' or 'APPROVAL'.
+  final String checkoutMode;
+
+  /// When the user requested checkout (approval mode) — null otherwise.
+  final DateTime? checkoutRequestedAt;
+
+  /// Whether the user can check out instantly (free tier or DIRECT workspace).
+  /// Defaults to true so older payloads keep the legacy direct behaviour.
+  final bool canCheckOutDirectly;
+
   const WorkspaceAttendanceEntity({
     required this.attendanceId,
     required this.workspaceId,
@@ -40,10 +58,20 @@ class WorkspaceAttendanceEntity extends Equatable {
     this.billableMinutes,
     this.deductedMinutes,
     this.hourMultiplierApplied,
+    this.billingSource = 'FREE',
+    this.workspaceSubscriptionRemainingMinutes,
+    this.workspaceSubscriptionExpiresAt,
+    this.checkoutMode = 'DIRECT',
+    this.checkoutRequestedAt,
+    this.canCheckOutDirectly = true,
   });
 
   /// Whether the session is still active (no check-out yet).
   bool get isActive => checkOutTime == null;
+
+  /// Whether a checkout request is pending owner approval.
+  bool get isCheckoutPending =>
+      checkOutTime == null && checkoutRequestedAt != null;
 
   /// Elapsed time since check-in (local estimate before server confirms).
   Duration get elapsed => DateTime.now().difference(checkInTime);
@@ -59,5 +87,11 @@ class WorkspaceAttendanceEntity extends Equatable {
         billableMinutes,
         deductedMinutes,
         hourMultiplierApplied,
+        billingSource,
+        workspaceSubscriptionRemainingMinutes,
+        workspaceSubscriptionExpiresAt,
+        checkoutMode,
+        checkoutRequestedAt,
+        canCheckOutDirectly,
       ];
 }

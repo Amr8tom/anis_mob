@@ -42,7 +42,6 @@ class UserFactory extends Factory
             'avatar_color_key' => fake()->randomElement(['red', 'blue', 'purple', 'green', 'orange']),
             'availability' => Availability::OFFLINE,
             'rating' => fake()->randomFloat(2, 3, 5),
-            'wallet_balance' => fake()->randomFloat(2, 0, 200),
             'total_study_hours' => fake()->numberBetween(0, 300),
             'streak_days' => fake()->numberBetween(0, 60),
             'total_sessions' => fake()->numberBetween(0, 40),

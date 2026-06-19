@@ -70,7 +70,8 @@ class ProfileCompletionHeader extends StatelessWidget {
           const Sizer(height: 4),
           Text(
             S.current.completeProfileSubtitle,
-            style: tt.bodySmall?.copyWith(
+            style: (tt.bodySmall ?? const TextStyle()).copyWith(
+              fontSize: 13,
               color: ColorRes.white.withValues(alpha: 0.78),
               height: 1.5,
               overflow: TextOverflow.visible,

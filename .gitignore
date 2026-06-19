@@ -1,5 +1,11 @@
 # Miscellaneous
 *.class
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
 *.log
 *.pyc
 *.swp

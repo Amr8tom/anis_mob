@@ -14,6 +14,7 @@ return [
     */
 
     'default' => env('FILESYSTEM_DISK', 'local'),
+    'workspace_media_disk' => env('WORKSPACE_MEDIA_DISK', 'public'),
 
     /*
     |--------------------------------------------------------------------------

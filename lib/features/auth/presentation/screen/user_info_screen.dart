@@ -73,7 +73,9 @@ class _UserInfoViewState extends State<_UserInfoView> {
       value: SystemUiOverlayStyle.dark,
       child: BlocListener<UserInfoCubit, UserInfoState>(
         listenWhen: (p, c) =>
-            p.stepError != c.stepError || p.status != c.status || p.step != c.step,
+            p.stepError != c.stepError ||
+            p.status != c.status ||
+            p.step != c.step,
         listener: (ctx, state) {
           if (state.stepError.isNotEmpty) {
             CustomUI.snackBarFailure(context: ctx, message: state.stepError);
@@ -89,7 +91,8 @@ class _UserInfoViewState extends State<_UserInfoView> {
             cubit.resetStatus();
           }
 
-          if (_pageController.hasClients && _pageController.page?.round() != state.step) {
+          if (_pageController.hasClients &&
+              _pageController.page?.round() != state.step) {
             _pageController.animateToPage(
               state.step,
               duration: const Duration(milliseconds: 380),
@@ -99,34 +102,36 @@ class _UserInfoViewState extends State<_UserInfoView> {
         },
         child: Scaffold(
           backgroundColor: ColorRes.white,
-          body: Column(
-            children: [
-              // ── Green hero header ─────────────────────────
-              const SignUpHeader(),
+          body: SafeArea(
+            child: Column(
+              children: [
+                // ── Green hero header ─────────────────────────
+                const SignUpHeader(),
 
-              // ── Step progress dots ────────────────────────
-              const SignUpStepProgress(),
+                // ── Step progress dots ────────────────────────
+                const SignUpStepProgress(),
 
-              // ── Page content ──────────────────────────────
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    StepAccountWidget(
-                      passwordController: _passwordController,
-                      confirmPasswordController: _confirmPasswordController,
-                    ),
-                  ],
+                // ── Page content ──────────────────────────────
+                Expanded(
+                  child: PageView(
+                    controller: _pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      StepAccountWidget(
+                        passwordController: _passwordController,
+                        confirmPasswordController: _confirmPasswordController,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
 
-              // ── Footer: back + next ───────────────────────
-              SignUpFooter(
-                onNext: () => _onNext(cubit),
-                onBack: () => _onBack(cubit),
-              ),
-            ],
+                // ── Footer: back + next ───────────────────────
+                SignUpFooter(
+                  onNext: () => _onNext(cubit),
+                  onBack: () => _onBack(cubit),
+                ),
+              ],
+            ),
           ),
         ),
       ),

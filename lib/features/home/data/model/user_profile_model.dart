@@ -8,7 +8,8 @@ class UserProfileModel extends UserProfileEntity {
     required super.subscriptionType,
     required super.subscriptionDaysRemaining,
     required super.subscriptionTotalDays,
-    required super.walletBalance,
+    required super.subscriptionRemainingMinutes,
+    required super.subscriptionRemainingHours,
     required super.totalStudyHours,
     required super.streakDays,
   });
@@ -28,9 +29,10 @@ class UserProfileModel extends UserProfileEntity {
           (json['subscription_total_days'] as num?)?.toInt() ??
           (json['duration_days'] as num?)?.toInt() ??
           30,
-      walletBalance: (json['walletBalance'] as num?)?.toDouble() ??
-          (json['wallet_balance'] as num?)?.toDouble() ??
-          0.0,
+      subscriptionRemainingMinutes:
+          (json['subscriptionRemainingMinutes'] as num?)?.toInt() ?? 0,
+      subscriptionRemainingHours:
+          (json['subscriptionRemainingHours'] as num?)?.toInt() ?? 0,
       totalStudyHours: (json['totalStudyHours'] as num?)?.toInt() ??
           (json['total_study_hours'] as num?)?.toInt() ??
           0,
@@ -47,9 +49,10 @@ class UserProfileModel extends UserProfileEntity {
         'subscriptionType': subscriptionType,
         'subscriptionDaysRemaining': subscriptionDaysRemaining,
         'subscriptionTotalDays': subscriptionTotalDays,
+        'subscriptionRemainingMinutes': subscriptionRemainingMinutes,
+        'subscriptionRemainingHours': subscriptionRemainingHours,
         'subscription_days_remaining': subscriptionDaysRemaining,
         'subscription_total_days': subscriptionTotalDays,
-        'walletBalance': walletBalance,
         'totalStudyHours': totalStudyHours,
         'streakDays': streakDays,
       };

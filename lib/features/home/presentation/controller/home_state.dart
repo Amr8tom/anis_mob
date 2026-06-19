@@ -6,6 +6,8 @@ enum AttendanceStatus {
   idle, // not checked in
   checkingIn, // scanning / API call in progress
   checkedIn, // inside workspace, timer running
+  requestingCheckout, // sending a "request to leave" to the owner
+  checkoutPending, // request sent, awaiting owner approval
   checkingOut, // API call in progress
   checkedOut, // just finished before returning to idle
 }
@@ -14,9 +16,11 @@ extension AttendanceStatusX on AttendanceStatus {
   bool get isIdle => this == AttendanceStatus.idle;
   bool get isCheckingIn => this == AttendanceStatus.checkingIn;
   bool get isCheckedIn => this == AttendanceStatus.checkedIn;
+  bool get isRequestingCheckout => this == AttendanceStatus.requestingCheckout;
+  bool get isCheckoutPending => this == AttendanceStatus.checkoutPending;
   bool get isCheckingOut => this == AttendanceStatus.checkingOut;
   bool get isCheckedOut => this == AttendanceStatus.checkedOut;
-  bool get isBusy => isCheckingIn || isCheckingOut;
+  bool get isBusy => isCheckingIn || isCheckingOut || isRequestingCheckout;
 }
 
 final class HomeState extends Equatable {

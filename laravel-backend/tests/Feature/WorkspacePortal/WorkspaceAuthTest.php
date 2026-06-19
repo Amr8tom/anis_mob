@@ -47,6 +47,7 @@ final class WorkspaceAuthTest extends TestCase
         $user = User::where('phone_number', '01012345678')->first();
         $this->assertNotNull($user);
 
+        // Held for admin review: pending and inactive (hidden from the mobile app).
         $this->assertDatabaseHas('workspaces', [
             'owner_id' => $user->id,
             'name' => 'مساحة العمل التجريبية',
@@ -54,13 +55,13 @@ final class WorkspaceAuthTest extends TestCase
             'latitude' => 30.0444,
             'longitude' => 31.2357,
             'day_calculation_hours' => 8,
+            'lifecycle_status' => 'PENDING',
+            'is_active' => false,
         ]);
 
-        // Assert session authentication is active
-        $this->assertAuthenticatedAs($user);
-
-        // Redirects to settings
-        $response->assertRedirect(route('workspace.settings.edit'));
+        // The owner is NOT logged in while pending; they land on the pending page.
+        $this->assertGuest();
+        $response->assertRedirect(route('workspace.pending'));
     }
 
     public function test_workspace_owner_can_see_login_page(): void

@@ -16,6 +16,13 @@ abstract class WorkspaceAttendanceRemoteDataSource {
     required DateTime checkInTime,
     required Duration elapsedTime,
   });
+
+  Future<WorkspaceAttendanceModel> requestCheckout({
+    required String attendanceId,
+  });
+
+  /// Returns the active visit, or null when the user is not checked in.
+  Future<WorkspaceAttendanceModel?> getActiveVisit();
 }
 
 class WorkspaceAttendanceRemoteDataSourceImpl implements WorkspaceAttendanceRemoteDataSource {
@@ -49,6 +56,31 @@ class WorkspaceAttendanceRemoteDataSourceImpl implements WorkspaceAttendanceRemo
       requiresAuth: true,
     );
     return WorkspaceAttendanceModel.fromJson(_extractObject(response));
+  }
+
+  @override
+  Future<WorkspaceAttendanceModel> requestCheckout({
+    required String attendanceId,
+  }) async {
+    final response = await _dio.post(
+      url: URL.requestCheckout(attendanceId),
+      requiresAuth: true,
+    );
+    return WorkspaceAttendanceModel.fromJson(_extractObject(response));
+  }
+
+  @override
+  Future<WorkspaceAttendanceModel?> getActiveVisit() async {
+    final response = await _dio.get(
+      url: URL.activeVisit,
+      requiresAuth: true,
+    );
+    final data = response is Map<String, dynamic> ? response['data'] : null;
+    if (data is Map<String, dynamic>) {
+      return WorkspaceAttendanceModel.fromJson(data);
+    }
+    // data is null → the user has no active visit.
+    return null;
   }
 
   Map<String, dynamic> _extractObject(dynamic response) {

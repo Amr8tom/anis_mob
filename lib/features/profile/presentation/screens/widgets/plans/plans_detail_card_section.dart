@@ -11,11 +11,13 @@ import 'plans_tag_chip.dart';
 class PlansDetailCardSection extends StatelessWidget {
   final PlanData plan;
   final bool isCurrent;
+  final VoidCallback? onChoosePlan;
 
   const PlansDetailCardSection({
     super.key,
     required this.plan,
     required this.isCurrent,
+    this.onChoosePlan,
   });
 
   @override
@@ -153,7 +155,7 @@ class PlansDetailCardSection extends StatelessWidget {
             )
           else
             ElevatedButton(
-              onPressed: () {},
+              onPressed: onChoosePlan,
               style: ElevatedButton.styleFrom(
                 backgroundColor: plan.accentColor,
                 foregroundColor: ColorRes.white,

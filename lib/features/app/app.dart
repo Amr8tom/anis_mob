@@ -17,7 +17,7 @@ class AnisApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DDeviceUtils.setStatusBarColor(ColorRes.primary);
-    DDeviceUtils.setNavigationBarColor(ColorRes.primary);
+    DDeviceUtils.setNavigationBarColor(ColorRes.white);
     return MultiBlocProvider(
       providers: [
         BlocProvider<LanguageCubit>(
@@ -46,6 +46,7 @@ class AnisApp extends StatelessWidget {
                 supportedLocales: [
                   Locale('en'), // English
                   Locale('ar'), // Arabic
+                  Locale('tr'), // Turkish
                 ],
                 locale: controller.currentLanguage,
                 localizationsDelegates: [

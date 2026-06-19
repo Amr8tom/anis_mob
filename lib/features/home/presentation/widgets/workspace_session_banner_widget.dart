@@ -59,7 +59,30 @@ class _WorkspaceSessionBannerWidgetState
         final session = state.activeSession;
         if (session == null) return const SizedBox.shrink();
 
+        final isPending = session.isCheckoutPending ||
+            state.attendanceStatus.isCheckoutPending;
         final elapsed = _formatElapsed(session.elapsed);
+
+        // Amber while a checkout request is awaiting owner approval; green while
+        // the session is simply running.
+        final gradientColors = isPending
+            ? const [Color(0xFFF4A800), Color(0xFFE08E00)]
+            : const [ColorRes.anisGreen, ColorRes.anisButtonGreen];
+        final shadowColor =
+            isPending ? const Color(0xFFF4A800) : ColorRes.anisGreen;
+
+        final fundingSuffix =
+            session.billingSource == 'WORKSPACE_SUBSCRIPTION' &&
+                    session.workspaceSubscriptionRemainingMinutes != null
+                ? ' • ${session.workspaceSubscriptionRemainingMinutes}m'
+                : '';
+        final subtitle = isPending
+            ? S.current.checkoutPendingSubtitle
+            : '${S.current.studyTimeLabel}: $elapsed$fundingSuffix';
+        final title = isPending
+            ? S.current.awaitingCheckoutApproval
+            : S.current.currentWorkspace;
+
         return Container(
           margin: EdgeInsets.fromLTRB(
             AppSizes.padding,
@@ -69,15 +92,15 @@ class _WorkspaceSessionBannerWidgetState
           ),
           padding: EdgeInsets.all(AppSizes.md),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [ColorRes.anisGreen, ColorRes.anisButtonGreen],
+            gradient: LinearGradient(
+              colors: gradientColors,
               begin: AlignmentDirectional.centerStart,
               end: AlignmentDirectional.centerEnd,
             ),
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
             boxShadow: [
               BoxShadow(
-                color: ColorRes.anisGreen.withValues(alpha: 0.30),
+                color: shadowColor.withValues(alpha: 0.30),
                 blurRadius: 16,
                 offset: const Offset(0, 6),
               ),
@@ -94,13 +117,12 @@ class _WorkspaceSessionBannerWidgetState
                 ),
               ),
               const Sizer(width: 10),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      S.current.currentWorkspace,
+                      title,
                       style: tt.labelSmall?.copyWith(
                         color: ColorRes.white.withValues(alpha: 0.75),
                         fontSize: 11,
@@ -117,7 +139,7 @@ class _WorkspaceSessionBannerWidgetState
                     ),
                     const Sizer(height: 2),
                     Text(
-                      '${S.current.studyTimeLabel}: $elapsed',
+                      subtitle,
                       style: tt.labelSmall?.copyWith(
                         color: ColorRes.white.withValues(alpha: 0.80),
                         fontSize: 11,
@@ -126,7 +148,6 @@ class _WorkspaceSessionBannerWidgetState
                   ],
                 ),
               ),
-
               Container(
                 width: 42,
                 height: 42,
@@ -134,8 +155,10 @@ class _WorkspaceSessionBannerWidgetState
                   color: ColorRes.white.withValues(alpha: 0.18),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.timer_outlined,
+                child: Icon(
+                  isPending
+                      ? Icons.hourglass_top_rounded
+                      : Icons.timer_outlined,
                   color: ColorRes.white,
                   size: 22,
                 ),

@@ -17,6 +17,7 @@ final readonly class UpdateWorkspaceAction
 
     public function handle(Workspace $workspace, WorkspaceUpdateData $data): Workspace
     {
+        $disk = (string) config('filesystems.workspace_media_disk');
         // 1. Map simple text/numeric attributes
         $workspace->name = $data->name;
         $workspace->description = $data->description;
@@ -28,38 +29,43 @@ final readonly class UpdateWorkspaceAction
         $workspace->close_time = $data->closeTime;
         $workspace->admin_phone = $data->adminPhone;
         $workspace->day_calculation_hours = $data->dayCalculationHours;
+        $workspace->hour_multiplier = $data->hourMultiplier;
+        $workspace->checkout_mode = $data->checkoutMode;
         $workspace->amenities = $data->amenities;
 
         // 2. Handle Cover Image
         if ($data->coverImage !== null) {
             // Delete old cover if it exists on public disk
             if ($workspace->cover_image_url) {
-                $oldCoverPath = str_replace('/storage/', '', $workspace->cover_image_url);
-                Storage::disk('public')->delete($oldCoverPath);
+                Storage::disk($disk)->delete($this->mediaPath($workspace->getRawOriginal('cover_image_url')));
             }
-            $coverPath = $data->coverImage->store("workspaces/{$workspace->id}", 'public');
-            $workspace->cover_image_url = '/storage/'.$coverPath;
+            $workspace->cover_image_url = $data->coverImage->store("workspaces/{$workspace->id}", $disk);
         }
 
         // 3. Handle Gallery Images
-        $galleryUrls = $data->retainedGalleryImages;
+        $galleryUrls = array_map($this->mediaPath(...), $data->retainedGalleryImages);
         $oldGalleryUrls = $workspace->gallery_images ?? [];
 
         // Delete deleted gallery images from disk
         $removedUrls = array_diff($oldGalleryUrls, $data->retainedGalleryImages);
         foreach ($removedUrls as $removedUrl) {
-            $removedPath = str_replace('/storage/', '', $removedUrl);
-            Storage::disk('public')->delete($removedPath);
+            Storage::disk($disk)->delete($this->mediaPath($removedUrl));
         }
 
         // Save new gallery images
         foreach ($data->galleryImages as $file) {
-            $path = $file->store("workspaces/{$workspace->id}/gallery", 'public');
-            $galleryUrls[] = '/storage/'.$path;
+            $galleryUrls[] = $file->store("workspaces/{$workspace->id}/gallery", $disk);
         }
         $workspace->gallery_images = $galleryUrls;
 
         // 4. Persist changes via repository
         return $this->repository->updateWorkspace($workspace, $data);
+    }
+
+    private function mediaPath(string $value): string
+    {
+        $path = parse_url($value, PHP_URL_PATH) ?: $value;
+
+        return ltrim(str_replace('/storage/', '', $path), '/');
     }
 }

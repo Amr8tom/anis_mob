@@ -84,7 +84,7 @@ class SplashLanguageSection extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: Text(
-                  'أو',
+                  S.current.or,
                   style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 12.sp,

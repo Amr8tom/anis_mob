@@ -39,6 +39,17 @@ final class WorkspaceApiTest extends TestCase
             ->assertJsonPath('meta.total', 1);
     }
 
+    public function test_non_approved_workspaces_are_hidden_from_listing(): void
+    {
+        Workspace::factory()->create(); // APPROVED + active by default
+        Workspace::factory()->create(['lifecycle_status' => 'PENDING', 'is_active' => false]);
+        Workspace::factory()->create(['lifecycle_status' => 'SUSPENDED', 'is_active' => false]);
+
+        $this->getJson('/api/v1/workspaces')
+            ->assertOk()
+            ->assertJsonPath('meta.total', 1);
+    }
+
     public function test_detail_returns_camelcase_shape_with_drinks(): void
     {
         $workspace = Workspace::factory()->create(['status' => 'OPEN']);

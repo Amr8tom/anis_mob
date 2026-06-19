@@ -363,9 +363,48 @@
                         <div class="form-group">
                             <label for="day_calculation_hours">ساعات احتساب اليوم</label>
                             <input type="number" id="day_calculation_hours" name="day_calculation_hours" class="form-control" min="1" max="24" value="{{ old('day_calculation_hours', $workspace->day_calculation_hours ?? 8) }}" required>
+                            <small style="color: var(--upwork-muted); font-size: 12px; display: block; margin-top: 4px;">الحد الأدنى لساعات الحضور لاحتساب يوم كامل من الاشتراك.</small>
                             @error('day_calculation_hours')
                                 <div class="form-error">{{ $message }}</div>
                             @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="hour_multiplier">معامل سعر الساعة (hour_multiplier)</label>
+                            <input type="number" id="hour_multiplier" name="hour_multiplier" class="form-control"
+                                   min="0" max="10" step="0.01"
+                                   value="{{ old('hour_multiplier', $workspace->hour_multiplier ?? 1.0) }}" required>
+                            <small style="color: var(--upwork-muted); font-size: 12px; display: block; margin-top: 4px;">
+                                يحدد كم دقيقة اشتراك تُستهلك عن كل ساعة حضور فعلي.<br>
+                                <strong>1.0</strong> = الأسعار القياسية &nbsp;|&nbsp;
+                                <strong>2.0</strong> = بريميوم (يُستهلك ضعف الوقت) &nbsp;|&nbsp;
+                                <strong>0.0</strong> = مجاني
+                            </small>
+                            @error('hour_multiplier')
+                                <div class="form-error">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-self:start;">
+                            <div style="background:var(--upwork-bg); border:1px solid var(--upwork-border); border-radius:var(--radius-sm); padding:16px;">
+                                <div style="font-size:12px; color:var(--upwork-muted); font-weight:700; margin-bottom:6px;">سعر الساعة الأساسي</div>
+                                <div style="font-size:22px; font-weight:900; color:var(--upwork-slate);">
+                                    {{ number_format($workspace->baseHourlyRateEgp(), 2) }}
+                                    <small style="font-size:12px; color:var(--upwork-muted);">ج.م</small>
+                                </div>
+                                <div style="font-size:11px; color:var(--upwork-muted); margin-top:6px;">تحدده إدارة أنيس</div>
+                            </div>
+                            <div style="background:var(--upwork-green-soft); border:1px solid rgba(20,168,0,.2); border-radius:var(--radius-sm); padding:16px;">
+                                <div style="font-size:12px; color:var(--upwork-green-dark); font-weight:700; margin-bottom:6px;">سعر الساعة بعد المعامل</div>
+                                <div style="font-size:22px; font-weight:900; color:var(--upwork-green-dark);">
+                                    {{ number_format($workspace->effectiveHourlyRateEgp(), 2) }}
+                                    <small style="font-size:12px;">ج.م</small>
+                                </div>
+                                <div style="font-size:11px; color:var(--upwork-muted); margin-top:6px;">
+                                    {{ number_format($workspace->baseHourlyRateEgp(), 2) }} × {{ number_format($workspace->hour_multiplier, 2) }}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -434,13 +473,44 @@
                     <!-- Cover Image Section -->
                     <div class="form-group" style="padding-bottom: 24px; border-bottom: 1px solid var(--upwork-border);">
                         <label for="cover_image">صورة الغلاف الأساسية</label>
-                        <input type="file" id="cover_image" name="cover_image" class="form-control" accept="image/*">
+
+                        <div id="cover-dropzone"
+                             style="border: 2px dashed var(--upwork-border); border-radius: var(--radius-md);
+                                    padding: 22px 20px; text-align:center; cursor:pointer; transition: var(--transition);
+                                    background: var(--upwork-bg);"
+                             onclick="document.getElementById('cover_image').click()"
+                             ondragover="event.preventDefault(); this.style.borderColor='var(--upwork-green)'; this.style.background='var(--upwork-green-soft)';"
+                             ondragleave="this.style.borderColor='var(--upwork-border)'; this.style.background='var(--upwork-bg)';"
+                             ondrop="handleCoverDrop(event)">
+                            <i class="fa-solid fa-image" style="font-size:24px; color:var(--upwork-green); margin-bottom:6px; display:block;"></i>
+                            <span style="font-weight:700; color:var(--upwork-slate); font-size:13px;">اسحب صورة الغلاف هنا أو اضغط للاختيار</span><br>
+                            <span style="color:var(--upwork-muted); font-size:12px;">يُفضّل 1920×1080 أو أعلى — يتم ضغطها تلقائياً</span>
+                        </div>
+
+                        <input type="file" id="cover_image" name="cover_image" accept="image/*" style="display:none;">
+
+                        {{-- Cover compression status --}}
+                        <div id="cover-compress-status"
+                             style="display:none; margin-top:8px; padding:8px 14px;
+                                    background:var(--upwork-green-soft); border:1px solid rgba(20,168,0,.2);
+                                    border-radius:var(--radius-sm); font-size:13px; font-weight:700; color:var(--upwork-green-dark);
+                                    align-items:center; gap:8px;">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            <span>جاري ضغط صورة الغلاف…</span>
+                        </div>
+
                         @if($workspace->cover_image_url)
-                            <div>
+                            <div id="cover-current-preview">
                                 <label style="font-size: 12px; color: var(--upwork-muted); margin-top: 12px; display: block;">الصورة الحالية:</label>
-                                <img src="{{ $workspace->cover_image_url }}" alt="Cover Image" class="cover-preview">
+                                <img src="{{ $workspace->cover_image_url }}" alt="Cover Image" class="cover-preview" id="cover-preview-img">
+                            </div>
+                        @else
+                            <div id="cover-current-preview" style="display:none;">
+                                <label style="font-size: 12px; color: var(--upwork-muted); margin-top: 12px; display: block;">المعاينة:</label>
+                                <img src="" alt="Cover Preview" class="cover-preview" id="cover-preview-img">
                             </div>
                         @endif
+
                         @error('cover_image')
                             <div class="form-error">{{ $message }}</div>
                         @enderror
@@ -449,8 +519,37 @@
                     <!-- Gallery Section -->
                     <div class="form-group" style="margin-top: 24px;">
                         <label for="gallery_images">أضف صور جديدة للمعرض</label>
-                        <input type="file" id="gallery_images" name="gallery_images[]" class="form-control" accept="image/*" multiple>
-                        <small style="color: var(--upwork-muted); font-size: 12px; display: block; margin-top: 4px;">يمكنك اختيار صور متعددة لرفعها دفعة واحدة.</small>
+
+                        {{-- Drop-zone wrapper --}}
+                        <div id="gallery-dropzone"
+                             style="border: 2px dashed var(--upwork-border); border-radius: var(--radius-md);
+                                    padding: 28px 20px; text-align:center; cursor:pointer; transition: var(--transition);
+                                    background: var(--upwork-bg); position:relative;"
+                             onclick="document.getElementById('gallery_images').click()"
+                             ondragover="event.preventDefault(); this.style.borderColor='var(--upwork-green)'; this.style.background='var(--upwork-green-soft)';"
+                             ondragleave="this.style.borderColor='var(--upwork-border)'; this.style.background='var(--upwork-bg)';"
+                             ondrop="handleGalleryDrop(event)">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size:28px; color:var(--upwork-green); margin-bottom:8px; display:block;"></i>
+                            <span style="font-weight:700; color:var(--upwork-slate); font-size:14px;">اسحب الصور هنا أو اضغط للاختيار</span><br>
+                            <span style="color:var(--upwork-muted); font-size:12px;">PNG / JPG / WEBP — يتم ضغط الصور تلقائياً قبل الرفع</span>
+                        </div>
+
+                        <input type="file" id="gallery_images" name="gallery_images[]"
+                               accept="image/*" multiple style="display:none;">
+
+                        {{-- Compression progress (hidden until JS shows it) --}}
+                        <div id="gallery-compress-status"
+                             style="display:none; margin-top:10px; padding:10px 14px;
+                                    background:var(--upwork-green-soft); border:1px solid rgba(20,168,0,.2);
+                                    border-radius:var(--radius-sm); font-size:13px; font-weight:700; color:var(--upwork-green-dark);
+                                    align-items:center; gap:8px;">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            <span id="gallery-compress-text">جاري ضغط الصور…</span>
+                        </div>
+
+                        {{-- New images preview --}}
+                        <div id="gallery-new-previews" class="gallery-grid" style="margin-top:14px;"></div>
+
                         @error('gallery_images')
                             <div class="form-error">{{ $message }}</div>
                         @enderror
@@ -460,11 +559,29 @@
 
                         <label style="font-weight: 700; margin-top: 24px; display: block; font-size: 14px;">الصور الحالية بالمعرض (اضغط لحذف أي صورة):</label>
                         <div class="gallery-grid" id="gallery-container">
-                            @if($workspace->gallery_images && count($workspace->gallery_images) > 0)
-                                @foreach($workspace->gallery_images as $image)
-                                    <div class="gallery-item" data-url="{{ $image }}">
-                                        <input type="hidden" name="retained_gallery_images[]" value="{{ $image }}">
-                                        <img src="{{ $image }}" alt="Gallery Image">
+                            @php
+                                // gallery_images = raw DB paths  → used for hidden inputs (server needs them)
+                                // gallery_urls   = full HTTP URLs → used for <img src> (browser needs them)
+                                $galleryPaths    = $workspace->gallery_images ?? [];
+                                $galleryFullUrls = $workspace->gallery_urls   ?? [];
+                            @endphp
+
+                            @if(count($galleryPaths) > 0)
+                                @foreach($galleryPaths as $index => $rawPath)
+                                    @php $imgSrc = $galleryFullUrls[$index] ?? asset('storage/' . $rawPath); @endphp
+                                    <div class="gallery-item" data-url="{{ $rawPath }}">
+                                        {{-- hidden input keeps the raw path so the server can compare / delete correctly --}}
+                                        <input type="hidden" name="retained_gallery_images[]" value="{{ $rawPath }}">
+                                        <img src="{{ $imgSrc }}" alt="صورة المعرض"
+                                             loading="lazy"
+                                             onerror="this.src=''; this.parentElement.querySelector('.gallery-broken').style.display='flex';">
+                                        {{-- fallback shown if image fails to load --}}
+                                        <div class="gallery-broken" style="display:none; position:absolute; inset:0;
+                                             background:#fafafa; align-items:center; justify-content:center;
+                                             flex-direction:column; gap:6px; color:var(--upwork-muted);">
+                                            <i class="fa-solid fa-image-slash" style="font-size:22px;"></i>
+                                            <span style="font-size:11px;">تعذّر تحميل الصورة</span>
+                                        </div>
                                         <button type="button" class="btn-delete-img" onclick="deleteGalleryImage(this)">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </button>
@@ -587,6 +704,34 @@
                                 <div class="form-error">{{ $message }}</div>
                             @enderror
                         </div>
+                    </div>
+
+                    {{-- Checkout mode: control how paid visitors leave --}}
+                    @php $currentCheckoutMode = old('checkout_mode', $workspace->checkout_mode?->value ?? 'DIRECT'); @endphp
+                    <div class="form-group" style="margin-top:10px; padding-top:20px; border-top:1px solid var(--upwork-border);">
+                        <label style="margin-bottom:4px;">طريقة تسجيل خروج الزوار</label>
+                        <p style="color:var(--upwork-muted); font-size:13px; margin:0 0 14px;">
+                            ينطبق على أصحاب الباقات المدفوعة (فضي / ذهبي) فقط. الزوار في الباقة المجانية يسجّلون خروجهم مباشرة دائماً.
+                        </p>
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:14px;">
+                            <label class="checkbox-card" style="align-items:flex-start;">
+                                <input type="radio" name="checkout_mode" value="DIRECT" {{ $currentCheckoutMode === 'DIRECT' ? 'checked' : '' }} style="margin-top:3px;">
+                                <span>
+                                    <strong>خروج مباشر</strong><br>
+                                    <span style="font-weight:500; color:var(--upwork-muted); font-size:13px;">يستطيع الزائر تسجيل خروجه بنفسه فوراً من التطبيق.</span>
+                                </span>
+                            </label>
+                            <label class="checkbox-card" style="align-items:flex-start;">
+                                <input type="radio" name="checkout_mode" value="APPROVAL" {{ $currentCheckoutMode === 'APPROVAL' ? 'checked' : '' }} style="margin-top:3px;">
+                                <span>
+                                    <strong>يتطلب موافقتي</strong><br>
+                                    <span style="font-weight:500; color:var(--upwork-muted); font-size:13px;">يرسل الزائر طلب خروج، ويظهر لك في صفحة "تسجيل الزوار" للموافقة عليه.</span>
+                                </span>
+                            </label>
+                        </div>
+                        @error('checkout_mode')
+                            <div class="form-error">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -743,6 +888,11 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // --- 0. Auto-switch tab if server redirected back with open_tab hint ---
+            @if(session('open_tab'))
+                switchTab({ currentTarget: document.querySelector('.tab-btn[onclick*="{{ session("open_tab") }}"]') }, '{{ session("open_tab") }}');
+            @endif
+
             // --- 1. Map Initialization ---
             var initialLat = parseFloat(document.getElementById('latitude').value) || 30.0444;
             var initialLng = parseFloat(document.getElementById('longitude').value) || 31.2357;
@@ -854,6 +1004,206 @@
             } else {
                 alert("تعذر إنشاء ملف PDF، يرجى المحاولة مرة أخرى.");
             }
+        }
+
+
+        /* ═══════════════════════════════════════════════════════════════
+           FORM SUBMIT GUARD — block upload if total files still too large
+        ═══════════════════════════════════════════════════════════════ */
+        document.getElementById('settings-form').addEventListener('submit', function (e) {
+            const MAX_POST_BYTES = 50 * 1024 * 1024; // must match serve.sh / .user.ini
+            let totalBytes = 0;
+
+            const coverInput   = document.getElementById('cover_image');
+            const galleryInput = document.getElementById('gallery_images');
+
+            for (const f of coverInput.files)   totalBytes += f.size;
+            for (const f of galleryInput.files) totalBytes += f.size;
+
+            if (totalBytes > MAX_POST_BYTES) {
+                e.preventDefault();
+
+                // Show banner at top of gallery tab
+                let banner = document.getElementById('upload-size-error');
+                if (!banner) {
+                    banner = document.createElement('div');
+                    banner.id = 'upload-size-error';
+                    banner.style.cssText =
+                        'margin-bottom:16px; padding:14px 18px; border-radius:8px; ' +
+                        'background:#fff5f5; border:1px solid rgba(223,32,32,.25); ' +
+                        'color:#b91c1c; font-weight:700; font-size:14px; ' +
+                        'display:flex; align-items:flex-start; gap:10px;';
+                    banner.innerHTML =
+                        '<i class="fa-solid fa-circle-xmark" style="margin-top:2px;font-size:16px;"></i>' +
+                        '<div>' +
+                        '<div>الصور المختارة كبيرة جداً حتى بعد الضغط (' + formatBytes(totalBytes) + ' إجمالاً).</div>' +
+                        '<div style="font-weight:500; margin-top:4px; color:#6b1111;">يُرجى تقليل عدد الصور أو اختيار صور أصغر. الحد الأقصى المسموح به هو 50MB في كل مرة.</div>' +
+                        '</div>';
+
+                    // Insert before the gallery dropzone
+                    const galleryTab = document.getElementById('gallery-tab');
+                    const card = galleryTab.querySelector('.card');
+                    card.insertBefore(banner, card.firstChild);
+                }
+
+                // Switch to gallery tab
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                document.getElementById('gallery-tab').classList.add('active');
+                document.querySelector('.tab-btn[onclick*="gallery-tab"]').classList.add('active');
+
+                banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            // Remove any old error banner if size is now OK
+            const old = document.getElementById('upload-size-error');
+            if (old) old.remove();
+        });
+
+        /* ═══════════════════════════════════════════════════════════════
+           IMAGE COMPRESSION  — canvas-based, runs 100% client-side
+           Compresses any image >300KB to max 1920px wide at 82% JPEG
+           so the total POST stays well under PHP's post_max_size limit.
+        ═══════════════════════════════════════════════════════════════ */
+
+        /**
+         * Compress a File object using an off-screen canvas.
+         * Returns a new File (image/jpeg) that is ≤ maxSizeKB.
+         */
+        async function compressImageFile(file, maxWidthPx = 1920, quality = 0.82) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                const objectUrl = URL.createObjectURL(file);
+
+                img.onload = () => {
+                    URL.revokeObjectURL(objectUrl);
+
+                    let w = img.naturalWidth;
+                    let h = img.naturalHeight;
+
+                    if (w > maxWidthPx) {
+                        h = Math.round(h * maxWidthPx / w);
+                        w = maxWidthPx;
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width  = w;
+                    canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+
+                    canvas.toBlob((blob) => {
+                        const newName = file.name.replace(/\.[^.]+$/, '.jpg');
+                        resolve(new File([blob], newName, { type: 'image/jpeg' }));
+                    }, 'image/jpeg', quality);
+                };
+
+                img.onerror = () => { URL.revokeObjectURL(objectUrl); resolve(file); };
+                img.src = objectUrl;
+            });
+        }
+
+        function formatBytes(bytes) {
+            return bytes < 1024 * 1024
+                ? (bytes / 1024).toFixed(0) + ' KB'
+                : (bytes / 1024 / 1024).toFixed(1) + ' MB';
+        }
+
+        /* ─── Gallery images ─── */
+
+        async function processGalleryFiles(fileList) {
+            const files = Array.from(fileList);
+            if (files.length === 0) return;
+
+            // Show status
+            const statusEl = document.getElementById('gallery-compress-status');
+            const statusText = document.getElementById('gallery-compress-text');
+            statusEl.style.display = 'flex';
+
+            const compressed = [];
+            for (let i = 0; i < files.length; i++) {
+                statusText.textContent = `جاري ضغط الصورة ${i + 1} من ${files.length}…`;
+                const f = files[i];
+                const out = f.size > 300 * 1024 ? await compressImageFile(f) : f;
+                compressed.push({ file: out, originalSize: f.size });
+            }
+
+            // Replace <input> files via DataTransfer
+            const dt = new DataTransfer();
+            compressed.forEach(({ file }) => dt.items.add(file));
+            document.getElementById('gallery_images').files = dt.files;
+
+            // Summary message
+            const totalOrig = files.reduce((s, f) => s + f.size, 0);
+            const totalNew  = compressed.reduce((s, { file }) => s + file.size, 0);
+            const saved     = Math.round((1 - totalNew / totalOrig) * 100);
+            statusText.innerHTML =
+                `<i class="fa-solid fa-circle-check"></i>&nbsp; ${files.length} صورة جاهزة — ` +
+                `${formatBytes(totalOrig)} ← <strong>${formatBytes(totalNew)}</strong> (وفّرت ${saved}%)`;
+
+            // Preview compressed images
+            const previewGrid = document.getElementById('gallery-new-previews');
+            previewGrid.innerHTML = '';
+            compressed.forEach(({ file }) => {
+                const url = URL.createObjectURL(file);
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.innerHTML = `<img src="${url}" alt="معاينة" style="width:100%;height:100%;object-fit:cover;">
+                    <div style="position:absolute;bottom:4px;right:6px;background:rgba(0,0,0,.55);color:#fff;
+                                font-size:10px;padding:2px 6px;border-radius:4px;">${formatBytes(file.size)}</div>`;
+                previewGrid.appendChild(div);
+            });
+        }
+
+        document.getElementById('gallery_images').addEventListener('change', function () {
+            processGalleryFiles(this.files);
+        });
+
+        function handleGalleryDrop(event) {
+            event.preventDefault();
+            const dz = document.getElementById('gallery-dropzone');
+            dz.style.borderColor = 'var(--upwork-border)';
+            dz.style.background  = 'var(--upwork-bg)';
+            processGalleryFiles(event.dataTransfer.files);
+        }
+
+        /* ─── Cover image ─── */
+
+        async function processCoverFile(fileList) {
+            const file = fileList[0];
+            if (!file) return;
+
+            const statusEl = document.getElementById('cover-compress-status');
+            statusEl.style.display = 'flex';
+
+            const out = file.size > 300 * 1024 ? await compressImageFile(file, 1920, 0.85) : file;
+
+            const dt = new DataTransfer();
+            dt.items.add(out);
+            document.getElementById('cover_image').files = dt.files;
+
+            // Preview
+            const prevWrapper = document.getElementById('cover-current-preview');
+            const prevImg     = document.getElementById('cover-preview-img');
+            prevImg.src = URL.createObjectURL(out);
+            prevWrapper.style.display = 'block';
+
+            const saved = Math.round((1 - out.size / file.size) * 100);
+            statusEl.innerHTML =
+                `<i class="fa-solid fa-circle-check" style="color:var(--upwork-green);"></i>
+                 <span>${formatBytes(file.size)} ← <strong>${formatBytes(out.size)}</strong> (وفّرت ${saved}%)</span>`;
+        }
+
+        document.getElementById('cover_image').addEventListener('change', function () {
+            processCoverFile(this.files);
+        });
+
+        function handleCoverDrop(event) {
+            event.preventDefault();
+            const dz = document.getElementById('cover-dropzone');
+            dz.style.borderColor = 'var(--upwork-border)';
+            dz.style.background  = 'var(--upwork-bg)';
+            processCoverFile(event.dataTransfer.files);
         }
     </script>
 @endsection

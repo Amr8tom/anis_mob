@@ -23,7 +23,7 @@ final class HomeApiTest extends TestCase
 
     public function test_home_profile_returns_expected_shape(): void
     {
-        $user = User::factory()->create(['wallet_balance' => 120, 'total_study_hours' => 124, 'streak_days' => 7]);
+        $user = User::factory()->create(['total_study_hours' => 124, 'streak_days' => 7]);
         $plan = Plan::factory()->create(['tier' => PlanTier::SILVER, 'duration_days' => 30]);
         Subscription::factory()->create([
             'user_id' => $user->id,
@@ -37,7 +37,8 @@ final class HomeApiTest extends TestCase
             ->assertJsonPath('data.subscriptionType', 'silver')
             ->assertJsonPath('data.subscriptionTotalDays', 30)
             ->assertJsonPath('data.subscriptionDaysRemaining', 8)
-            ->assertJsonStructure(['data' => ['id', 'name', 'initials', 'walletBalance', 'totalStudyHours', 'streakDays']]);
+            ->assertJsonStructure(['data' => ['id', 'name', 'initials', 'totalStudyHours', 'streakDays']])
+            ->assertJsonMissingPath('data.walletBalance');
     }
 
     public function test_today_sessions_returns_only_todays(): void
