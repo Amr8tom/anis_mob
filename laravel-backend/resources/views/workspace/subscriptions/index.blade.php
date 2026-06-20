@@ -3,7 +3,7 @@
 @section('title', 'الاشتراكات الخاصة | بوابة مساحة العمل')
 
 @section('content')
-<div class="settings-container">
+<div>
     <h1 class="page-title" style="margin:0 0 6px;">الاشتراكات الخاصة بمساحتك</h1>
     <p class="page-subtitle">باقات تصدرها أنت، وتصلح للحضور في مساحتك فقط بنفس رمز الـ QR الحالي.</p>
 
@@ -49,7 +49,7 @@
             <p style="margin:0 0 14px; color:var(--upwork-muted); font-size:13px;">ذكّر الزائر بالتجديد قبل انتهاء اشتراكه في مساحتك.</p>
             @foreach($expiring_soon as $sub)
                 <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; background:#fff8e6; border-radius:var(--radius-sm); margin-bottom:8px;">
-                    <span style="font-weight:700; color:#8a6413;">{{ $sub->user->full_name ?? 'زائر' }} · <span style="direction:ltr;">{{ $sub->user->phone_number ?? '—' }}</span></span>
+                    <span style="font-weight:700; color:#8a6413;">{{ $sub->subscriberName() }} · <span style="direction:ltr;">{{ $sub->subscriberPhone() ?? '—' }}</span></span>
                     <span style="font-size:13px; color:#8a6413;">يبقى {{ $sub->daysLeft() }} يوم · {{ number_format($sub->remaining_minutes / 60, 1) }} ساعة</span>
                     @if($sub->user)
                         <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $sub->user->whatsapp_number) }}" target="_blank"
@@ -87,10 +87,11 @@
                     <button type="submit" class="btn-primary" style="margin-top:12px;"><i class="fa-solid fa-ticket"></i> توليد</button>
                 </form>
 
-                {{-- Assign by phone --}}
+                {{-- Assign by phone (app user OR walk-in) --}}
                 <form action="{{ route('workspace.subscriptions.assign') }}" method="POST" style="background:var(--upwork-bg); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--upwork-border);">
                     @csrf
-                    <div style="font-weight:800; margin-bottom:10px;">ربط برقم هاتف (لمستخدم مسجّل)</div>
+                    <div style="font-weight:800; margin-bottom:4px;">ربط برقم هاتف</div>
+                    <p style="font-size:12px; color:var(--upwork-muted); margin:0 0 10px;">إن لم يكن الرقم لمستخدم مسجّل بالتطبيق، سيُسجَّل كزائر مباشر تلقائياً ثم تُفعّل له الباقة.</p>
                     <label style="font-size:13px;">الباقة</label>
                     <select name="workspace_plan_id" class="form-control" required>
                         @foreach($activePlans as $plan)
@@ -99,6 +100,8 @@
                     </select>
                     <label style="font-size:13px; margin-top:10px; display:block;">رقم هاتف الزائر</label>
                     <input type="text" name="phone_number" class="form-control" placeholder="01xxxxxxxxx" style="direction:ltr; text-align:right;" value="{{ old('phone_number') }}" required>
+                    <label style="font-size:13px; margin-top:10px; display:block;">الاسم (لزائر جديد فقط)</label>
+                    <input type="text" name="name" class="form-control" placeholder="اسم الزائر" value="{{ old('name') }}">
                     <button type="submit" class="btn-primary" style="margin-top:12px;"><i class="fa-solid fa-user-check"></i> تفعيل مباشر</button>
                 </form>
             </div>
@@ -137,52 +140,64 @@
 
     {{-- ── Plan templates ────────────────────────────────────── --}}
     <div class="card" style="margin-bottom:22px;">
-        <h3 style="margin:0 0 16px;"><i class="fa-solid fa-layer-group"></i> باقاتك</h3>
-        <form action="{{ route('workspace.subscriptions.plans.store') }}" method="POST" style="background:var(--upwork-bg); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--upwork-border); margin-bottom:16px;">
-            @csrf
-            <div class="grid-4" style="gap:12px;">
-                <div><label style="font-size:13px;">اسم الباقة</label><input type="text" name="name" class="form-control" placeholder="باقة المذاكرة" required></div>
-                <div><label style="font-size:13px;">عدد الساعات</label><input type="number" name="hours" class="form-control" min="1" max="1000" value="20" required></div>
-                <div><label style="font-size:13px;">عدد الأيام</label><input type="number" name="duration_days" class="form-control" min="1" max="365" value="30" required></div>
-                <div><label style="font-size:13px;">السعر (ج.م)</label><input type="number" name="price_pounds" class="form-control" min="0" step="0.01" placeholder="اختياري"></div>
+        <h3 style="margin:0 0 18px;"><i class="fa-solid fa-layer-group"></i> باقاتك</h3>
+        <div class="manage-grid">
+            {{-- List (primary) --}}
+            <div class="manage-main">
+                @if($plans->isEmpty())
+                    <div class="empty-state">
+                        <i class="fa-solid fa-layer-group"></i>
+                        لا توجد باقات بعد. أنشئ أول باقة من النموذج المجاور لتتمكن من إصدار اشتراكات.
+                    </div>
+                @else
+                    <table>
+                        <thead><tr><th>الباقة</th><th>الساعات</th><th>الأيام</th><th>السعر</th><th>الحالة</th><th>إجراء</th></tr></thead>
+                        <tbody>
+                            @foreach($plans as $plan)
+                                <tr>
+                                    <td style="font-weight:700;">{{ $plan->name }}</td>
+                                    <td>{{ (int)($plan->included_minutes/60) }}</td>
+                                    <td>{{ $plan->duration_days }}</td>
+                                    <td>{{ $plan->price_cents ? number_format($plan->price_cents/100, 2).' ج.م' : '—' }}</td>
+                                    <td>
+                                        @if($plan->is_active)
+                                            <span style="background:var(--upwork-green-soft); color:var(--upwork-green-dark); padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700;">فعّالة</span>
+                                        @else
+                                            <span style="background:#eee; color:#777; padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700;">موقوفة</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($plan->is_active)
+                                            <form action="{{ route('workspace.subscriptions.plans.deactivate', $plan->id) }}" method="POST" onsubmit="return confirm('إيقاف هذه الباقة؟ لن تتأثر الاشتراكات الصادرة.');">
+                                                @csrf
+                                                <button type="submit" style="padding:6px 12px; border:1px solid var(--upwork-border); background:#fff; border-radius:var(--radius-sm); cursor:pointer; font-weight:700; color:var(--upwork-error);">إيقاف</button>
+                                            </form>
+                                        @else — @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
             </div>
-            <button type="submit" class="btn-primary" style="margin-top:12px;"><i class="fa-solid fa-plus"></i> إضافة باقة</button>
-        </form>
 
-        @if($plans->isEmpty())
-            <p style="text-align:center; color:var(--upwork-muted); padding:16px;">لا توجد باقات بعد.</p>
-        @else
-            <table style="width:100%; border-collapse:collapse; text-align:right;">
-                <thead><tr style="border-bottom:2px solid var(--upwork-border);">
-                    <th style="padding:10px;">الباقة</th><th style="padding:10px;">الساعات</th><th style="padding:10px;">الأيام</th><th style="padding:10px;">السعر</th><th style="padding:10px;">الحالة</th><th style="padding:10px;">إجراء</th>
-                </tr></thead>
-                <tbody>
-                    @foreach($plans as $plan)
-                        <tr style="border-bottom:1px solid var(--upwork-border);">
-                            <td style="padding:10px; font-weight:700;">{{ $plan->name }}</td>
-                            <td style="padding:10px;">{{ (int)($plan->included_minutes/60) }}</td>
-                            <td style="padding:10px;">{{ $plan->duration_days }}</td>
-                            <td style="padding:10px;">{{ $plan->price_cents ? number_format($plan->price_cents/100, 2).' ج.م' : '—' }}</td>
-                            <td style="padding:10px;">
-                                @if($plan->is_active)
-                                    <span style="background:var(--upwork-green-soft); color:var(--upwork-green-dark); padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700;">فعّالة</span>
-                                @else
-                                    <span style="background:#eee; color:#777; padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700;">موقوفة</span>
-                                @endif
-                            </td>
-                            <td style="padding:10px;">
-                                @if($plan->is_active)
-                                    <form action="{{ route('workspace.subscriptions.plans.deactivate', $plan->id) }}" method="POST" onsubmit="return confirm('إيقاف هذه الباقة؟ لن تتأثر الاشتراكات الصادرة.');">
-                                        @csrf
-                                        <button type="submit" style="padding:6px 12px; border:1px solid var(--upwork-border); background:#fff; border-radius:var(--radius-sm); cursor:pointer; font-weight:700; color:var(--upwork-error);">إيقاف</button>
-                                    </form>
-                                @else — @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
+            {{-- Add form (side) --}}
+            <aside class="manage-aside">
+                <form action="{{ route('workspace.subscriptions.plans.store') }}" method="POST" class="manage-form-panel">
+                    @csrf
+                    <h4><i class="fa-solid fa-plus" style="color:var(--upwork-green);"></i> إضافة باقة</h4>
+                    <label style="font-size:13px;">اسم الباقة</label>
+                    <input type="text" name="name" class="form-control" placeholder="باقة المذاكرة" required>
+                    <label style="font-size:13px;">عدد الساعات</label>
+                    <input type="number" name="hours" class="form-control" min="1" max="1000" value="20" required>
+                    <label style="font-size:13px;">عدد الأيام</label>
+                    <input type="number" name="duration_days" class="form-control" min="1" max="365" value="30" required>
+                    <label style="font-size:13px;">السعر (ج.م)</label>
+                    <input type="number" name="price_pounds" class="form-control" min="0" step="0.01" placeholder="اختياري">
+                    <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> إضافة باقة</button>
+                </form>
+            </aside>
+        </div>
     </div>
 
     {{-- ── Issued subscriptions ──────────────────────────────── --}}
@@ -208,7 +223,11 @@
                             $s = $statusMap[$sub->status->value] ?? ['—', '#eee', '#777'];
                         @endphp
                         <tr style="border-bottom:1px solid var(--upwork-border);">
-                            <td style="padding:10px; font-weight:700;">{{ $sub->user->full_name ?? 'زائر' }}<br><small style="color:var(--upwork-muted); direction:ltr;">{{ $sub->user->phone_number ?? '' }}</small></td>
+                            <td style="padding:10px; font-weight:700;">
+                                {{ $sub->subscriberName() }}
+                                @if($sub->walk_in_id)<span style="background:var(--upwork-green-soft); color:var(--upwork-green-dark); padding:1px 7px; border-radius:20px; font-size:10px; font-weight:800; margin-inline-start:4px;">زائر مباشر</span>@endif
+                                <br><small style="color:var(--upwork-muted); direction:ltr;">{{ $sub->subscriberPhone() ?? '' }}</small>
+                            </td>
                             <td style="padding:10px;">{{ $sub->plan_name_snapshot }}</td>
                             <td style="padding:10px;">{{ number_format($sub->remaining_minutes/60, 1) }} / {{ number_format($sub->total_minutes/60, 1) }}</td>
                             <td style="padding:10px;">{{ $sub->daysLeft() }}</td>

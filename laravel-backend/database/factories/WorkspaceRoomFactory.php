@@ -23,6 +23,7 @@ class WorkspaceRoomFactory extends Factory
         return [
             'workspace_id' => Workspace::factory(),
             'name' => 'غرفة اجتماعات',
+            'note' => null,
             'hourly_price_cents' => 5000,
             'position' => 0,
             'is_active' => true,

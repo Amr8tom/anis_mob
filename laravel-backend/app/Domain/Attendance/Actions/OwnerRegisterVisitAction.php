@@ -53,15 +53,19 @@ final readonly class OwnerRegisterVisitAction
                 throw new OwnerVisitException('مساحة العمل ممتلئة حالياً.');
             }
 
+            // A walk-in may hold a workspace (special) subscription. Use it if usable,
+            // otherwise the visit is FREE / direct-pay.
+            $funding = $this->funding->handleForWalkIn($workspace, $walkIn->id, lockWorkspaceSubscription: true);
+
             try {
                 return WorkspaceVisit::create([
                     'user_id' => null,
                     'walk_in_id' => $walkIn->id,
                     'workspace_id' => $workspace->id,
                     'subscription_id' => null,
-                    'workspace_subscription_id' => null,
-                    'billing_source' => BillingSource::FREE->value,
-                    'plan_tier_snapshot' => PlanTier::FREE->value,
+                    'workspace_subscription_id' => $funding->workspaceSubscriptionId,
+                    'billing_source' => $funding->billingSource->value,
+                    'plan_tier_snapshot' => $funding->planTierSnapshot ?? PlanTier::FREE->value,
                     'status' => VisitStatus::CHECKED_IN->value,
                     'source' => VisitSource::OWNER->value,
                     'registered_by' => $registeredBy,

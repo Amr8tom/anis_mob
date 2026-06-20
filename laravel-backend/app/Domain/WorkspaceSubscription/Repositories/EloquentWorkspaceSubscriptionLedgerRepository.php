@@ -23,6 +23,7 @@ final class EloquentWorkspaceSubscriptionLedgerRepository implements WorkspaceSu
             'workspace_visit_id' => $visitId,
             'workspace_id' => $subscription->workspace_id,
             'user_id' => $subscription->user_id,
+            'walk_in_id' => $subscription->walk_in_id,
             'change_minutes' => $changeMinutes,
             'balance_after' => $balanceAfter,
             'reason' => $reason,

@@ -29,6 +29,15 @@ interface WorkspaceSubscriptionRepositoryInterface
      */
     public function activeForUserWorkspace(string $userId, string $workspaceId): ?WorkspaceSubscription;
 
+    /** Walk-in counterpart of usableActiveForUserWorkspace(). */
+    public function usableActiveForWalkInWorkspace(string $walkInId, string $workspaceId): ?WorkspaceSubscription;
+
+    /** Walk-in counterpart of lockUsableActiveForUserWorkspace(). */
+    public function lockUsableActiveForWalkInWorkspace(string $walkInId, string $workspaceId): ?WorkspaceSubscription;
+
+    /** Walk-in counterpart of activeForUserWorkspace(). */
+    public function activeForWalkInWorkspace(string $walkInId, string $workspaceId): ?WorkspaceSubscription;
+
     public function lockById(string $id): ?WorkspaceSubscription;
 
     /** @return Collection<int, WorkspaceSubscription> */

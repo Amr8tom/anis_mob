@@ -20,24 +20,39 @@ final class EloquentWorkspaceSubscriptionRepository implements WorkspaceSubscrip
 
     public function usableActiveForUserWorkspace(string $userId, string $workspaceId): ?WorkspaceSubscription
     {
-        return $this->usableQuery($userId, $workspaceId)
+        return $this->usableQuery('user_id', $userId, $workspaceId)
             ->latest('started_at')
             ->first();
     }
 
     public function lockUsableActiveForUserWorkspace(string $userId, string $workspaceId): ?WorkspaceSubscription
     {
-        return $this->usableQuery($userId, $workspaceId)
+        return $this->usableQuery('user_id', $userId, $workspaceId)
+            ->latest('started_at')
+            ->lockForUpdate()
+            ->first();
+    }
+
+    public function usableActiveForWalkInWorkspace(string $walkInId, string $workspaceId): ?WorkspaceSubscription
+    {
+        return $this->usableQuery('walk_in_id', $walkInId, $workspaceId)
+            ->latest('started_at')
+            ->first();
+    }
+
+    public function lockUsableActiveForWalkInWorkspace(string $walkInId, string $workspaceId): ?WorkspaceSubscription
+    {
+        return $this->usableQuery('walk_in_id', $walkInId, $workspaceId)
             ->latest('started_at')
             ->lockForUpdate()
             ->first();
     }
 
     /** @return Builder<WorkspaceSubscription> */
-    private function usableQuery(string $userId, string $workspaceId): Builder
+    private function usableQuery(string $column, string $id, string $workspaceId): Builder
     {
         return WorkspaceSubscription::query()
-            ->where('user_id', $userId)
+            ->where($column, $id)
             ->where('workspace_id', $workspaceId)
             ->where('status', WorkspaceSubscriptionStatus::ACTIVE->value)
             ->where('remaining_minutes', '>', 0)
@@ -48,6 +63,16 @@ final class EloquentWorkspaceSubscriptionRepository implements WorkspaceSubscrip
     {
         return WorkspaceSubscription::query()
             ->where('user_id', $userId)
+            ->where('workspace_id', $workspaceId)
+            ->where('status', WorkspaceSubscriptionStatus::ACTIVE->value)
+            ->latest('started_at')
+            ->first();
+    }
+
+    public function activeForWalkInWorkspace(string $walkInId, string $workspaceId): ?WorkspaceSubscription
+    {
+        return WorkspaceSubscription::query()
+            ->where('walk_in_id', $walkInId)
             ->where('workspace_id', $workspaceId)
             ->where('status', WorkspaceSubscriptionStatus::ACTIVE->value)
             ->latest('started_at')
@@ -65,7 +90,7 @@ final class EloquentWorkspaceSubscriptionRepository implements WorkspaceSubscrip
     public function expiringWithinDays(string $workspaceId, int $days): Collection
     {
         return WorkspaceSubscription::query()
-            ->with('user')
+            ->with(['user', 'walkIn'])
             ->where('workspace_id', $workspaceId)
             ->where('status', WorkspaceSubscriptionStatus::ACTIVE->value)
             ->whereNotNull('expires_at')
@@ -77,7 +102,7 @@ final class EloquentWorkspaceSubscriptionRepository implements WorkspaceSubscrip
     public function paginateForWorkspace(string $workspaceId, int $perPage): LengthAwarePaginator
     {
         return WorkspaceSubscription::query()
-            ->with('user')
+            ->with(['user', 'walkIn'])
             ->where('workspace_id', $workspaceId)
             ->latest('created_at')
             ->paginate($perPage);

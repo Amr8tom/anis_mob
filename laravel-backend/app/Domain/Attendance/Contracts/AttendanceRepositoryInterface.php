@@ -47,4 +47,7 @@ interface AttendanceRepositoryInterface
      * regardless of funding source.
      */
     public function todayBillableMinutesForUserInWorkspace(string $userId, string $workspaceId): int;
+
+    /** Walk-in counterpart of todayBillableMinutesForUserInWorkspace(). */
+    public function todayBillableMinutesForWalkInInWorkspace(string $walkInId, string $workspaceId): int;
 }

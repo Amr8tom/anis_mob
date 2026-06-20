@@ -57,6 +57,24 @@ class WorkspaceSubscription extends Model
         return $this->belongsTo(User::class);
     }
 
+    /** @return BelongsTo<WorkspaceWalkIn, $this> */
+    public function walkIn(): BelongsTo
+    {
+        return $this->belongsTo(WorkspaceWalkIn::class, 'walk_in_id');
+    }
+
+    /** Display name of the subscriber, whether an app user or a walk-in. */
+    public function subscriberName(): string
+    {
+        return $this->user?->full_name ?? $this->walkIn?->full_name ?? 'زائر';
+    }
+
+    /** Phone of the subscriber, whether an app user or a walk-in. */
+    public function subscriberPhone(): ?string
+    {
+        return $this->user?->phone_number ?? $this->walkIn?->phone_number;
+    }
+
     /** @return HasMany<WorkspaceSubscriptionLedger, $this> */
     public function ledgers(): HasMany
     {

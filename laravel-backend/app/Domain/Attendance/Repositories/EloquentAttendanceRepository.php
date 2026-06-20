@@ -121,4 +121,17 @@ final class EloquentAttendanceRepository implements AttendanceRepositoryInterfac
             ->where('check_in_at', '<', $startOfDay->copy()->addDay())
             ->sum('billable_minutes');
     }
+
+    public function todayBillableMinutesForWalkInInWorkspace(string $walkInId, string $workspaceId): int
+    {
+        $startOfDay = now()->startOfDay();
+
+        return (int) WorkspaceVisit::query()
+            ->where('walk_in_id', $walkInId)
+            ->where('workspace_id', $workspaceId)
+            ->where('status', VisitStatus::CHECKED_OUT->value)
+            ->where('check_in_at', '>=', $startOfDay)
+            ->where('check_in_at', '<', $startOfDay->copy()->addDay())
+            ->sum('billable_minutes');
+    }
 }

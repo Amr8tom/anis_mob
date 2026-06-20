@@ -20,9 +20,19 @@ final class EloquentRoomClientRepository implements RoomClientRepositoryInterfac
             ->first();
 
         if ($client !== null) {
-            // Keep the latest name the owner typed; don't clobber an existing note.
+            $updates = [];
+
+            // Keep the latest name and note the owner typed.
             if ($name !== '' && $name !== $client->name) {
-                $client->update(['name' => $name]);
+                $updates['name'] = $name;
+            }
+
+            if (filled($note) && $note !== $client->note) {
+                $updates['note'] = $note;
+            }
+
+            if ($updates !== []) {
+                $client->update($updates);
             }
 
             return $client;

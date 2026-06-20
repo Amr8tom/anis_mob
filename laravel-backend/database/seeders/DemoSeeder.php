@@ -43,58 +43,6 @@ class DemoSeeder extends Seeder
             Badge::create(['key' => $key, 'label' => $label, 'icon_key' => $key]);
         }
 
-        // ──────────────────────────────────────────────
-        // ---- Admin Users (password: admin123) ----
-        // ──────────────────────────────────────────────
-        $adminPassword = 'admin123';
-
-        $admin1 = User::create([
-            'full_name' => 'أحمد المدير',
-            'phone_number' => '01100000001',
-            'whatsapp_number' => '01100000001',
-            'password' => Hash::make($adminPassword),
-            'role' => UserRole::ADMIN,
-            'is_guest' => false,
-            'availability' => Availability::OFFLINE,
-            'profile_completed_at' => now(),
-            'admin_permissions' => ['*'],
-            'admin_mfa_enabled' => false,
-        ]);
-
-        $admin2 = User::create([
-            'full_name' => 'سارة المشرفة',
-            'phone_number' => '01100000002',
-            'whatsapp_number' => '01100000002',
-            'password' => Hash::make($adminPassword),
-            'role' => UserRole::ADMIN,
-            'is_guest' => false,
-            'availability' => Availability::OFFLINE,
-            'profile_completed_at' => now(),
-            'admin_permissions' => ['*'],
-            'admin_mfa_enabled' => false,
-        ]);
-
-        // ──────────────────────────────────────────────
-        // ---- Workspace Owners (password: owner123) ----
-        // ──────────────────────────────────────────────
-        $ownerPassword = 'owner123';
-
-        $owners = collect([
-            ['full_name' => 'محمد صاحب المركزية', 'phone_number' => '01200000001', 'whatsapp_number' => '01200000001'],
-            ['full_name' => 'فاطمة صاحبة المعادي', 'phone_number' => '01200000002', 'whatsapp_number' => '01200000002'],
-            ['full_name' => 'يوسف صاحب مدينة نصر', 'phone_number' => '01200000003', 'whatsapp_number' => '01200000003'],
-            ['full_name' => 'نور صاحبة الجيزة',   'phone_number' => '01200000004', 'whatsapp_number' => '01200000004'],
-            ['full_name' => 'خالد صاحب الزمالك',   'phone_number' => '01200000005', 'whatsapp_number' => '01200000005'],
-            ['full_name' => 'ليلى صاحبة مصر الجديدة', 'phone_number' => '01200000006', 'whatsapp_number' => '01200000006'],
-        ])->map(fn (array $data) => User::create([
-            ...$data,
-            'password' => Hash::make($ownerPassword),
-            'role' => UserRole::WORKSPACE_OWNER,
-            'is_guest' => false,
-            'availability' => Availability::OFFLINE,
-            'profile_completed_at' => now(),
-        ]));
-
         // ---- Demo login user (phone + password, no OTP) ----
         $demo = User::create([
             'full_name' => 'أنس التجريبي',
@@ -177,7 +125,7 @@ class DemoSeeder extends Seeder
             ['name' => 'مياه', 'icon' => 'water', 'price_cents' => 1000],
         ];
 
-        $workspaces = collect($definitions)->map(function (array $def, int $index) use ($drinkMenu, $owners): Workspace {
+        $workspaces = collect($definitions)->map(function (array $def) use ($drinkMenu): Workspace {
             $slug = str_replace('ws_', '', $def['qr_token']);
             $workspace = Workspace::create([
                 'qr_token' => $def['qr_token'],
@@ -186,8 +134,6 @@ class DemoSeeder extends Seeder
                 'address' => $def['address'],
                 'latitude' => $def['lat'],
                 'longitude' => $def['lng'],
-                'owner_id' => $owners[$index]->id,
-                'admin_phone' => $owners[$index]->whatsapp_number,
                 'cover_image_url' => "https://picsum.photos/seed/$slug/800/500",
                 'gallery_images' => [
                     "https://picsum.photos/seed/$slug-1/800/500",

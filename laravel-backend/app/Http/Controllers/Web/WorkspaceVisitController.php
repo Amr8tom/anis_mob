@@ -76,10 +76,14 @@ class WorkspaceVisitController extends Controller
                             ->orWhere('phone_number', 'like', "%{$search}%"));
                 });
             });
+        // Revenue is summed over per-visit CAPPED minutes so no visit bills beyond
+        // the workspace's daily-hours ceiling (ساعات احتساب اليوم).
+        $capMinutes = $workspace->dailyCapMinutes();
         $recentSummaryRow = (clone $recentVisitsQuery)
             ->toBase()
             ->selectRaw('COUNT(*) as total_visits')
             ->selectRaw('COALESCE(SUM(duration_minutes), 0) as total_minutes')
+            ->selectRaw('COALESCE(SUM(LEAST(duration_minutes, ?)), 0) as total_billable_minutes', [$capMinutes])
             ->first();
         $recentSummary = [
             'total_visits' => (int) ($recentSummaryRow->total_visits ?? 0),
@@ -87,7 +91,7 @@ class WorkspaceVisitController extends Controller
             'total_visitors' => (clone $recentVisitsQuery)->whereNotNull('user_id')->distinct()->count('user_id')
                 + (clone $recentVisitsQuery)->whereNotNull('walk_in_id')->distinct()->count('walk_in_id'),
         ];
-        $recentSummary['total_revenue'] = round(($recentSummary['total_minutes'] / 60) * $workspace->effectiveHourlyRateEgp(), 2);
+        $recentSummary['total_revenue'] = round(((int) ($recentSummaryRow->total_billable_minutes ?? 0) / 60) * $workspace->effectiveHourlyRateEgp(), 2);
         $recentVisits = $recentVisitsQuery->latest('check_out_at')->paginate(20)->withQueryString();
 
         // ── Room reservations folded into this table + its totals ─────────────
@@ -99,13 +103,14 @@ class WorkspaceVisitController extends Controller
             $roomReservations = \App\Models\RoomReservation::with('room')
                 ->where('workspace_id', $workspace->id)
                 ->where('status', \App\Enums\RoomReservationStatus::RESERVED->value)
+                ->when($workspace->recent_visits_cleared_at, fn ($q) => $q->where('created_at', '>', $workspace->recent_visits_cleared_at))
                 ->when(isset($filters['from']), fn ($q) => $q->where('starts_at', '>=', Carbon::parse($filters['from'])))
                 ->when(isset($filters['to']), fn ($q) => $q->where('starts_at', '<', Carbon::parse($filters['to'])->addSecond()))
                 ->when(filled($filters['search'] ?? null), function ($q) use ($filters): void {
                     $search = trim((string) $filters['search']);
                     $q->where(fn ($qq) => $qq->where('client_name', 'like', "%{$search}%")->orWhere('client_phone', 'like', "%{$search}%"));
                 })
-                ->latest('starts_at')
+                ->latest('created_at')
                 ->get();
 
             $roomMinutes = (int) $roomReservations->sum(fn ($r) => $r->durationMinutes());
@@ -224,11 +229,26 @@ class WorkspaceVisitController extends Controller
     public function checkOut(WorkspaceVisit $visit, OwnerCheckOutVisitAction $action): RedirectResponse
     {
         try {
-            $action->handle(Auth::user()->ownedWorkspace, $visit->id);
+            $closedVisit = $action->handle(Auth::user()->ownedWorkspace, $visit->id);
         } catch (OwnerVisitException $e) {
             return back()->withErrors(['checkout' => $e->getMessage()]);
         }
 
-        return back()->with('success', 'تم تسجيل خروج الزائر بنجاح.');
+        $workspace = Auth::user()->ownedWorkspace;
+        $mins = $closedVisit->duration_minutes ?? 0;
+        $hours = intdiv($mins, 60);
+        $remainingMins = $mins % 60;
+        $price = $workspace->estimatedRevenueEgp((int) $mins);
+
+        return back()->with('success', 'تم تسجيل خروج الزائر بنجاح.')
+                     ->with('checkout_summary', [
+            'visitor_name' => $closedVisit->visitor_name,
+            'duration_minutes' => $mins,
+            'duration_label' => $hours > 0 ? "{$hours} ساعة و {$remainingMins} دقيقة" : "{$remainingMins} دقيقة",
+            'price' => number_format($price, 2),
+            'billing_source' => $closedVisit->billing_source?->value ?? 'FREE',
+            'check_in_at' => $closedVisit->check_in_at?->format('h:i A'),
+            'check_out_at' => $closedVisit->check_out_at?->format('h:i A'),
+        ]);
     }
 }

@@ -38,6 +38,33 @@ final readonly class WorkspaceSubscriptionActivator
             throw new AlreadyHasWorkspaceSubscriptionException;
         }
 
+        return $this->createSubscription($plan, $delivery, $issuedByOwnerId, userId: $userId);
+    }
+
+    /**
+     * Activate a workspace subscription for a walk-in visitor (no app account).
+     * Only DIRECT_ASSIGNMENT — walk-ins can't redeem activation codes (no login).
+     */
+    public function activateForWalkIn(
+        WorkspacePlan $plan,
+        string $walkInId,
+        WorkspaceSubscriptionDelivery $delivery,
+        ?string $issuedByOwnerId,
+    ): WorkspaceSubscription {
+        if ($this->subscriptions->usableActiveForWalkInWorkspace($walkInId, $plan->workspace_id) !== null) {
+            throw new AlreadyHasWorkspaceSubscriptionException;
+        }
+
+        return $this->createSubscription($plan, $delivery, $issuedByOwnerId, walkInId: $walkInId);
+    }
+
+    private function createSubscription(
+        WorkspacePlan $plan,
+        WorkspaceSubscriptionDelivery $delivery,
+        ?string $issuedByOwnerId,
+        ?string $userId = null,
+        ?string $walkInId = null,
+    ): WorkspaceSubscription {
         $reason = $delivery === WorkspaceSubscriptionDelivery::ACTIVATION_CODE
             ? WorkspaceLedgerReason::ACTIVATION
             : WorkspaceLedgerReason::DIRECT_ASSIGNMENT;
@@ -47,6 +74,7 @@ final readonly class WorkspaceSubscriptionActivator
                 'workspace_id' => $plan->workspace_id,
                 'workspace_plan_id' => $plan->id,
                 'user_id' => $userId,
+                'walk_in_id' => $walkInId,
                 'status' => WorkspaceSubscriptionStatus::ACTIVE->value,
                 'active_flag' => 1,
                 'started_at' => now(),
@@ -61,7 +89,7 @@ final readonly class WorkspaceSubscriptionActivator
                 'issued_by_owner_id' => $issuedByOwnerId,
             ]);
         } catch (QueryException $e) {
-            // unique(user_id, workspace_id, active_flag) — concurrent activation.
+            // unique(user_id|walk_in_id, workspace_id, active_flag) — concurrent activation.
             if (($e->errorInfo[1] ?? null) === 1062 || $e->getCode() === '23000') {
                 throw new AlreadyHasWorkspaceSubscriptionException;
             }

@@ -53,6 +53,28 @@ final readonly class ResolveVisitFundingAction
         return null;
     }
 
+    /**
+     * Funding for a walk-in visitor. Walk-ins can only hold a workspace (special)
+     * subscription — they have no app account, so no global subscription path.
+     * Returns FREE when the workspace is free or the walk-in has no usable plan.
+     */
+    public function handleForWalkIn(Workspace $workspace, string $walkInId, bool $lockWorkspaceSubscription = false): VisitFunding
+    {
+        if ((float) $workspace->hour_multiplier === 0.0) {
+            return VisitFunding::free();
+        }
+
+        $workspaceSub = $lockWorkspaceSubscription
+            ? $this->workspaceSubscriptions->lockUsableActiveForWalkInWorkspace($walkInId, $workspace->id)
+            : $this->workspaceSubscriptions->usableActiveForWalkInWorkspace($walkInId, $workspace->id);
+
+        if ($workspaceSub !== null && $workspaceSub->remaining_minutes >= self::MINIMUM_PAID_BALANCE_MINUTES) {
+            return VisitFunding::workspace($workspaceSub->id);
+        }
+
+        return VisitFunding::free();
+    }
+
     private function globalUsable(Subscription $subscription): bool
     {
         if ($subscription->expires_at !== null && $subscription->expires_at->isPast()) {

@@ -1,110 +1,76 @@
 @extends('workspace.layouts.app')
 
-@section('title', 'تسجيل الزوار | بوابة مساحة العمل')
+@section('title', 'تسجيل الزوا')
 
 @section('content')
-<div class="settings-container">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h1 class="page-title" style="margin:0;">تسجيل دخول وخروج الزوار</h1>
-    </div>
+<div class="visits-dark">
 
-    @if(session('success'))
-        <div class="card" style="margin-bottom:16px; border-right:4px solid var(--upwork-green); color:var(--upwork-green-dark);">
-            {{ session('success') }}
-        </div>
-    @endif
     @if($errors->any())
         <div class="card" style="margin-bottom:16px; border-right:4px solid #e23d3d; color:#b91c1c;">
             {{ $errors->first() }}
         </div>
     @endif
 
-    {{-- ── Stats ─────────────────────────────────────────────── --}}
+    {{-- ── Checkout Summary Modal (auto-dismiss 10s) ──────────── --}}
+    @if(session('checkout_summary'))
+        @php $cs = session('checkout_summary'); @endphp
+        <div id="checkout-modal" style="position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,0.82); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:20px; animation:coFadeIn 0.25s ease;">
+            <div style="width:min(100%, 420px); border-radius:var(--radius-md); overflow:hidden; background:#1a1a1a; color:#fff; box-shadow:0 28px 80px rgba(0,0,0,0.6); border:1px solid #2e2e2e; animation:coSlideUp 0.32s cubic-bezier(.2,.8,.2,1);">
 
-    {{-- Active now: full-width highlight card --}}
-    <div class="card" style="margin-bottom:16px; border-right:4px solid var(--upwork-green); display:flex; align-items:center; gap:20px; padding:18px 24px;">
-        <div style="font-size:48px; font-weight:900; color:var(--upwork-green); line-height:1;">{{ $stats['active'] }}</div>
-        <div>
-            <div style="font-weight:800; font-size:18px;">حاضرون الآن</div>
-            <div style="color:var(--upwork-muted); font-size:13px; margin-top:4px;">ساعات اليوم (مكتملة + جارية): <strong>{{ $stats['today_hours'] }} ساعة</strong></div>
+                {{-- Countdown progress bar --}}
+                <div style="height:4px; background:#2e2e2e; position:relative; overflow:hidden;">
+                    <div id="co-progress" style="position:absolute; top:0; right:0; height:100%; background:var(--upwork-green); width:100%; transition:width 10s linear;"></div>
+                </div>
+
+                {{-- Header --}}
+                <div style="padding:28px 24px 20px; text-align:center; border-bottom:1px solid #2e2e2e;">
+                    <div style="width:56px; height:56px; border-radius:50%; background:rgba(20,168,0,0.15); display:grid; place-items:center; margin:0 auto 14px;">
+                        <i class="fa-solid fa-circle-check" style="color:var(--upwork-green); font-size:28px;"></i>
+                    </div>
+                    <h3 style="margin:0 0 5px; font-size:19px; font-weight:900; color:#fff;">تم تسجيل الخروج بنجاح</h3>
+                    <p style="margin:0; font-size:14px; color:#999; font-weight:600;">{{ $cs['visitor_name'] }}</p>
+                </div>
+
+                {{-- Details --}}
+                <div style="padding:20px 24px 0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid #2a2a2a;">
+                        <span style="font-size:13px; color:#888; font-weight:700; display:flex; align-items:center; gap:7px;"><i class="fa-solid fa-clock"></i>المدة الإجمالية</span>
+                        <span style="font-size:15px; font-weight:800; color:#f0f0f0;">{{ $cs['duration_label'] }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid #2a2a2a;">
+                        <span style="font-size:13px; color:#888; font-weight:700; display:flex; align-items:center; gap:7px;"><i class="fa-solid fa-right-to-bracket"></i>دخول</span>
+                        <span style="font-size:14px; font-weight:700; color:#ccc;">{{ $cs['check_in_at'] }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid #2a2a2a;">
+                        <span style="font-size:13px; color:#888; font-weight:700; display:flex; align-items:center; gap:7px;"><i class="fa-solid fa-right-from-bracket"></i>خروج</span>
+                        <span style="font-size:14px; font-weight:700; color:#ccc;">{{ $cs['check_out_at'] }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:11px 0;">
+                        <span style="font-size:13px; color:#888; font-weight:700; display:flex; align-items:center; gap:7px;"><i class="fa-solid fa-tag"></i>الباقة</span>
+                        <span style="font-size:13px; font-weight:700; color:#ccc;">
+                            @if($cs['billing_source'] === 'FREE') مجاني
+                            @elseif($cs['billing_source'] === 'GLOBAL_SUBSCRIPTION') اشتراك عالمي
+                            @else اشتراك مساحة @endif
+                        </span>
+                    </div>
+                </div>
+
+                {{-- Revenue highlight --}}
+                <div style="margin:16px 16px 0; padding:18px 20px; background:rgba(20,168,0,0.1); border:1px solid rgba(20,168,0,0.25); border-radius:var(--radius-sm); display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:14px; font-weight:800; color:#aaa; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-coins" style="color:var(--upwork-green);"></i>الإيراد التقديري</span>
+                    <span style="font-size:26px; font-weight:900; color:var(--upwork-green); letter-spacing:-0.5px;">{{ $cs['price'] }} <small style="font-size:14px;">ج.م</small></span>
+                </div>
+
+                {{-- Close button + countdown --}}
+                <div style="padding:16px 24px 20px; display:flex; align-items:center; gap:12px;">
+                    <button onclick="closeCheckoutModal()" style="flex:1; padding:13px; border:none; border-radius:var(--radius-sm); background:var(--upwork-green); color:#fff; font-family:inherit; font-size:15px; font-weight:800; cursor:pointer;">
+                        <i class="fa-solid fa-check"></i> إغلاق
+                    </button>
+                    <span id="co-countdown" style="font-size:13px; color:#666; font-weight:700; white-space:nowrap; min-width:48px; text-align:center;">10 ث</span>
+                </div>
+            </div>
         </div>
-    </div>
-
-    {{-- Period breakdown: 3 columns --}}
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:22px;">
-        @php
-            $periodCards = [
-                [
-                    'period'   => 'اليوم',
-                    'visitors' => $stats['today_visitors'],
-                    'hours'    => $stats['today_hours'],
-                    'color'    => '#14a800',
-                    'note'     => 'يشمل الجلسات الجارية حالياً',
-                ],
-                [
-                    'period'   => 'آخر 7 أيام',
-                    'visitors' => $stats['week_visitors'],
-                    'hours'    => $stats['week_hours'],
-                    'color'    => '#0c9200',
-                    'note'     => 'الزيارات المكتملة فقط',
-                ],
-                [
-                    'period'   => 'هذا الشهر',
-                    'visitors' => $stats['month_visitors'],
-                    'hours'    => $stats['month_hours'],
-                    'color'    => '#075200',
-                    'note'     => 'الزيارات المكتملة فقط',
-                ],
-            ];
-        @endphp
-        @foreach($periodCards as $card)
-            <div class="card" style="text-align:center; padding:20px;">
-                <div style="font-size:13px; font-weight:700; color:var(--upwork-muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:.5px;">
-                    {{ $card['period'] }}
-                </div>
-                <div style="display:flex; justify-content:center; gap:24px; margin-bottom:8px;">
-                    <div>
-                        <div style="font-size:28px; font-weight:900; color:{{ $card['color'] }};">{{ $card['visitors'] }}</div>
-                        <div style="font-size:12px; color:var(--upwork-muted); margin-top:2px;">زيارة</div>
-                    </div>
-                    <div style="width:1px; background:var(--upwork-border);"></div>
-                    <div>
-                        <div style="font-size:28px; font-weight:900; color:#f4a800;">{{ $card['hours'] }}</div>
-                        <div style="font-size:12px; color:var(--upwork-muted); margin-top:2px;">ساعة</div>
-                    </div>
-                </div>
-                <div style="font-size:11px; color:var(--upwork-muted);">{{ $card['note'] }}</div>
-            </div>
-        @endforeach
-    </div>
-
-    {{-- ── Manual check-in form ──────────────────────────────── --}}
-    <div class="card" style="margin-bottom:22px;">
-        <h3 style="margin:0 0 6px;">تسجيل دخول زائر</h3>
-        <p style="color:var(--upwork-muted); margin:0 0 16px; font-size:14px;">
-            أدخل رقم هاتف أي زائر. مستخدمو الباقات الفضية والذهبية يجب أن يكون لديهم اشتراك نشط ورصيد لا يقل عن 15 دقيقة.
-        </p>
-        <form action="{{ route('workspace.visits.store') }}" method="POST"
-              style="display:flex; gap:15px; align-items:flex-end; flex-wrap:wrap;">
-            @csrf
-            <div style="flex:1; min-width:200px;">
-                <label style="display:block; font-weight:700; font-size:14px; margin-bottom:6px;">رقم الهاتف</label>
-                <input type="text" name="phone_number" class="form-control" placeholder="01xxxxxxxxx"
-                       value="{{ old('phone_number') }}" required style="direction:ltr; text-align:right;">
-            </div>
-            <div style="flex:1; min-width:200px;">
-                <label style="display:block; font-weight:700; font-size:14px; margin-bottom:6px;">الاسم (للزائر الجديد فقط)</label>
-                <input type="text" name="name" class="form-control" placeholder="اسم الزائر" value="{{ old('name') }}">
-            </div>
-            <div>
-                <button type="submit" class="btn-action btn-action-primary"
-                        style="padding:12px 26px; border-radius:var(--radius-sm); border:none; color:#fff; background:var(--upwork-green); cursor:pointer; font-weight:800; height: 45px;">
-                    تسجيل دخول
-                </button>
-            </div>
-        </form>
-    </div>
-
+    @endif
     @if(session('paid_visitor_verification'))
         @php
             $verification = session('paid_visitor_verification');
@@ -155,153 +121,337 @@
         </div>
     @endif
 
-    {{-- ── Active visitors (auto-refreshing) ─────────────────── --}}
-    <div class="card" style="margin-bottom:22px;" id="active-visitors-container"
-         data-poll-url="{{ route('workspace.visits.index') }}?partial=active">
-        @include('workspace.visits.partials.active-table')
+    {{-- ── Active visitors + check-in form (manage-grid) ────────── --}}
+    <div class="vd-card" style="padding:22px;">
+        <div class="manage-grid">
+            {{-- Active visitors (primary) --}}
+            <div class="manage-main" id="active-visitors-container"
+                 data-poll-url="{{ route('workspace.visits.index') }}?partial=active">
+                @include('workspace.visits.partials.active-table')
+            </div>
+
+            {{-- Check-in form (sticky aside) --}}
+            <aside class="manage-aside">
+                <form action="{{ route('workspace.visits.store') }}" method="POST" class="manage-form-panel">
+                    @csrf
+                    <h4><i class="fa-solid fa-right-to-bracket" style="color:var(--vd-accent);"></i> تسجيل دخول زائر</h4>
+                    <p style="color:var(--vd-text-muted); font-size:13px; margin:-6px 0 14px; font-weight:400;">أدخل رقم هاتف أي زائر. الباقات الفضية/الذهبية تتطلب اشتراكاً نشطاً ورصيداً لا يقل عن 15 دقيقة.</p>
+                    <label>رقم الهاتف</label>
+                    <input type="text" name="phone_number" class="form-control" placeholder="01xxxxxxxxx"
+                           value="{{ old('phone_number') }}" required style="direction:ltr; text-align:right;">
+                    <label>الاسم (للزائر الجديد فقط)</label>
+                    <input type="text" name="name" class="form-control" placeholder="اسم الزائر" value="{{ old('name') }}">
+                    <button type="submit" class="btn-primary" style="width:100%;">
+                        <i class="fa-solid fa-check"></i> تسجيل دخول
+                    </button>
+                </form>
+            </aside>
+        </div>
     </div>
 
     {{-- ── Recent closed visits ──────────────────────────────── --}}
-    <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:18px;">
-            <div>
-                <h3 style="margin:0 0 4px;">أحدث الزيارات المنتهية</h3>
-                <p style="margin:0; color:var(--upwork-muted); font-size:13px;">يعرض السجل منذ آخر عملية مسح للعرض، دون حذف بيانات الحضور.</p>
+    <div class="vd-card vd-card--accent">
+        {{-- Section header --}}
+        <div class="vd-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="vd-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div>
+                    <h3>أحدث الزيارات المنتهية</h3>
+                    <p>يعرض السجل منذ آخر عملية مسح، دون حذف بيانات الحضور.</p>
+                </div>
             </div>
             <form action="{{ route('workspace.visits.clear-recent') }}" method="POST" onsubmit="return confirm('سيتم إخفاء الزيارات الحالية من هذه القائمة فقط. هل تريد المتابعة؟');">
                 @csrf
-                <button type="submit" style="padding:10px 16px; border-radius:var(--radius-sm); border:1px solid var(--upwork-error); color:var(--upwork-error); background:#fff; cursor:pointer; font-weight:700;">
-                    <i class="fa-solid fa-broom"></i> مسح أحدث الزيارات من العرض
-                </button>
+                <button type="submit" class="vd-btn"><i class="fa-solid fa-broom"></i> مسح العرض</button>
             </form>
         </div>
 
-        <form action="{{ route('workspace.visits.index') }}" method="GET" style="padding:16px; background:var(--upwork-bg); border:1px solid var(--upwork-border); border-radius:var(--radius-sm); margin-bottom:18px;">
-            <div class="grid-4" style="gap:12px;">
-                <div>
-                    <label for="recent-search">الاسم أو الهاتف</label>
-                    <input id="recent-search" type="text" name="search" class="form-control" value="{{ request('search') }}" placeholder="ابحث عن زائر">
-                </div>
-                <div>
-                    <label for="recent-from">من تاريخ ووقت</label>
-                    <input id="recent-from" type="datetime-local" name="from" class="form-control" value="{{ request('from') }}">
-                </div>
-                <div>
-                    <label for="recent-to">إلى تاريخ ووقت</label>
-                    <input id="recent-to" type="datetime-local" name="to" class="form-control" value="{{ request('to') }}">
-                </div>
-                <div>
-                    <label for="recent-plan">الباقة</label>
-                    <select id="recent-plan" name="plan" class="form-control">
-                        <option value="">كل الباقات</option>
-                        <option value="FREE" @selected(request('plan') === 'FREE')>مجاني</option>
-                        <option value="GLOBAL_SUBSCRIPTION" @selected(request('plan') === 'GLOBAL_SUBSCRIPTION')>عالمي</option>
-                        <option value="WORKSPACE_SUBSCRIPTION" @selected(request('plan') === 'WORKSPACE_SUBSCRIPTION')>اشتراك مساحة</option>
-                    </select>
-                </div>
-            </div>
-            <div style="display:flex; gap:10px;">
-                <button type="submit" class="btn-primary"><i class="fa-solid fa-filter"></i> تطبيق الفلاتر</button>
-                <a href="{{ route('workspace.visits.index') }}" style="padding:11px 18px; border:1px solid var(--upwork-border); border-radius:var(--radius-sm); text-decoration:none; color:var(--upwork-slate); font-weight:700;">مسح الفلاتر</a>
-            </div>
-        </form>
+        <div style="padding: 20px 26px;">
+            <div class="manage-grid">
 
-        @if($recentVisits->isEmpty())
-            <p style="text-align:center; color:var(--upwork-muted); padding:24px;">لا توجد زيارات منتهية بعد.</p>
-        @else
-            <div class="table-responsive">
-            <table style="width:100%; border-collapse:collapse; text-align:right;">
-                <thead>
-                    <tr style="border-bottom:2px solid var(--upwork-border);">
-                        <th style="padding:10px 12px;">الزائر</th>
-                        <th style="padding:10px 12px;">الباقة</th>
-                        <th style="padding:10px 12px;">الدخول</th>
-                        <th style="padding:10px 12px;">الخروج</th>
-                        <th style="padding:10px 12px;">المدة</th>
-                        <th style="padding:10px 12px;">دقائق مخصومة</th>
-                        <th style="padding:10px 12px;">الإيراد التقديري</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{-- Room reservations (own price, badge حجز غرفة) folded into this table --}}
-                    @foreach(($roomReservations ?? collect()) as $res)
-                        @php
-                            $rmins = $res->durationMinutes();
-                            $rh = intdiv($rmins, 60); $rm = $rmins % 60;
-                            $rLabel = $rh > 0 ? "{$rh}س {$rm}د" : "{$rm}د";
-                        @endphp
-                        <tr style="border-bottom:1px solid var(--upwork-border); background:#fff8ef;">
-                            <td style="padding:10px 12px; font-weight:bold;">{{ $res->client_name }}<br><small style="color:var(--upwork-muted);">{{ $res->room->name ?? 'غرفة' }}</small></td>
-                            <td style="padding:10px 12px;"><span style="background:#7a4dff; color:#fff; padding:3px 8px; border-radius:20px; font-size:12px; font-weight:700;">حجز غرفة</span></td>
-                            <td style="padding:10px 12px;"><small>{{ $res->starts_at->format('m/d H:i') }}</small></td>
-                            <td style="padding:10px 12px;"><small>{{ $res->ends_at->format('m/d H:i') }}</small></td>
-                            <td style="padding:10px 12px; font-weight:700;">{{ $rLabel }}</td>
-                            <td style="padding:10px 12px; color:var(--upwork-muted);">—</td>
-                            <td style="padding:10px 12px; font-weight:700; color:var(--upwork-green-dark);">{{ number_format($res->totalCostEgp(), 2) }} ج.م</td>
-                        </tr>
-                    @endforeach
-                    @foreach($recentVisits as $visit)
-                        @php
-                            $mins    = $visit->duration_minutes ?? 0;
-                            $h       = intdiv($mins, 60);
-                            $m       = $mins % 60;
-                            $dLabel  = $h > 0 ? "{$h}س {$m}د" : "{$m}د";
-                        @endphp
-                        <tr style="border-bottom:1px solid var(--upwork-border);">
-                            <td style="padding:10px 12px; font-weight:bold;">{{ $visit->visitor_name }}</td>
-                            <td style="padding:10px 12px;">
-                                @if(($visit->billing_source?->value ?? 'FREE') === 'FREE')
-                                    <span style="background:var(--upwork-green-soft); color:var(--upwork-green-dark); padding:3px 8px; border-radius:20px; font-size:12px; font-weight:700;">مجاني</span>
-                                @elseif($visit->billing_source?->value === 'GLOBAL_SUBSCRIPTION')
-                                    <span style="background:var(--upwork-blue); color:#fff; padding:3px 8px; border-radius:20px; font-size:12px; font-weight:700;">عالمي</span>
-                                @else
-                                    <span style="background:#ffb300; color:#fff; padding:3px 8px; border-radius:20px; font-size:12px; font-weight:700;">اشتراك مساحة</span>
-                                @endif
-                            </td>
-                            <td style="padding:10px 12px;"><small>{{ $visit->check_in_at->format('m/d H:i') }}</small></td>
-                            <td style="padding:10px 12px;"><small>{{ $visit->check_out_at?->format('m/d H:i') }}</small></td>
-                            <td style="padding:10px 12px; font-weight:700;">{{ $dLabel }}</td>
-                            <td style="padding:10px 12px; color:var(--upwork-muted);">
-                                {{ $visit->deducted_minutes ?? '—' }}
-                                @if($visit->hour_multiplier_applied && $visit->hour_multiplier_applied != 1.0)
-                                    <small style="color:var(--upwork-muted);">(×{{ $visit->hour_multiplier_applied }})</small>
-                                @endif
-                            </td>
-                            <td style="padding:10px 12px; font-weight:700; color:var(--upwork-green-dark);">
-                                {{ number_format(($mins / 60) * $workspace->effectiveHourlyRateEgp(), 2) }} ج.م
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr style="background:var(--upwork-green-soft); border-top:2px solid var(--upwork-green);">
-                        <td colspan="2" style="padding:14px 12px; font-weight:900;">إجمالي النتائج: {{ number_format($recentSummary['total_visitors']) }} زائر</td>
-                        <td style="padding:14px 12px; font-weight:900;">{{ number_format($recentSummary['total_visits']) }} زيارة</td>
-                        <td colspan="2" style="padding:14px 12px; font-weight:900;">{{ number_format($recentSummary['total_minutes'] / 60, 2) }} ساعة</td>
-                        <td colspan="2" style="padding:14px 12px; font-weight:900; color:var(--upwork-green-dark);">{{ number_format($recentSummary['total_revenue'], 2) }} ج.م</td>
-                    </tr>
-                </tfoot>
-            </table>
+                {{-- Table (primary) --}}
+                <div class="manage-main">
+                    @if($recentVisits->isEmpty() && ($roomReservations ?? collect())->isEmpty())
+                        <div class="empty-state">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            لا توجد زيارات منتهية بعد.
+                        </div>
+                    @else
+                        <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الزائر</th>
+                                    <th>الباقة</th>
+                                    <th>الدخول</th>
+                                    <th>الخروج</th>
+                                    <th>المدة</th>
+                                    <th>دقائق مخصومة</th>
+                                    <th>الإيراد التقديري</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(($roomReservations ?? collect()) as $res)
+                                    @php
+                                        $rmins = $res->durationMinutes();
+                                        $rh = intdiv($rmins, 60); $rm = $rmins % 60;
+                                        $rLabel = $rh > 0 ? "{$rh}س {$rm}د" : "{$rm}د";
+                                    @endphp
+                                    <tr class="vd-row-alt">
+                                        <td style="font-weight:700;">
+                                            {{ $res->client_name }}
+                                            <br><small class="sub">{{ $res->room->name ?? 'غرفة' }}</small>
+                                            @if($res->note)
+                                                <br><small class="sub">ملاحظة: {{ $res->note }}</small>
+                                            @endif
+                                        </td>
+                                        <td><span class="badge badge-room">حجز غرفة</span></td>
+                                        <td><small class="time">{{ $res->starts_at->format('m/d H:i') }}</small></td>
+                                        <td><small class="time">{{ $res->ends_at->format('m/d H:i') }}</small></td>
+                                        <td style="font-weight:700;">{{ $rLabel }}</td>
+                                        <td class="dim">—</td>
+                                        <td class="money">{{ number_format($res->totalCostEgp(), 2) }} <small style="font-size:11px;">ج.م</small></td>
+                                    </tr>
+                                @endforeach
+                                @foreach($recentVisits as $visit)
+                                    @php
+                                        $mins    = $visit->duration_minutes ?? 0;
+                                        $h       = intdiv($mins, 60);
+                                        $m       = $mins % 60;
+                                        $dLabel  = $h > 0 ? "{$h}س {$m}د" : "{$m}د";
+                                    @endphp
+                                    <tr>
+                                        <td style="font-weight:700;">{{ $visit->visitor_name }}</td>
+                                        <td>
+                                            @if(($visit->billing_source?->value ?? 'FREE') === 'FREE')
+                                                <span class="badge badge-free">مجاني</span>
+                                            @elseif($visit->billing_source?->value === 'GLOBAL_SUBSCRIPTION')
+                                                <span class="badge badge-global">عالمي</span>
+                                            @else
+                                                <span class="badge badge-space">اشتراك مساحة</span>
+                                            @endif
+                                        </td>
+                                        <td><small class="time">{{ $visit->check_in_at->format('m/d H:i') }}</small></td>
+                                        <td><small class="time">{{ $visit->check_out_at?->format('m/d H:i') }}</small></td>
+                                        <td style="font-weight:700;">{{ $dLabel }}</td>
+                                        <td class="time">
+                                            {{ $visit->deducted_minutes ?? '—' }}
+                                            @if($visit->hour_multiplier_applied && $visit->hour_multiplier_applied != 1.0)
+                                                <small class="dim">(×{{ $visit->hour_multiplier_applied }})</small>
+                                            @endif
+                                        </td>
+                                        <td class="money">
+                                            {{ number_format($workspace->estimatedRevenueEgp((int) $mins), 2) }} <small style="font-size:11px;">ج.م</small>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">إجمالي: {{ number_format($recentSummary['total_visitors']) }} زائر</td>
+                                    <td>{{ number_format($recentSummary['total_visits']) }} زيارة</td>
+                                    <td colspan="2">{{ number_format($recentSummary['total_minutes'] / 60, 2) }} ساعة</td>
+                                    <td colspan="2" class="money">
+                                        <i class="fa-solid fa-coins" style="margin-left:4px; opacity:0.85;"></i>
+                                        {{ number_format($recentSummary['total_revenue'], 2) }} ج.م
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        </div>
+                        {{ $recentVisits->links('vendor.pagination.upwork') }}
+                    @endif
+                </div>
+
+                {{-- Filter form (sticky aside) --}}
+                <aside class="manage-aside">
+                    <form action="{{ route('workspace.visits.index') }}" method="GET" class="manage-form-panel">
+                        <h4><i class="fa-solid fa-filter" style="color:var(--vd-text-muted);"></i> تصفية النتائج</h4>
+                        <label for="recent-search">الاسم أو الهاتف</label>
+                        <input id="recent-search" type="text" name="search" class="form-control" value="{{ request('search') }}" placeholder="ابحث عن زائر">
+                        <label for="recent-from">من تاريخ</label>
+                        <input id="recent-from" type="datetime-local" name="from" class="form-control" value="{{ request('from') }}">
+                        <label for="recent-to">إلى تاريخ</label>
+                        <input id="recent-to" type="datetime-local" name="to" class="form-control" value="{{ request('to') }}">
+                        <label for="recent-plan">الباقة</label>
+                        <select id="recent-plan" name="plan" class="form-control">
+                            <option value="">كل الباقات</option>
+                            <option value="FREE" @selected(request('plan') === 'FREE')>مجاني</option>
+                            <option value="GLOBAL_SUBSCRIPTION" @selected(request('plan') === 'GLOBAL_SUBSCRIPTION')>عالمي</option>
+                            <option value="WORKSPACE_SUBSCRIPTION" @selected(request('plan') === 'WORKSPACE_SUBSCRIPTION')>اشتراك مساحة</option>
+                        </select>
+                        <button type="submit" class="btn-primary" style="width:100%; box-shadow:none;">
+                            <i class="fa-solid fa-filter"></i> تطبيق
+                        </button>
+                        @if(request()->hasAny(['search','from','to','plan']))
+                            <a href="{{ route('workspace.visits.index') }}" class="vd-clear-link">
+                                <i class="fa-solid fa-xmark"></i> مسح الفلاتر
+                            </a>
+                        @endif
+                    </form>
+                </aside>
+
             </div>
-            {{ $recentVisits->links('vendor.pagination.upwork') }}
-        @endif
+        </div>{{-- /padding wrapper --}}
     </div>
 </div>
 @endsection
 
 @section('styles')
 <style>
+    /* ════════════════════════════════════════════════════════════
+       VISITS — consistent dark theme
+       One palette, applied everywhere. No ad-hoc hex values.
+    ════════════════════════════════════════════════════════════ */
+    .visits-dark {
+        --vd-surface:    #16211b;   /* card body                         */
+        --vd-surface-2:  #1d2c24;   /* header / footer / thead / panels  */
+        --vd-row:        #16211b;   /* default row                       */
+        --vd-row-alt:    #1a261f;   /* zebra / reservation row           */
+        --vd-row-hover:  #21322a;   /* row hover                         */
+        --vd-border:     #2c3d33;   /* all borders / dividers            */
+        --vd-text:       #eef3f0;   /* primary text                      */
+        --vd-text-muted: #9db0a4;   /* secondary                         */
+        --vd-text-dim:   #6c7e73;   /* dim / placeholder / dashes        */
+        --vd-accent:     #2bd968;   /* money / positive highlight        */
+        --vd-input:      #0f1813;   /* form inputs                       */
+    }
+
+    /* Cards */
+    .visits-dark .vd-card {
+        background: var(--vd-surface);
+        color: var(--vd-text);
+        border: 1px solid var(--vd-border);
+        border-radius: var(--radius-md);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.28);
+        overflow: hidden;
+        margin-bottom: 22px;
+    }
+    .visits-dark .vd-card--accent { border-top: 3px solid var(--vd-accent); }
+
+    /* Section header strip */
+    .visits-dark .vd-header {
+        display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+        padding: 18px 26px; background: var(--vd-surface-2); border-bottom: 1px solid var(--vd-border);
+    }
+    .visits-dark .vd-header h3 { margin:0 0 2px; color: var(--vd-text); }
+    .visits-dark .vd-header p  { margin:0; color: var(--vd-text-muted); font-size:13px; }
+    .visits-dark .vd-icon {
+        width:42px; height:42px; border-radius:12px; flex-shrink:0;
+        display:grid; place-items:center; color:#fff; font-size:18px;
+        background: rgba(43,217,104,0.15); border:1px solid rgba(43,217,104,0.3);
+    }
+    .visits-dark .vd-icon i { color: var(--vd-accent); }
+
+    /* Form panels (check-in + filter) */
+    .visits-dark .manage-form-panel {
+        background: var(--vd-surface-2); border: 1px solid var(--vd-border); color: var(--vd-text);
+    }
+    .visits-dark .manage-form-panel h4 { color: var(--vd-text); }
+    .visits-dark .manage-form-panel label { color: var(--vd-text-muted); }
+    .visits-dark .manage-form-panel .form-control {
+        background: var(--vd-input); color: var(--vd-text); border: 1px solid var(--vd-border);
+    }
+    .visits-dark .manage-form-panel .form-control::placeholder { color: var(--vd-text-dim); }
+    .visits-dark .manage-form-panel .form-control:focus {
+        border-color: var(--vd-accent); box-shadow: 0 0 0 3px rgba(43,217,104,0.15);
+    }
+    .visits-dark .empty-state {
+        color: var(--vd-text-muted); border: 1px dashed var(--vd-border); background: var(--vd-surface-2);
+    }
+    .visits-dark .empty-state i { color: var(--vd-text-dim); }
+
+    /* Tables */
+    .visits-dark table { width:100%; border-collapse:collapse; text-align:right; }
+    .visits-dark thead tr { background: var(--vd-surface-2); border-bottom: 1px solid var(--vd-border); }
+    .visits-dark th {
+        padding:13px 14px; font-size:12px; font-weight:800; color: var(--vd-text-muted);
+        white-space:nowrap; letter-spacing:0.3px;
+    }
+    .visits-dark tbody tr { background: var(--vd-row); border-bottom: 1px solid var(--vd-border); transition: background .15s ease; }
+    .visits-dark tbody tr:hover { background: var(--vd-row-hover); }
+    .visits-dark tbody tr.vd-row-alt { background: var(--vd-row-alt); }
+    .visits-dark td { padding:13px 14px; font-size:14px; color: var(--vd-text); }
+    .visits-dark td .sub  { color: var(--vd-text-muted); font-weight:400; }
+    .visits-dark td .time { color: var(--vd-text-muted); }
+    .visits-dark td .dim  { color: var(--vd-text-dim); }
+    .visits-dark td .money { font-weight:800; color: var(--vd-accent); font-size:15px; }
+    .visits-dark tfoot tr {
+        background: var(--vd-surface-2); border-top: 2px solid var(--vd-border);
+    }
+    .visits-dark tfoot td { padding:16px 14px; font-weight:900; color: var(--vd-text); }
+    .visits-dark tfoot td.money { color: var(--vd-accent); font-size:16px; }
+
+    /* Badges — consistent translucent style */
+    .visits-dark .badge { padding:4px 11px; border-radius:20px; font-size:12px; font-weight:700; white-space:nowrap; }
+    .visits-dark .badge-free  { background: rgba(43,217,104,0.16);  color:#4ade80; }
+    .visits-dark .badge-global{ background: rgba(59,130,246,0.16);  color:#93c5fd; }
+    .visits-dark .badge-space { background: rgba(245,158,11,0.16);  color:#fcd34d; }
+    .visits-dark .badge-room  { background: rgba(139,92,246,0.18);  color:#c4b5fd; }
+
+    /* Buttons inside dark cards */
+    .visits-dark .vd-btn {
+        padding:9px 16px; border-radius:var(--radius-sm); border:1px solid var(--vd-border);
+        color: var(--vd-text-muted); background: transparent; cursor:pointer;
+        font-weight:700; font-size:13px; font-family:inherit; transition: all .15s ease;
+    }
+    .visits-dark .vd-btn:hover { background: var(--vd-row-hover); color: var(--vd-text); }
+    .visits-dark .vd-clear-link {
+        display:block; margin-top:10px; text-align:center; padding:10px;
+        border:1px solid var(--vd-border); border-radius:var(--radius-sm);
+        text-decoration:none; color: var(--vd-text-muted); font-weight:700; font-size:14px;
+    }
+    .visits-dark .vd-clear-link:hover { background: var(--vd-row-hover); color: var(--vd-text); }
+
     @keyframes anisPulse {
         0%   { box-shadow: 0 0 0 0 rgba(244,168,0,0.45); }
         70%  { box-shadow: 0 0 0 8px rgba(244,168,0,0); }
         100% { box-shadow: 0 0 0 0 rgba(244,168,0,0); }
     }
     .checkout-req-badge { animation: anisPulse 1.8s infinite; }
+
+    @keyframes coFadeIn  { from { opacity:0 } to { opacity:1 } }
+    @keyframes coSlideUp { from { opacity:0; transform:translateY(24px) scale(0.97) } to { opacity:1; transform:none } }
+    @keyframes coFadeOut { to { opacity:0; transform:scale(0.96) } }
 </style>
 @endsection
 
 @section('scripts')
 <script>
+    // ── Checkout modal: 10-second countdown + auto-dismiss ─────────
+    function closeCheckoutModal() {
+        const modal = document.getElementById('checkout-modal');
+        if (!modal) return;
+        modal.style.animation = 'coFadeOut 0.25s ease forwards';
+        setTimeout(() => modal.remove(), 240);
+    }
+
+    (function () {
+        const modal = document.getElementById('checkout-modal');
+        if (!modal) return;
+
+        const TOTAL = 10;
+        const bar   = document.getElementById('co-progress');
+        const label = document.getElementById('co-countdown');
+        let remaining = TOTAL;
+
+        // Trigger the shrink immediately (transition is 10s linear)
+        requestAnimationFrame(() => { bar.style.width = '0%'; });
+
+        const tick = setInterval(() => {
+            remaining--;
+            if (label) label.textContent = remaining + ' ث';
+            if (remaining <= 0) {
+                clearInterval(tick);
+                closeCheckoutModal();
+            }
+        }, 1000);
+
+        // Clicking the backdrop also closes
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeCheckoutModal(); });
+    })();
+
+    // ── Poll active-visitors table ──────────────────────────────────
     // Poll the active-visitors table so new "request to leave" entries appear
     // without a manual refresh. Pauses while the tab is hidden.
     (function () {

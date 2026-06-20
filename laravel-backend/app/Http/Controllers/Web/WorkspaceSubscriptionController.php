@@ -93,13 +93,14 @@ class WorkspaceSubscriptionController extends Controller
         $validated = $request->validate([
             'workspace_plan_id' => ['required', 'uuid'],
             'phone_number' => ['required', 'string', 'max:30'],
+            'name' => ['nullable', 'string', 'max:120'],
         ]);
 
         $plan = $plans->findForWorkspace($validated['workspace_plan_id'], $workspace->id);
         abort_if($plan === null, 404);
 
         try {
-            $action->handle($plan, $validated['phone_number'], (string) Auth::id());
+            $action->handle($plan, $validated['phone_number'], (string) Auth::id(), $validated['name'] ?? null);
         } catch (ApiException $e) {
             return back()->withErrors(['phone_number' => $e->getMessage()])->withInput();
         }

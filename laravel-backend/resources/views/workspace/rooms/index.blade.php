@@ -3,9 +3,9 @@
 @section('title', 'حجوزات الغرف | بوابة مساحة العمل')
 
 @section('content')
-<div class="settings-container">
+<div>
     <h1 class="page-title" style="margin:0 0 6px;">حجوزات الغرف</h1>
-    <p class="page-subtitle">سجّل حجوزات غرفك لتتذكّر مواعيدها وتتجنّب الحجز المزدوج. مستقلة تماماً عن الباقات والاشتراكات.</p>
+    <p class="page-subtitle">سجّل حجوزات غرفك بسرعة للزائر العادي أو مستخدم التطبيق. اكتب رقم الهاتف فقط للعميل المحفوظ، أو أضف الاسم مرة واحدة للزائر الجديد.</p>
 
     @if(session('success'))
         <div class="card" style="margin-bottom:16px; border-right:4px solid var(--upwork-green); color:var(--upwork-green-dark);">{{ session('success') }}</div>
@@ -27,20 +27,30 @@
                         <label style="font-size:13px;">الغرفة</label>
                         <select name="room_id" class="form-control" required>
                             @foreach($activeRooms as $room)
-                                <option value="{{ $room->id }}">{{ $room->name }} — {{ number_format($room->hourlyPriceEgp(), 2) }} ج.م/ساعة</option>
+                                <option value="{{ $room->id }}">{{ $room->name }} — {{ number_format($room->hourlyPriceEgp(), 2) }} ج.م/ساعة{{ $room->note ? ' — '.$room->note : '' }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div>
-                        <label style="font-size:13px;">اسم العميل</label>
-                        <input type="text" name="client_name" class="form-control" value="{{ old('client_name') }}" required>
+                        <label style="font-size:13px;">اسم العميل أو الزائر</label>
+                        <input type="text" name="client_name" class="form-control" value="{{ old('client_name') }}" list="room-client-names" placeholder="اختياري إذا كان الهاتف محفوظاً">
                     </div>
                     <div>
                         <label style="font-size:13px;">رقم هاتف العميل</label>
-                        <input type="text" name="client_phone" class="form-control" style="direction:ltr; text-align:right;" placeholder="01xxxxxxxxx" value="{{ old('client_phone') }}" required>
-                        <small style="color:var(--upwork-muted); font-size:11px;">يُحفظ العميل تلقائياً لإعادة استخدامه لاحقاً.</small>
+                        <input type="text" name="client_phone" class="form-control" style="direction:ltr; text-align:right;" placeholder="01xxxxxxxxx" value="{{ old('client_phone') }}" list="room-client-phones" required>
+                        <small style="color:var(--upwork-muted); font-size:11px;">يدعم زائر walk-in أو مستخدم تطبيق. لو الرقم محفوظ، سيتم ملء الاسم تلقائياً في الخلفية.</small>
                     </div>
                 </div>
+                <datalist id="room-client-names">
+                    @foreach($clients as $c)
+                        <option value="{{ $c->name }}">{{ $c->phone }}</option>
+                    @endforeach
+                </datalist>
+                <datalist id="room-client-phones">
+                    @foreach($clients as $c)
+                        <option value="{{ $c->phone }}">{{ $c->name }}</option>
+                    @endforeach
+                </datalist>
                 <div class="grid-3" style="gap:14px; margin-top:12px;">
                     <div>
                         <label style="font-size:13px;">التاريخ</label>
@@ -81,7 +91,16 @@
                     </div>
                 </div>
 
-                <input type="text" name="note" class="form-control" placeholder="ملاحظة (اختياري)" style="margin-top:12px;" value="{{ old('note') }}">
+                <div class="grid-2" style="gap:14px; margin-top:12px;">
+                    <div>
+                        <label style="font-size:13px;">ملاحظة على العميل</label>
+                        <textarea name="client_note" class="form-control" rows="2" placeholder="مثلاً: يفضّل غرفة هادئة">{{ old('client_note') }}</textarea>
+                    </div>
+                    <div>
+                        <label style="font-size:13px;">ملاحظة على الحجز</label>
+                        <textarea name="note" class="form-control" rows="2" placeholder="مثلاً: يحتاج شاشة أو سبورة">{{ old('note') }}</textarea>
+                    </div>
+                </div>
                 <button type="submit" class="btn-primary" style="margin-top:14px;"><i class="fa-solid fa-check"></i> تأكيد الحجز</button>
             </form>
         @endif
@@ -96,18 +115,29 @@
             <div class="table-responsive">
             <table style="width:100%; border-collapse:collapse; text-align:right;">
                 <thead><tr style="border-bottom:2px solid var(--upwork-border);">
-                    <th style="padding:10px;">الغرفة</th><th style="padding:10px;">العميل</th><th style="padding:10px;">من</th><th style="padding:10px;">إلى</th><th style="padding:10px;">المدة</th><th style="padding:10px;">التكلفة</th><th style="padding:10px;">إجراء</th>
+                    <th style="padding:10px;">الغرفة</th><th style="padding:10px;">العميل</th><th style="padding:10px;">من</th><th style="padding:10px;">إلى</th><th style="padding:10px;">المدة</th><th style="padding:10px;">التكلفة</th><th style="padding:10px;">ملاحظات</th><th style="padding:10px;">إجراء</th>
                 </tr></thead>
                 <tbody>
                     @foreach($upcoming as $r)
                         @php $mins=$r->durationMinutes(); $h=intdiv($mins,60); $m=$mins%60; @endphp
                         <tr style="border-bottom:1px solid var(--upwork-border);">
-                            <td style="padding:10px; font-weight:700;">{{ $r->room->name ?? '—' }}</td>
-                            <td style="padding:10px;">{{ $r->client_name }}<br><small style="color:var(--upwork-muted); direction:ltr;">{{ $r->client_phone }}</small></td>
+                            <td style="padding:10px; font-weight:700;">
+                                {{ $r->room->name ?? '—' }}
+                                @if($r->room?->note)
+                                    <br><small style="color:var(--upwork-muted); font-weight:500;">{{ $r->room->note }}</small>
+                                @endif
+                            </td>
+                            <td style="padding:10px;">
+                                {{ $r->client_name }}<br><small style="color:var(--upwork-muted); direction:ltr;">{{ $r->client_phone }}</small>
+                                @if($r->client?->note)
+                                    <br><small style="color:var(--upwork-muted);">{{ $r->client->note }}</small>
+                                @endif
+                            </td>
                             <td style="padding:10px;"><small>{{ $r->starts_at->format('m/d H:i') }}</small></td>
                             <td style="padding:10px;"><small>{{ $r->ends_at->format('m/d H:i') }}</small></td>
                             <td style="padding:10px;">{{ $h>0 ? $h.'س ' : '' }}{{ $m>0 ? $m.'د' : '' }}</td>
                             <td style="padding:10px; font-weight:700; color:var(--upwork-green-dark);">{{ number_format($r->totalCostEgp(),2) }} ج.م</td>
+                            <td style="padding:10px; color:var(--upwork-muted);">{{ $r->note ?: '—' }}</td>
                             <td style="padding:10px;">
                                 <form action="{{ route('workspace.rooms.reservations.cancel', $r->id) }}" method="POST" onsubmit="return confirm('إلغاء هذا الحجز؟');">
                                     @csrf
@@ -124,48 +154,61 @@
 
     {{-- ── Rooms manager ─────────────────────────────────────── --}}
     <div class="card" style="margin-bottom:22px;">
-        <h3 style="margin:0 0 16px;"><i class="fa-solid fa-door-open"></i> غرفك</h3>
-        <form action="{{ route('workspace.rooms.store') }}" method="POST" style="background:var(--upwork-bg); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--upwork-border); margin-bottom:16px;">
-            @csrf
-            <div class="grid-3" style="gap:12px;">
-                <div><label style="font-size:13px;">اسم الغرفة</label><input type="text" name="name" class="form-control" placeholder="غرفة اجتماعات" required></div>
-                <div><label style="font-size:13px;">سعر الساعة (ج.م)</label><input type="number" name="hourly_price_pounds" class="form-control" min="0" step="0.01" value="50" required></div>
-                <div style="display:flex; align-items:flex-end;"><button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> إضافة غرفة</button></div>
+        <h3 style="margin:0 0 18px;"><i class="fa-solid fa-door-open"></i> غرفك</h3>
+        <div class="manage-grid">
+            {{-- List (primary) --}}
+            <div class="manage-main">
+                @if($rooms->isEmpty())
+                    <div class="empty-state">
+                        <i class="fa-solid fa-door-closed"></i>
+                        لا توجد غرف بعد. أضف غرفتك الأولى من النموذج المجاور.
+                    </div>
+                @else
+                    <table>
+                        <thead><tr><th>الغرفة</th><th>ملاحظة الغرفة</th><th>سعر الساعة</th><th>الحالة</th><th>إجراء</th></tr></thead>
+                        <tbody>
+                            @foreach($rooms as $room)
+                                <tr>
+                                    <td style="font-weight:700;">{{ $room->name }}</td>
+                                    <td style="color:var(--upwork-muted);">{{ $room->note ?: '—' }}</td>
+                                    <td>{{ number_format($room->hourlyPriceEgp(),2) }} ج.م</td>
+                                    <td>
+                                        @if($room->is_active)
+                                            <span style="background:var(--upwork-green-soft); color:var(--upwork-green-dark); padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700;">فعّالة</span>
+                                        @else
+                                            <span style="background:#eee; color:#777; padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700;">موقوفة</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($room->is_active)
+                                            <form action="{{ route('workspace.rooms.deactivate', $room->id) }}" method="POST" onsubmit="return confirm('إيقاف هذه الغرفة؟');">
+                                                @csrf
+                                                <button type="submit" style="padding:6px 12px; border:1px solid var(--upwork-border); background:#fff; border-radius:var(--radius-sm); cursor:pointer; font-weight:700; color:var(--upwork-error);">إيقاف</button>
+                                            </form>
+                                        @else — @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
             </div>
-        </form>
 
-        @if($rooms->isEmpty())
-            <p style="text-align:center; color:var(--upwork-muted); padding:16px;">لا توجد غرف بعد.</p>
-        @else
-            <table style="width:100%; border-collapse:collapse; text-align:right;">
-                <thead><tr style="border-bottom:2px solid var(--upwork-border);">
-                    <th style="padding:10px;">الغرفة</th><th style="padding:10px;">سعر الساعة</th><th style="padding:10px;">الحالة</th><th style="padding:10px;">إجراء</th>
-                </tr></thead>
-                <tbody>
-                    @foreach($rooms as $room)
-                        <tr style="border-bottom:1px solid var(--upwork-border);">
-                            <td style="padding:10px; font-weight:700;">{{ $room->name }}</td>
-                            <td style="padding:10px;">{{ number_format($room->hourlyPriceEgp(),2) }} ج.م</td>
-                            <td style="padding:10px;">
-                                @if($room->is_active)
-                                    <span style="background:var(--upwork-green-soft); color:var(--upwork-green-dark); padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700;">فعّالة</span>
-                                @else
-                                    <span style="background:#eee; color:#777; padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700;">موقوفة</span>
-                                @endif
-                            </td>
-                            <td style="padding:10px;">
-                                @if($room->is_active)
-                                    <form action="{{ route('workspace.rooms.deactivate', $room->id) }}" method="POST" onsubmit="return confirm('إيقاف هذه الغرفة؟');">
-                                        @csrf
-                                        <button type="submit" style="padding:6px 12px; border:1px solid var(--upwork-border); background:#fff; border-radius:var(--radius-sm); cursor:pointer; font-weight:700; color:var(--upwork-error);">إيقاف</button>
-                                    </form>
-                                @else — @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
+            {{-- Add form (side) --}}
+            <aside class="manage-aside">
+                <form action="{{ route('workspace.rooms.store') }}" method="POST" class="manage-form-panel">
+                    @csrf
+                    <h4><i class="fa-solid fa-plus" style="color:var(--upwork-green);"></i> إضافة غرفة</h4>
+                    <label style="font-size:13px;">اسم الغرفة</label>
+                    <input type="text" name="name" class="form-control" placeholder="غرفة اجتماعات" required>
+                    <label style="font-size:13px;">ملاحظة الغرفة</label>
+                    <textarea name="note" class="form-control" rows="2" placeholder="مثلاً: بها شاشة، ٦ كراسي، مناسبة للمذاكرة الهادئة">{{ old('note') }}</textarea>
+                    <label style="font-size:13px;">سعر الساعة (ج.م)</label>
+                    <input type="number" name="hourly_price_pounds" class="form-control" min="0" step="0.01" value="50" required>
+                    <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> إضافة غرفة</button>
+                </form>
+            </aside>
+        </div>
     </div>
 
     {{-- ── Saved clients ─────────────────────────────────────── --}}
@@ -176,13 +219,14 @@
         @else
             <table style="width:100%; border-collapse:collapse; text-align:right;">
                 <thead><tr style="border-bottom:2px solid var(--upwork-border);">
-                    <th style="padding:10px;">الاسم</th><th style="padding:10px;">الهاتف</th><th style="padding:10px;">عدد الحجوزات</th><th style="padding:10px;">السجل</th>
+                    <th style="padding:10px;">الاسم</th><th style="padding:10px;">الهاتف</th><th style="padding:10px;">ملاحظة</th><th style="padding:10px;">عدد الحجوزات</th><th style="padding:10px;">السجل</th>
                 </tr></thead>
                 <tbody>
                     @foreach($clients as $c)
                         <tr style="border-bottom:1px solid var(--upwork-border);">
                             <td style="padding:10px; font-weight:700;">{{ $c->name }}</td>
                             <td style="padding:10px; direction:ltr; text-align:right;">{{ $c->phone }}</td>
+                            <td style="padding:10px; color:var(--upwork-muted);">{{ $c->note ?: '—' }}</td>
                             <td style="padding:10px;">{{ $c->reservations_count }}</td>
                             <td style="padding:10px;"><a href="{{ route('workspace.rooms.clients.show', $c->id) }}" style="color:var(--upwork-blue); text-decoration:none;">عرض السجل</a></td>
                         </tr>

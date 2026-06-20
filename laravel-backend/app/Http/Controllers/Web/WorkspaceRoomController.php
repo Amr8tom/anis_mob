@@ -15,6 +15,9 @@ use App\Domain\Room\Contracts\RoomReservationRepositoryInterface;
 use App\Domain\Room\Data\CreateReservationData;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
+use App\Models\RoomClient;
+use App\Models\User;
+use App\Models\WorkspaceWalkIn;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -45,9 +48,15 @@ class WorkspaceRoomController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:120'],
             'hourly_price_pounds' => ['required', 'numeric', 'min:0'],
+            'note' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $action->handle($workspace->id, $validated['name'], (int) round(((float) $validated['hourly_price_pounds']) * 100));
+        $action->handle(
+            $workspace->id,
+            $validated['name'],
+            (int) round(((float) $validated['hourly_price_pounds']) * 100),
+            $validated['note'] ?? null,
+        );
 
         return back()->with('success', 'تمت إضافة الغرفة.');
     }
@@ -61,6 +70,7 @@ class WorkspaceRoomController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:120'],
             'hourly_price_pounds' => ['required', 'numeric', 'min:0'],
+            'note' => ['nullable', 'string', 'max:255'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
@@ -69,6 +79,7 @@ class WorkspaceRoomController extends Controller
             $validated['name'],
             (int) round(((float) $validated['hourly_price_pounds']) * 100),
             (bool) ($validated['is_active'] ?? true),
+            $validated['note'] ?? null,
         );
 
         return back()->with('success', 'تم تحديث الغرفة.');
@@ -90,7 +101,7 @@ class WorkspaceRoomController extends Controller
         $workspace = Auth::user()->ownedWorkspace;
         $validated = $request->validate([
             'room_id' => ['required', 'uuid'],
-            'client_name' => ['required', 'string', 'max:120'],
+            'client_name' => ['nullable', 'string', 'max:120'],
             'client_phone' => ['required', 'string', 'max:30'],
             'client_note' => ['nullable', 'string', 'max:255'],
             'date' => ['required', 'date'],
@@ -104,11 +115,23 @@ class WorkspaceRoomController extends Controller
         ]);
 
         $startsAt = Carbon::parse($validated['date'].' '.$validated['start_time']);
+        $clientPhone = trim($validated['client_phone']);
+        $clientName = trim((string) ($validated['client_name'] ?? ''));
+
+        if ($clientName === '') {
+            $clientName = $this->resolveReservableClientName($workspace->id, $clientPhone);
+        }
+
+        if ($clientName === '') {
+            return back()
+                ->withErrors(['client_name' => 'اكتب اسم العميل أول مرة. بعد حفظه يمكنك الحجز برقم الهاتف فقط.'])
+                ->withInput();
+        }
 
         $data = new CreateReservationData(
             roomId: $validated['room_id'],
-            clientName: trim($validated['client_name']),
-            clientPhone: trim($validated['client_phone']),
+            clientName: $clientName,
+            clientPhone: $clientPhone,
             clientNote: $validated['client_note'] ?? null,
             startsAt: $startsAt,
             durationMinutes: (int) $validated['duration_minutes'],
@@ -152,5 +175,32 @@ class WorkspaceRoomController extends Controller
             'client' => $model,
             'reservations' => $reservations->paginateForClient($model->id, 20),
         ]);
+    }
+
+    private function resolveReservableClientName(string $workspaceId, string $phone): string
+    {
+        $existingRoomClient = RoomClient::query()
+            ->where('workspace_id', $workspaceId)
+            ->where('phone', $phone)
+            ->value('name');
+
+        if (filled($existingRoomClient)) {
+            return trim((string) $existingRoomClient);
+        }
+
+        $walkIn = WorkspaceWalkIn::query()
+            ->where('workspace_id', $workspaceId)
+            ->where('phone_number', $phone)
+            ->value('full_name');
+
+        if (filled($walkIn)) {
+            return trim((string) $walkIn);
+        }
+
+        $appUser = User::query()
+            ->where('phone_number', $phone)
+            ->value('full_name');
+
+        return filled($appUser) ? trim((string) $appUser) : '';
     }
 }

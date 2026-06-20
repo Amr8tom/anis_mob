@@ -187,6 +187,26 @@ class Workspace extends Model
         return round($this->baseHourlyRateEgp() * (float) ($this->hour_multiplier ?? 1.0), 2);
     }
 
+    /**
+     * Maximum billable minutes for a single visit/day: a visitor is never charged
+     * for more than the workspace's configured "ساعات احتساب اليوم".
+     */
+    public function dailyCapMinutes(): int
+    {
+        return (int) (($this->day_calculation_hours ?? 8) * 60);
+    }
+
+    /**
+     * Estimated revenue for a visit, capped at the daily-hours ceiling so a long
+     * stay can never bill above (day_calculation_hours × hourly rate).
+     */
+    public function estimatedRevenueEgp(int $minutes): float
+    {
+        $capped = min(max($minutes, 0), $this->dailyCapMinutes());
+
+        return round(($capped / 60) * $this->effectiveHourlyRateEgp(), 2);
+    }
+
     /** @return HasMany<StudySession, $this> */
     public function sessions(): HasMany
     {
