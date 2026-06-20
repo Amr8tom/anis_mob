@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Domain\Room\Repositories;
 
 use App\Domain\Room\Contracts\RoomRepositoryInterface;
+use App\Models\RoomReservation;
 use App\Models\WorkspaceRoom;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 final class EloquentRoomRepository implements RoomRepositoryInterface
 {
@@ -27,6 +29,15 @@ final class EloquentRoomRepository implements RoomRepositoryInterface
         $room->update(['is_active' => false]);
 
         return $room->refresh();
+    }
+
+    public function deleteWithReservations(WorkspaceRoom $room): void
+    {
+        DB::transaction(function () use ($room): void {
+            // Reservations FK-restrict the room, so remove them first.
+            RoomReservation::where('room_id', $room->id)->delete();
+            $room->delete();
+        });
     }
 
     public function findForWorkspace(string $roomId, string $workspaceId): ?WorkspaceRoom

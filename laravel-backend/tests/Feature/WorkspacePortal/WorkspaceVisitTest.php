@@ -6,12 +6,15 @@ namespace Tests\Feature\WorkspacePortal;
 
 use App\Enums\BillingSource;
 use App\Enums\PlanTier;
+use App\Enums\RoomReservationStatus;
 use App\Enums\SubscriptionStatus;
 use App\Enums\UserRole;
 use App\Models\Plan;
+use App\Models\RoomReservation;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceRoom;
 use App\Models\WorkspaceSubscription;
 use App\Models\WorkspaceVisit;
 use App\Models\WorkspaceWalkIn;
@@ -305,5 +308,50 @@ final class WorkspaceVisitTest extends TestCase
         $this->actingAs($owner)
             ->get(route('workspace.visits.index'))
             ->assertViewHas('recentVisits', fn ($visits): bool => $visits->isEmpty());
+    }
+
+    public function test_clearing_recent_visits_hides_existing_room_reservations_until_new_ones_are_created(): void
+    {
+        $owner = User::factory()->create(['role' => UserRole::WORKSPACE_OWNER]);
+        $workspace = Workspace::factory()->create(['owner_id' => $owner->id]);
+        $room = WorkspaceRoom::factory()->create(['workspace_id' => $workspace->id]);
+
+        $oldReservation = RoomReservation::factory()->create([
+            'workspace_id' => $workspace->id,
+            'room_id' => $room->id,
+            'client_name' => 'Old Room Guest',
+            'client_phone' => '01011110000',
+            'status' => RoomReservationStatus::RESERVED,
+            'created_at' => now()->subMinutes(10),
+            'updated_at' => now()->subMinutes(10),
+        ]);
+
+        $this->actingAs($owner)
+            ->post(route('workspace.visits.clear-recent'))
+            ->assertRedirect(route('workspace.visits.index'));
+
+        WorkspaceVisit::factory()->checkedOut(30)->create(['workspace_id' => $workspace->id]);
+
+        $this->actingAs($owner)
+            ->get(route('workspace.visits.index'))
+            ->assertOk()
+            ->assertDontSee('Old Room Guest')
+            ->assertViewHas('roomReservations', fn ($reservations): bool => $reservations->doesntContain('id', $oldReservation->id));
+
+        RoomReservation::factory()->create([
+            'workspace_id' => $workspace->id,
+            'room_id' => $room->id,
+            'client_name' => 'New Room Guest',
+            'client_phone' => '01022220000',
+            'status' => RoomReservationStatus::RESERVED,
+            'created_at' => now()->addMinute(),
+            'updated_at' => now()->addMinute(),
+        ]);
+
+        $this->actingAs($owner)
+            ->get(route('workspace.visits.index'))
+            ->assertOk()
+            ->assertDontSee('Old Room Guest')
+            ->assertSee('New Room Guest');
     }
 }

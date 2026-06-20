@@ -319,6 +319,7 @@
 @php
     $navItems = [
         ['route' => 'workspace.sessions.index',      'match' => 'workspace.sessions.*',      'icon' => 'fa-chalkboard-user',  'label' => 'الجلسات'],
+        ['route' => 'workspace.private-sessions.index', 'match' => 'workspace.private-sessions.*', 'icon' => 'fa-qrcode', 'label' => 'جلسات خاصة'],
         ['route' => 'workspace.clients.index',        'match' => 'workspace.clients.*',       'icon' => 'fa-users-viewfinder', 'label' => 'السجل'],
         ['route' => 'workspace.visits.index',         'match' => 'workspace.visits.*',        'icon' => 'fa-right-to-bracket', 'label' => 'تسجيل الزوار'],
         ['route' => 'workspace.subscriptions.index',  'match' => 'workspace.subscriptions.*', 'icon' => 'fa-ticket',           'label' => 'الاشتراكات'],

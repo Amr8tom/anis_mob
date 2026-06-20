@@ -2,23 +2,36 @@
 
 @section('title', 'حجوزات الغرف | بوابة مساحة العمل')
 
+@section('styles')
+@include('workspace.partials.dark-theme')
+@endsection
+
 @section('content')
-<div>
+<div class="visits-dark">
     <h1 class="page-title" style="margin:0 0 6px;">حجوزات الغرف</h1>
     <p class="page-subtitle">سجّل حجوزات غرفك بسرعة للزائر العادي أو مستخدم التطبيق. اكتب رقم الهاتف فقط للعميل المحفوظ، أو أضف الاسم مرة واحدة للزائر الجديد.</p>
 
     @if(session('success'))
-        <div class="card" style="margin-bottom:16px; border-right:4px solid var(--upwork-green); color:var(--upwork-green-dark);">{{ session('success') }}</div>
+        <div class="vd-card vd-card--pad" style="margin-bottom:16px; border-right:4px solid var(--vd-accent); color:var(--vd-accent);">{{ session('success') }}</div>
     @endif
     @if($errors->any())
-        <div class="card" style="margin-bottom:16px; border-right:4px solid var(--upwork-error); color:var(--upwork-error);">{{ $errors->first() }}</div>
+        <div class="vd-card vd-card--pad" style="margin-bottom:16px; border-right:4px solid var(--vd-danger); color:#ff7b78;">{{ $errors->first() }}</div>
     @endif
 
     {{-- ── New reservation ───────────────────────────────────── --}}
-    <div class="card" style="margin-bottom:22px;">
-        <h3 style="margin:0 0 16px;"><i class="fa-solid fa-calendar-plus"></i> حجز غرفة</h3>
+    <div class="vd-card vd-card--accent">
+        <div class="vd-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="vd-icon"><i class="fa-solid fa-calendar-plus"></i></div>
+                <div>
+                    <h3>حجز غرفة</h3>
+                    <p>أنشئ حجزاً جديداً لإحدى غرفك.</p>
+                </div>
+            </div>
+        </div>
+        <div class="vd-body">
         @if($activeRooms->isEmpty())
-            <p style="color:var(--upwork-muted);">أضف غرفة أولاً من القسم بالأسفل لتتمكن من الحجز.</p>
+            <p style="color:var(--vd-text-muted); margin:0;">أضف غرفة أولاً من قسم «غرفك» بالأسفل لتتمكن من الحجز.</p>
         @else
             <form action="{{ route('workspace.rooms.reservations.store') }}" method="POST">
                 @csrf
@@ -38,7 +51,7 @@
                     <div>
                         <label style="font-size:13px;">رقم هاتف العميل</label>
                         <input type="text" name="client_phone" class="form-control" style="direction:ltr; text-align:right;" placeholder="01xxxxxxxxx" value="{{ old('client_phone') }}" list="room-client-phones" required>
-                        <small style="color:var(--upwork-muted); font-size:11px;">يدعم زائر walk-in أو مستخدم تطبيق. لو الرقم محفوظ، سيتم ملء الاسم تلقائياً في الخلفية.</small>
+                        <small style="color:var(--vd-text-dim); font-size:11px;">يدعم زائر walk-in أو مستخدم تطبيق. لو الرقم محفوظ، سيتم ملء الاسم تلقائياً.</small>
                     </div>
                 </div>
                 <datalist id="room-client-names">
@@ -71,8 +84,8 @@
                 </div>
 
                 {{-- Recurrence --}}
-                <div style="margin-top:14px; padding:14px; background:var(--upwork-bg); border:1px solid var(--upwork-border); border-radius:var(--radius-sm);">
-                    <label style="display:flex; align-items:center; gap:8px; font-weight:700;">
+                <div class="vd-softbox" style="margin-top:14px; padding:14px;">
+                    <label style="display:flex; align-items:center; gap:8px; font-weight:700; color:var(--vd-text);">
                         <input type="checkbox" name="recurring" value="1" id="recurring-toggle" onchange="document.getElementById('recurrence-options').style.display=this.checked?'block':'none'">
                         تكرار أسبوعي
                     </label>
@@ -80,14 +93,14 @@
                         <label style="font-size:13px; display:block; margin-bottom:6px;">أيام التكرار</label>
                         <div style="display:flex; gap:8px; flex-wrap:wrap;">
                             @foreach([0=>'الأحد',1=>'الإثنين',2=>'الثلاثاء',3=>'الأربعاء',4=>'الخميس',5=>'الجمعة',6=>'السبت'] as $d=>$label)
-                                <label style="display:inline-flex; align-items:center; gap:4px; padding:6px 10px; border:1px solid var(--upwork-border); border-radius:20px; cursor:pointer; font-size:13px;">
+                                <label class="vd-chip" style="display:inline-flex; align-items:center; gap:4px; padding:6px 10px; cursor:pointer; font-size:13px;">
                                     <input type="checkbox" name="weekdays[]" value="{{ $d }}"> {{ $label }}
                                 </label>
                             @endforeach
                         </div>
                         <label style="font-size:13px; display:block; margin-top:10px;">حتى تاريخ (اختياري، بحد أقصى ١٢ أسبوعاً)</label>
                         <input type="date" name="until" class="form-control" style="max-width:240px;">
-                        <small style="color:var(--upwork-muted); font-size:11px; display:block; margin-top:4px;">المواعيد المتعارضة مع حجوزات قائمة سيتم تخطّيها وإبلاغك بها.</small>
+                        <small style="color:var(--vd-text-dim); font-size:11px; display:block; margin-top:4px;">المواعيد المتعارضة مع حجوزات قائمة سيتم تخطّيها وإبلاغك بها.</small>
                     </div>
                 </div>
 
@@ -104,44 +117,47 @@
                 <button type="submit" class="btn-primary" style="margin-top:14px;"><i class="fa-solid fa-check"></i> تأكيد الحجز</button>
             </form>
         @endif
+        </div>
     </div>
 
     {{-- ── Upcoming reservations ─────────────────────────────── --}}
-    <div class="card" style="margin-bottom:22px;">
-        <h3 style="margin:0 0 16px;">الحجوزات القادمة</h3>
+    <div class="vd-card">
+        <div class="vd-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="vd-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                <div><h3>الحجوزات القادمة</h3><p>المواعيد المحجوزة القادمة في غرفك.</p></div>
+            </div>
+        </div>
+        <div class="vd-body">
         @if($upcoming->isEmpty())
-            <p style="text-align:center; color:var(--upwork-muted); padding:16px;">لا توجد حجوزات قادمة.</p>
+            <div class="empty-state"><i class="fa-solid fa-calendar-xmark"></i> لا توجد حجوزات قادمة.</div>
         @else
             <div class="table-responsive">
-            <table style="width:100%; border-collapse:collapse; text-align:right;">
-                <thead><tr style="border-bottom:2px solid var(--upwork-border);">
-                    <th style="padding:10px;">الغرفة</th><th style="padding:10px;">العميل</th><th style="padding:10px;">من</th><th style="padding:10px;">إلى</th><th style="padding:10px;">المدة</th><th style="padding:10px;">التكلفة</th><th style="padding:10px;">ملاحظات</th><th style="padding:10px;">إجراء</th>
+            <table>
+                <thead><tr>
+                    <th>الغرفة</th><th>العميل</th><th>من</th><th>إلى</th><th>المدة</th><th>التكلفة</th><th>ملاحظات</th><th>إجراء</th>
                 </tr></thead>
                 <tbody>
                     @foreach($upcoming as $r)
                         @php $mins=$r->durationMinutes(); $h=intdiv($mins,60); $m=$mins%60; @endphp
-                        <tr style="border-bottom:1px solid var(--upwork-border);">
-                            <td style="padding:10px; font-weight:700;">
+                        <tr>
+                            <td style="font-weight:700;">
                                 {{ $r->room->name ?? '—' }}
-                                @if($r->room?->note)
-                                    <br><small style="color:var(--upwork-muted); font-weight:500;">{{ $r->room->note }}</small>
-                                @endif
+                                @if($r->room?->note)<br><small class="sub">{{ $r->room->note }}</small>@endif
                             </td>
-                            <td style="padding:10px;">
-                                {{ $r->client_name }}<br><small style="color:var(--upwork-muted); direction:ltr;">{{ $r->client_phone }}</small>
-                                @if($r->client?->note)
-                                    <br><small style="color:var(--upwork-muted);">{{ $r->client->note }}</small>
-                                @endif
+                            <td>
+                                {{ $r->client_name }}<br><small class="sub" style="direction:ltr;">{{ $r->client_phone }}</small>
+                                @if($r->client?->note)<br><small class="dim">{{ $r->client->note }}</small>@endif
                             </td>
-                            <td style="padding:10px;"><small>{{ $r->starts_at->format('m/d H:i') }}</small></td>
-                            <td style="padding:10px;"><small>{{ $r->ends_at->format('m/d H:i') }}</small></td>
-                            <td style="padding:10px;">{{ $h>0 ? $h.'س ' : '' }}{{ $m>0 ? $m.'د' : '' }}</td>
-                            <td style="padding:10px; font-weight:700; color:var(--upwork-green-dark);">{{ number_format($r->totalCostEgp(),2) }} ج.م</td>
-                            <td style="padding:10px; color:var(--upwork-muted);">{{ $r->note ?: '—' }}</td>
-                            <td style="padding:10px;">
+                            <td><small class="time">{{ $r->starts_at->format('m/d H:i') }}</small></td>
+                            <td><small class="time">{{ $r->ends_at->format('m/d H:i') }}</small></td>
+                            <td style="font-weight:700;">{{ $h>0 ? $h.'س ' : '' }}{{ $m>0 ? $m.'د' : '' }}</td>
+                            <td class="money">{{ number_format($r->totalCostEgp(),2) }} <small style="font-size:11px;">ج.م</small></td>
+                            <td class="dim">{{ $r->note ?: '—' }}</td>
+                            <td>
                                 <form action="{{ route('workspace.rooms.reservations.cancel', $r->id) }}" method="POST" onsubmit="return confirm('إلغاء هذا الحجز؟');">
                                     @csrf
-                                    <button type="submit" style="padding:6px 12px; border:1px solid var(--upwork-border); background:#fff; border-radius:var(--radius-sm); cursor:pointer; font-weight:700; color:var(--upwork-error);">إلغاء</button>
+                                    <button type="submit" class="vd-btn vd-btn-danger">إلغاء</button>
                                 </form>
                             </td>
                         </tr>
@@ -150,11 +166,18 @@
             </table>
             </div>
         @endif
+        </div>
     </div>
 
     {{-- ── Rooms manager ─────────────────────────────────────── --}}
-    <div class="card" style="margin-bottom:22px;">
-        <h3 style="margin:0 0 18px;"><i class="fa-solid fa-door-open"></i> غرفك</h3>
+    <div class="vd-card">
+        <div class="vd-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="vd-icon"><i class="fa-solid fa-door-open"></i></div>
+                <div><h3>غرفك</h3><p>أضف غرفك وعدّل أسعارها أو احذفها نهائياً.</p></div>
+            </div>
+        </div>
+        <div class="vd-body">
         <div class="manage-grid">
             {{-- List (primary) --}}
             <div class="manage-main">
@@ -164,33 +187,43 @@
                         لا توجد غرف بعد. أضف غرفتك الأولى من النموذج المجاور.
                     </div>
                 @else
+                    <div class="table-responsive">
                     <table>
                         <thead><tr><th>الغرفة</th><th>ملاحظة الغرفة</th><th>سعر الساعة</th><th>الحالة</th><th>إجراء</th></tr></thead>
                         <tbody>
                             @foreach($rooms as $room)
                                 <tr>
                                     <td style="font-weight:700;">{{ $room->name }}</td>
-                                    <td style="color:var(--upwork-muted);">{{ $room->note ?: '—' }}</td>
-                                    <td>{{ number_format($room->hourlyPriceEgp(),2) }} ج.م</td>
+                                    <td class="dim">{{ $room->note ?: '—' }}</td>
+                                    <td class="money">{{ number_format($room->hourlyPriceEgp(),2) }} <small style="font-size:11px;">ج.م</small></td>
                                     <td>
                                         @if($room->is_active)
-                                            <span style="background:var(--upwork-green-soft); color:var(--upwork-green-dark); padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700;">فعّالة</span>
+                                            <span class="badge badge-on">فعّالة</span>
                                         @else
-                                            <span style="background:#eee; color:#777; padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700;">موقوفة</span>
+                                            <span class="badge badge-off">موقوفة</span>
                                         @endif
                                     </td>
                                     <td>
-                                        @if($room->is_active)
-                                            <form action="{{ route('workspace.rooms.deactivate', $room->id) }}" method="POST" onsubmit="return confirm('إيقاف هذه الغرفة؟');">
+                                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                            @if($room->is_active)
+                                                <form action="{{ route('workspace.rooms.deactivate', $room->id) }}" method="POST" onsubmit="return confirm('إيقاف هذه الغرفة؟ يمكن إعادة تفعيلها لاحقاً.');">
+                                                    @csrf
+                                                    <button type="submit" class="vd-btn">إيقاف</button>
+                                                </form>
+                                            @endif
+                                            <form action="{{ route('workspace.rooms.destroy', $room->id) }}" method="POST"
+                                                  onsubmit="return confirm('حذف «{{ $room->name }}» نهائياً مع كل حجوزاتها؟ لا يمكن التراجع عن هذا الإجراء.');">
                                                 @csrf
-                                                <button type="submit" style="padding:6px 12px; border:1px solid var(--upwork-border); background:#fff; border-radius:var(--radius-sm); cursor:pointer; font-weight:700; color:var(--upwork-error);">إيقاف</button>
+                                                @method('DELETE')
+                                                <button type="submit" class="vd-btn vd-btn-danger"><i class="fa-solid fa-trash"></i> حذف</button>
                                             </form>
-                                        @else — @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    </div>
                 @endif
             </div>
 
@@ -198,43 +231,53 @@
             <aside class="manage-aside">
                 <form action="{{ route('workspace.rooms.store') }}" method="POST" class="manage-form-panel">
                     @csrf
-                    <h4><i class="fa-solid fa-plus" style="color:var(--upwork-green);"></i> إضافة غرفة</h4>
+                    <h4><i class="fa-solid fa-plus" style="color:var(--vd-accent);"></i> إضافة غرفة</h4>
                     <label style="font-size:13px;">اسم الغرفة</label>
                     <input type="text" name="name" class="form-control" placeholder="غرفة اجتماعات" required>
                     <label style="font-size:13px;">ملاحظة الغرفة</label>
                     <textarea name="note" class="form-control" rows="2" placeholder="مثلاً: بها شاشة، ٦ كراسي، مناسبة للمذاكرة الهادئة">{{ old('note') }}</textarea>
                     <label style="font-size:13px;">سعر الساعة (ج.م)</label>
                     <input type="number" name="hourly_price_pounds" class="form-control" min="0" step="0.01" value="50" required>
-                    <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> إضافة غرفة</button>
+                    <button type="submit" class="btn-primary" style="width:100%;"><i class="fa-solid fa-plus"></i> إضافة غرفة</button>
                 </form>
             </aside>
+        </div>
         </div>
     </div>
 
     {{-- ── Saved clients ─────────────────────────────────────── --}}
-    <div class="card">
-        <h3 style="margin:0 0 16px;">عملاء الغرف المسجّلون</h3>
+    <div class="vd-card">
+        <div class="vd-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="vd-icon"><i class="fa-solid fa-address-book"></i></div>
+                <div><h3>عملاء الغرف المسجّلون</h3><p>العملاء المحفوظون لإعادة الحجز بسرعة.</p></div>
+            </div>
+        </div>
+        <div class="vd-body">
         @if($clients->isEmpty())
-            <p style="text-align:center; color:var(--upwork-muted); padding:16px;">لا يوجد عملاء بعد.</p>
+            <div class="empty-state"><i class="fa-solid fa-user-slash"></i> لا يوجد عملاء بعد.</div>
         @else
-            <table style="width:100%; border-collapse:collapse; text-align:right;">
-                <thead><tr style="border-bottom:2px solid var(--upwork-border);">
-                    <th style="padding:10px;">الاسم</th><th style="padding:10px;">الهاتف</th><th style="padding:10px;">ملاحظة</th><th style="padding:10px;">عدد الحجوزات</th><th style="padding:10px;">السجل</th>
+            <div class="table-responsive">
+            <table>
+                <thead><tr>
+                    <th>الاسم</th><th>الهاتف</th><th>ملاحظة</th><th>عدد الحجوزات</th><th>السجل</th>
                 </tr></thead>
                 <tbody>
                     @foreach($clients as $c)
-                        <tr style="border-bottom:1px solid var(--upwork-border);">
-                            <td style="padding:10px; font-weight:700;">{{ $c->name }}</td>
-                            <td style="padding:10px; direction:ltr; text-align:right;">{{ $c->phone }}</td>
-                            <td style="padding:10px; color:var(--upwork-muted);">{{ $c->note ?: '—' }}</td>
-                            <td style="padding:10px;">{{ $c->reservations_count }}</td>
-                            <td style="padding:10px;"><a href="{{ route('workspace.rooms.clients.show', $c->id) }}" style="color:var(--upwork-blue); text-decoration:none;">عرض السجل</a></td>
+                        <tr>
+                            <td style="font-weight:700;">{{ $c->name }}</td>
+                            <td class="time" style="direction:ltr; text-align:right;">{{ $c->phone }}</td>
+                            <td class="dim">{{ $c->note ?: '—' }}</td>
+                            <td>{{ $c->reservations_count }}</td>
+                            <td><a href="{{ route('workspace.rooms.clients.show', $c->id) }}" class="vd-link">عرض السجل</a></td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            </div>
             <div style="margin-top:16px;">{{ $clients->links('vendor.pagination.upwork') }}</div>
         @endif
+        </div>
     </div>
 </div>
 @endsection

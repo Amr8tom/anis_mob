@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -79,11 +80,14 @@ class WorkspaceVisitController extends Controller
         // Revenue is summed over per-visit CAPPED minutes so no visit bills beyond
         // the workspace's daily-hours ceiling (ساعات احتساب اليوم).
         $capMinutes = $workspace->dailyCapMinutes();
+        $billableMinutesExpression = DB::connection()->getDriverName() === 'sqlite'
+            ? 'MIN(duration_minutes, ?)'
+            : 'LEAST(duration_minutes, ?)';
         $recentSummaryRow = (clone $recentVisitsQuery)
             ->toBase()
             ->selectRaw('COUNT(*) as total_visits')
             ->selectRaw('COALESCE(SUM(duration_minutes), 0) as total_minutes')
-            ->selectRaw('COALESCE(SUM(LEAST(duration_minutes, ?)), 0) as total_billable_minutes', [$capMinutes])
+            ->selectRaw("COALESCE(SUM({$billableMinutesExpression}), 0) as total_billable_minutes", [$capMinutes])
             ->first();
         $recentSummary = [
             'total_visits' => (int) ($recentSummaryRow->total_visits ?? 0),

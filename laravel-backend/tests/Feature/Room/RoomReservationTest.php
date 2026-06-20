@@ -7,11 +7,14 @@ namespace Tests\Feature\Room;
 use App\Domain\Room\Actions\CreateReservationAction;
 use App\Domain\Room\Data\CreateReservationData;
 use App\Enums\RoomReservationStatus;
+use App\Enums\UserRole;
 use App\Exceptions\RoomSlotUnavailableException;
 use App\Models\RoomReservation;
+use App\Models\RoomClient;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceRoom;
+use App\Models\WorkspaceWalkIn;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
@@ -33,8 +36,8 @@ final class RoomReservationTest extends TestCase
      */
     private function setup50PerHourRoom(): array
     {
-        $workspace = Workspace::factory()->create();
-        $owner = User::factory()->create();
+        $owner = User::factory()->create(['role' => UserRole::WORKSPACE_OWNER]);
+        $workspace = Workspace::factory()->create(['owner_id' => $owner->id]);
         $room = WorkspaceRoom::factory()->create([
             'workspace_id' => $workspace->id,
             'hourly_price_cents' => 5000,   // 50 ج.م/hour
@@ -137,5 +140,100 @@ final class RoomReservationTest extends TestCase
         // 3 Sundays in window, 1 already taken -> 2 created, 1 skipped.
         $this->assertSame(2, $result->createdCount());
         $this->assertSame(1, $result->skippedCount());
+    }
+
+    public function test_owner_can_reserve_room_for_existing_app_user_by_phone_only(): void
+    {
+        [$workspace, $room, $owner] = $this->setup50PerHourRoom();
+        $appUser = User::factory()->create([
+            'full_name' => 'Existing App User',
+            'phone_number' => '01022223333',
+        ]);
+
+        $this->actingAs($owner)
+            ->post(route('workspace.rooms.reservations.store'), [
+                'room_id' => $room->id,
+                'client_phone' => $appUser->phone_number,
+                'date' => now()->addDay()->toDateString(),
+                'start_time' => '12:00',
+                'duration_minutes' => 60,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('room_reservations', [
+            'workspace_id' => $workspace->id,
+            'client_name' => 'Existing App User',
+            'client_phone' => '01022223333',
+        ]);
+    }
+
+    public function test_owner_can_reserve_room_for_walk_in_by_phone_only_after_first_registration(): void
+    {
+        [$workspace, $room, $owner] = $this->setup50PerHourRoom();
+        WorkspaceWalkIn::create([
+            'workspace_id' => $workspace->id,
+            'full_name' => 'Walk In Room Guest',
+            'phone_number' => '01055556666',
+        ]);
+
+        $this->actingAs($owner)
+            ->post(route('workspace.rooms.reservations.store'), [
+                'room_id' => $room->id,
+                'client_phone' => '01055556666',
+                'date' => now()->addDay()->toDateString(),
+                'start_time' => '14:00',
+                'duration_minutes' => 60,
+                'client_note' => 'يفضل الكرسي القريب من النافذة',
+                'note' => 'يحتاج شاشة',
+            ])
+            ->assertRedirect()
+            ->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('room_clients', [
+            'workspace_id' => $workspace->id,
+            'phone' => '01055556666',
+            'name' => 'Walk In Room Guest',
+            'note' => 'يفضل الكرسي القريب من النافذة',
+        ]);
+        $this->assertDatabaseHas('room_reservations', [
+            'workspace_id' => $workspace->id,
+            'client_name' => 'Walk In Room Guest',
+            'note' => 'يحتاج شاشة',
+        ]);
+    }
+
+    public function test_room_page_displays_room_client_and_reservation_notes(): void
+    {
+        [$workspace, $room, $owner] = $this->setup50PerHourRoom();
+        $room->update(['note' => 'بها شاشة كبيرة']);
+        $client = RoomClient::factory()->create([
+            'workspace_id' => $workspace->id,
+            'name' => 'عميل دائم',
+            'phone' => '01077778888',
+            'note' => 'يفضل الهدوء',
+        ]);
+        RoomReservation::factory()->create([
+            'workspace_id' => $workspace->id,
+            'room_id' => $room->id,
+            'room_client_id' => $client->id,
+            'client_name' => $client->name,
+            'client_phone' => $client->phone,
+            'note' => 'يحتاج سبورة',
+        ]);
+
+        $this->actingAs($owner)
+            ->get(route('workspace.rooms.index'))
+            ->assertOk()
+            ->assertSee('بها شاشة كبيرة')
+            ->assertSee('يفضل الهدوء')
+            ->assertSee('يحتاج سبورة');
+
+        $this->actingAs($owner)
+            ->get(route('workspace.rooms.clients.show', $client->id))
+            ->assertOk()
+            ->assertSee('ملاحظة العميل')
+            ->assertSee('يفضل الهدوء')
+            ->assertSee('يحتاج سبورة');
     }
 }

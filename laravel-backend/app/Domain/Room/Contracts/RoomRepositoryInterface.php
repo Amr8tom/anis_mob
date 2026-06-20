@@ -17,6 +17,9 @@ interface RoomRepositoryInterface
 
     public function deactivate(WorkspaceRoom $room): WorkspaceRoom;
 
+    /** Hard-delete the room together with all its reservations. */
+    public function deleteWithReservations(WorkspaceRoom $room): void;
+
     public function findForWorkspace(string $roomId, string $workspaceId): ?WorkspaceRoom;
 
     /** Row-locked active room for a safe overlap check inside a transaction. */

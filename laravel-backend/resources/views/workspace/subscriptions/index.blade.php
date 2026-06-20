@@ -3,18 +3,22 @@
 @section('title', 'الاشتراكات الخاصة | بوابة مساحة العمل')
 
 @section('content')
-<div>
-    <h1 class="page-title" style="margin:0 0 6px;">الاشتراكات الخاصة بمساحتك</h1>
-    <p class="page-subtitle">باقات تصدرها أنت، وتصلح للحضور في مساحتك فقط بنفس رمز الـ QR الحالي.</p>
+<div class="workspace-dark-page workspace-subscriptions-dark">
+    <div class="workspace-dark-hero">
+        <div>
+            <h1 class="workspace-dark-title">الاشتراكات الخاصة بمساحتك</h1>
+            <p class="workspace-dark-subtitle">باقات تصدرها أنت، وتصلح للحضور في مساحتك فقط بنفس رمز الـ QR الحالي.</p>
+        </div>
+    </div>
 
     @if(session('success'))
-        <div class="card" style="margin-bottom:16px; border-right:4px solid var(--upwork-green); color:var(--upwork-green-dark);">{{ session('success') }}</div>
+        <div class="card workspace-dark-card" style="margin-bottom:16px; border-right:4px solid #2bd968;">{{ session('success') }}</div>
     @endif
     @if($errors->any())
-        <div class="card" style="margin-bottom:16px; border-right:4px solid var(--upwork-error); color:var(--upwork-error);">{{ $errors->first() }}</div>
+        <div class="card workspace-dark-card" style="margin-bottom:16px; border-right:4px solid #f87171;">{{ $errors->first() }}</div>
     @endif
     @if(session('generated_workspace_codes'))
-        <div class="card" style="margin-bottom:16px; border-right:4px solid var(--upwork-green);">
+        <div class="card workspace-dark-card" style="margin-bottom:16px; border-right:4px solid #2bd968;">
             <h3 style="margin-top:0;">أكواد التفعيل الجديدة</h3>
             @foreach(session('generated_workspace_codes') as $generatedCode)
                 <code style="display:inline-block; direction:ltr; padding:8px 12px; margin:4px; background:var(--upwork-bg); border-radius:6px;">{{ $generatedCode }}</code>
@@ -24,19 +28,19 @@
 
     {{-- ── Metrics ───────────────────────────────────────────── --}}
     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:22px;">
-        <div class="card" style="text-align:center; padding:18px;">
+        <div class="card workspace-dark-stat" style="text-align:center; padding:18px;">
             <div style="font-size:28px; font-weight:900; color:var(--upwork-green);">{{ number_format($metrics['active_count']) }}</div>
             <div style="font-size:13px; color:var(--upwork-muted);">اشتراكات فعّالة</div>
         </div>
-        <div class="card" style="text-align:center; padding:18px; {{ $metrics['expiring_count'] > 0 ? 'border-right:4px solid #f4a800;' : '' }}">
+        <div class="card workspace-dark-stat" style="text-align:center; padding:18px; {{ $metrics['expiring_count'] > 0 ? 'border-right:4px solid #f4a800;' : '' }}">
             <div style="font-size:28px; font-weight:900; color:#8a6413;">{{ number_format($metrics['expiring_count']) }}</div>
             <div style="font-size:13px; color:var(--upwork-muted);">تنتهي خلال 3 أيام</div>
         </div>
-        <div class="card" style="text-align:center; padding:18px;">
+        <div class="card workspace-dark-stat" style="text-align:center; padding:18px;">
             <div style="font-size:28px; font-weight:900; color:var(--upwork-slate);">{{ number_format($metrics['hours_sold'], 1) }}</div>
             <div style="font-size:13px; color:var(--upwork-muted);">ساعات مُباعة</div>
         </div>
-        <div class="card" style="text-align:center; padding:18px;">
+        <div class="card workspace-dark-stat" style="text-align:center; padding:18px;">
             <div style="font-size:28px; font-weight:900; color:var(--upwork-slate);">{{ number_format($metrics['plan_count']) }}</div>
             <div style="font-size:13px; color:var(--upwork-muted);">باقات</div>
         </div>
@@ -44,7 +48,7 @@
 
     {{-- ── Expiring soon ─────────────────────────────────────── --}}
     @if($expiring_soon->isNotEmpty())
-        <div class="card" style="margin-bottom:22px; border:1px solid #f4c775;">
+        <div class="card workspace-dark-card" style="margin-bottom:22px; border:1px solid #f4c775;">
             <h3 style="margin:0 0 4px; color:#8a6413;"><i class="fa-solid fa-bell"></i> اشتراكات تنتهي قريباً</h3>
             <p style="margin:0 0 14px; color:var(--upwork-muted); font-size:13px;">ذكّر الزائر بالتجديد قبل انتهاء اشتراكه في مساحتك.</p>
             @foreach($expiring_soon as $sub)
@@ -63,7 +67,7 @@
     @endif
 
     {{-- ── Issue a subscription ──────────────────────────────── --}}
-    <div class="card" style="margin-bottom:22px;">
+    <div class="card workspace-dark-card" style="margin-bottom:22px;">
         <h3 style="margin:0 0 16px;"><i class="fa-solid fa-paper-plane"></i> إصدار اشتراك لزائر</h3>
         @php $activePlans = $plans->where('is_active', true); @endphp
         @if($activePlans->isEmpty())
@@ -108,7 +112,7 @@
         @endif
     </div>
 
-    <div class="card" style="margin-bottom:22px;">
+    <div class="card workspace-dark-card" style="margin-bottom:22px;">
         <h3 style="margin:0 0 16px;">أكواد التفعيل</h3>
         <div class="table-responsive">
             <table style="width:100%; border-collapse:collapse; text-align:right;">
@@ -139,7 +143,7 @@
     </div>
 
     {{-- ── Plan templates ────────────────────────────────────── --}}
-    <div class="card" style="margin-bottom:22px;">
+    <div class="card workspace-dark-card" style="margin-bottom:22px;">
         <h3 style="margin:0 0 18px;"><i class="fa-solid fa-layer-group"></i> باقاتك</h3>
         <div class="manage-grid">
             {{-- List (primary) --}}
@@ -201,7 +205,7 @@
     </div>
 
     {{-- ── Issued subscriptions ──────────────────────────────── --}}
-    <div class="card">
+    <div class="card workspace-dark-card">
         <h3 style="margin:0 0 16px;">الاشتراكات الصادرة</h3>
         @if($subscriptions->isEmpty())
             <p style="text-align:center; color:var(--upwork-muted); padding:16px;">لم تصدر أي اشتراكات بعد.</p>
@@ -249,4 +253,120 @@
         @endif
     </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+    .workspace-dark-page {
+        --wd-surface: #16211b;
+        --wd-surface-2: #1d2c24;
+        --wd-input: #0f1813;
+        --wd-border: #2c3d33;
+        --wd-text: #eef3f0;
+        --wd-muted: #9db0a4;
+        --wd-dim: #6c7e73;
+        --wd-accent: #2bd968;
+    }
+
+    .workspace-dark-hero {
+        margin-bottom: 22px;
+        padding: 24px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--wd-border);
+        background:
+            radial-gradient(circle at 10% 20%, rgba(43, 217, 104, .13), transparent 28%),
+            linear-gradient(135deg, #16211b 0%, #1d2c24 100%);
+        box-shadow: 0 14px 34px rgba(0, 0, 0, .18);
+    }
+
+    .workspace-dark-title {
+        margin: 0 0 8px;
+        color: var(--wd-text);
+        font-size: 34px;
+        line-height: 1.2;
+        font-weight: 900;
+    }
+
+    .workspace-dark-subtitle {
+        margin: 0;
+        color: var(--wd-muted);
+        font-weight: 700;
+    }
+
+    .workspace-dark-page .card,
+    .workspace-dark-page .workspace-dark-card,
+    .workspace-dark-page .workspace-dark-stat,
+    .workspace-dark-page .manage-form-panel {
+        background: var(--wd-surface) !important;
+        color: var(--wd-text) !important;
+        border: 1px solid var(--wd-border) !important;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, .18) !important;
+    }
+
+    .workspace-dark-page h3,
+    .workspace-dark-page h4,
+    .workspace-dark-page label,
+    .workspace-dark-page td {
+        color: var(--wd-text) !important;
+    }
+
+    .workspace-dark-page p,
+    .workspace-dark-page small,
+    .workspace-dark-page .empty-state,
+    .workspace-dark-page .workspace-dark-stat div:last-child {
+        color: var(--wd-muted) !important;
+    }
+
+    .workspace-dark-page .workspace-dark-stat div:first-child,
+    .workspace-dark-page td[style*="var(--upwork-green-dark)"] {
+        color: var(--wd-accent) !important;
+    }
+
+    .workspace-dark-page .form-control,
+    .workspace-dark-page select,
+    .workspace-dark-page input,
+    .workspace-dark-page textarea {
+        background: var(--wd-input) !important;
+        border-color: var(--wd-border) !important;
+        color: var(--wd-text) !important;
+    }
+
+    .workspace-dark-page .form-control::placeholder {
+        color: var(--wd-dim);
+    }
+
+    .workspace-dark-page form[style*="var(--upwork-bg)"],
+    .workspace-dark-page code[style*="var(--upwork-bg)"] {
+        background: var(--wd-input) !important;
+        border-color: var(--wd-border) !important;
+        color: var(--wd-text) !important;
+    }
+
+    .workspace-dark-page table {
+        color: var(--wd-text);
+    }
+
+    .workspace-dark-page thead tr {
+        background: var(--wd-surface-2) !important;
+        border-bottom: 2px solid var(--wd-border) !important;
+    }
+
+    .workspace-dark-page tbody tr {
+        border-bottom: 1px solid var(--wd-border) !important;
+    }
+
+    .workspace-dark-page tbody tr:hover {
+        background: #21322a;
+    }
+
+    .workspace-dark-page th {
+        color: var(--wd-muted) !important;
+    }
+
+    .workspace-dark-page button[style*="background:#fff"],
+    .workspace-dark-page button[style*="background: #fff"] {
+        background: var(--wd-input) !important;
+        border-color: var(--wd-border) !important;
+    }
+</style>
 @endsection

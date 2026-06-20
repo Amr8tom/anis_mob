@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\AdminWorkspaceSettlementController;
 use App\Http\Controllers\Web\WorkspaceAuthController;
 use App\Http\Controllers\Web\WorkspaceClientController;
 use App\Http\Controllers\Web\WorkspaceFinancialController;
+use App\Http\Controllers\Web\WorkspacePrivateSessionController;
 use App\Http\Controllers\Web\WorkspaceSessionController;
 use App\Http\Controllers\Web\WorkspaceSettingsController;
 use App\Http\Controllers\Web\WorkspaceVisitController;
@@ -68,6 +69,20 @@ Route::prefix('workspace')->name('workspace.')->group(function () {
         // Sessions
         Route::resource('sessions', WorkspaceSessionController::class)->except(['show']);
 
+        // Workspace-private sessions: owner-created, hidden from the public app catalog.
+        Route::prefix('private-sessions')->name('private-sessions.')->group(function () {
+            Route::get('/', [WorkspacePrivateSessionController::class, 'index'])->name('index');
+            Route::get('create', [WorkspacePrivateSessionController::class, 'create'])->name('create');
+            Route::post('/', [WorkspacePrivateSessionController::class, 'store'])->name('store');
+            Route::get('{privateSession}', [WorkspacePrivateSessionController::class, 'show'])->name('show');
+            Route::get('{privateSession}/qr', [WorkspacePrivateSessionController::class, 'qr'])->name('qr');
+            Route::post('{privateSession}/attendees', [WorkspacePrivateSessionController::class, 'storeAttendee'])->name('attendees.store');
+            Route::post('{privateSession}/attendees/import', [WorkspacePrivateSessionController::class, 'importAttendees'])->name('attendees.import');
+            Route::post('{privateSession}/attendees/{attendee}/check-in', [WorkspacePrivateSessionController::class, 'checkInAttendee'])->name('attendees.check-in');
+            Route::post('{privateSession}/finish', [WorkspacePrivateSessionController::class, 'finish'])->name('finish');
+            Route::post('{privateSession}/cancel', [WorkspacePrivateSessionController::class, 'cancel'])->name('cancel');
+        });
+
         // Clients
         Route::get('clients', [WorkspaceClientController::class, 'index'])->name('clients.index');
         Route::get('clients/{client}', [WorkspaceClientController::class, 'show'])->name('clients.show');
@@ -87,6 +102,7 @@ Route::prefix('workspace')->name('workspace.')->group(function () {
             Route::post('/', [\App\Http\Controllers\Web\WorkspaceRoomController::class, 'storeRoom'])->name('store');
             Route::put('{room}', [\App\Http\Controllers\Web\WorkspaceRoomController::class, 'updateRoom'])->name('update');
             Route::post('{room}/deactivate', [\App\Http\Controllers\Web\WorkspaceRoomController::class, 'deactivateRoom'])->name('deactivate');
+            Route::delete('{room}', [\App\Http\Controllers\Web\WorkspaceRoomController::class, 'deleteRoom'])->name('destroy');
             Route::post('reservations', [\App\Http\Controllers\Web\WorkspaceRoomController::class, 'storeReservation'])->name('reservations.store');
             Route::post('reservations/{reservation}/cancel', [\App\Http\Controllers\Web\WorkspaceRoomController::class, 'cancelReservation'])->name('reservations.cancel');
             Route::get('clients/{client}', [\App\Http\Controllers\Web\WorkspaceRoomController::class, 'showClient'])->name('clients.show');

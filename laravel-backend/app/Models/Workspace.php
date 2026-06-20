@@ -213,6 +213,12 @@ class Workspace extends Model
         return $this->hasMany(StudySession::class);
     }
 
+    /** @return HasMany<WorkspacePrivateSession, $this> */
+    public function privateSessions(): HasMany
+    {
+        return $this->hasMany(WorkspacePrivateSession::class);
+    }
+
     /** @return HasMany<WorkspaceVisit, $this> */
     public function visits(): HasMany
     {

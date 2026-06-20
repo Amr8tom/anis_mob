@@ -8,6 +8,7 @@ use App\Domain\Room\Actions\CancelReservationAction;
 use App\Domain\Room\Actions\CreateReservationAction;
 use App\Domain\Room\Actions\CreateRoomAction;
 use App\Domain\Room\Actions\DeactivateRoomAction;
+use App\Domain\Room\Actions\DeleteRoomAction;
 use App\Domain\Room\Actions\UpdateRoomAction;
 use App\Domain\Room\Contracts\RoomClientRepositoryInterface;
 use App\Domain\Room\Contracts\RoomRepositoryInterface;
@@ -94,6 +95,17 @@ class WorkspaceRoomController extends Controller
         $action->handle($model);
 
         return back()->with('success', 'تم إيقاف الغرفة.');
+    }
+
+    public function deleteRoom(string $room, DeleteRoomAction $action, RoomRepositoryInterface $rooms): RedirectResponse
+    {
+        $workspace = Auth::user()->ownedWorkspace;
+        $model = $rooms->findForWorkspace($room, $workspace->id);
+        abort_if($model === null, 404);
+
+        $action->handle($model);
+
+        return back()->with('success', 'تم حذف الغرفة وكل حجوزاتها نهائياً.');
     }
 
     public function storeReservation(Request $request, CreateReservationAction $action): RedirectResponse

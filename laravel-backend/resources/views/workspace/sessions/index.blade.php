@@ -1,61 +1,92 @@
 @extends('workspace.layouts.app')
 
+@section('title', 'الجلسات الدراسية | بوابة مساحة العمل')
+
+@section('styles')
+@include('workspace.partials.dark-theme')
+@endsection
+
 @section('content')
-<div class="settings-container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h1 class="page-title" style="margin: 0;">الجلسات الدراسية وورش العمل</h1>
-        <a href="{{ route('workspace.sessions.create') }}" class="btn-action btn-action-primary" style="padding: 10px 20px; border-radius: var(--radius-sm); text-decoration: none; color: white; background: var(--upwork-green);">
-            <i class="fa-solid fa-plus"></i> إضافة جلسة جديدة
-        </a>
+<div class="visits-dark">
+
+    {{-- Hero header --}}
+    <div class="vd-card vd-card--accent" style="margin-bottom:22px;">
+        <div class="vd-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="vd-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+                <div>
+                    <h3 style="font-size:20px;">الجلسات الدراسية وورش العمل</h3>
+                    <p>أنشئ جلساتك وورش العمل وأدِر مواعيدها وأسعارها.</p>
+                </div>
+            </div>
+            <a href="{{ route('workspace.sessions.create') }}" class="btn-primary" style="text-decoration:none;">
+                <i class="fa-solid fa-plus"></i> إضافة جلسة جديدة
+            </a>
+        </div>
     </div>
 
     @if(session('success'))
-        <div style="background: var(--upwork-green-soft); color: var(--upwork-green-dark); padding: 15px; border-radius: var(--radius-sm); margin-bottom: 20px;">
-            {{ session('success') }}
-        </div>
+        <div class="vd-card vd-card--pad" style="margin-bottom:16px; border-right:4px solid var(--vd-accent); color:var(--vd-accent);">{{ session('success') }}</div>
     @endif
 
-    <div class="card">
+    {{-- Sessions table --}}
+    <div class="vd-card">
+        <div class="vd-body">
         @if($sessions->count() > 0)
-            <table style="width: 100%; border-collapse: collapse; text-align: right;">
+            <div class="table-responsive">
+            <table>
                 <thead>
-                    <tr style="border-bottom: 2px solid var(--upwork-border);">
-                        <th style="padding: 12px;">عنوان الجلسة</th>
-                        <th style="padding: 12px;">المدرب / المحاضر</th>
-                        <th style="padding: 12px;">التوقيت</th>
-                        <th style="padding: 12px;">السعر</th>
-                        <th style="padding: 12px;">الإجراءات</th>
+                    <tr>
+                        <th>عنوان الجلسة</th>
+                        <th>المدرب / المحاضر</th>
+                        <th>التوقيت</th>
+                        <th>السعر</th>
+                        <th>الإجراءات</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($sessions as $session)
-                        <tr style="border-bottom: 1px solid var(--upwork-border);">
-                            <td style="padding: 12px;">{{ $session->title }}</td>
-                            <td style="padding: 12px;">{{ $session->instructor_name ?? 'غير محدد' }}</td>
-                            <td style="padding: 12px;">
-                                {{ \Carbon\Carbon::parse($session->start_time)->format('Y-m-d h:i A') }}<br>
-                                <small>إلى: {{ \Carbon\Carbon::parse($session->end_time)->format('h:i A') }}</small>
+                        @php $priceEgp = $session->price_cents / 100; @endphp
+                        <tr>
+                            <td style="font-weight:700;">{{ $session->title }}</td>
+                            <td class="{{ $session->instructor_name ? '' : 'dim' }}">{{ $session->instructor_name ?? 'غير محدد' }}</td>
+                            <td>
+                                <span class="time">{{ \Carbon\Carbon::parse($session->start_time)->format('Y-m-d h:i A') }}</span><br>
+                                <small class="dim">إلى: {{ \Carbon\Carbon::parse($session->end_time)->format('h:i A') }}</small>
                             </td>
-                            <td style="padding: 12px;">{{ number_format($session->price_cents / 100, 2) }} ج.م</td>
-                            <td style="padding: 12px; display: flex; gap: 10px;">
-                                <a href="{{ route('workspace.sessions.edit', $session) }}" style="color: var(--upwork-blue); text-decoration: none;">تعديل</a>
-                                <form action="{{ route('workspace.sessions.destroy', $session) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذه الجلسة؟');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" style="color: var(--upwork-error); background: none; border: none; cursor: pointer; padding: 0;">حذف</button>
-                                </form>
+                            <td>
+                                @if($priceEgp > 0)
+                                    <span class="money">{{ number_format($priceEgp, 2) }} <small style="font-size:11px;">ج.م</small></span>
+                                @else
+                                    <span class="badge badge-free">مجاني</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                                    <a href="{{ route('workspace.sessions.edit', $session) }}" class="vd-btn"><i class="fa-solid fa-pen"></i> تعديل</a>
+                                    <form action="{{ route('workspace.sessions.destroy', $session) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذه الجلسة؟');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="vd-btn vd-btn-danger"><i class="fa-solid fa-trash"></i> حذف</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-            
-            <div style="margin-top: 20px;">
-                {{ $sessions->links() }}
+            </div>
+
+            <div style="margin-top:20px;">
+                {{ $sessions->links('vendor.pagination.upwork') }}
             </div>
         @else
-            <p style="text-align: center; color: var(--upwork-muted); padding: 40px;">لا توجد جلسات حالياً. أضف جلستك الأولى الآن!</p>
+            <div class="empty-state">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                لا توجد جلسات حالياً. أضف جلستك الأولى الآن!
+            </div>
         @endif
+        </div>
     </div>
 </div>
 @endsection

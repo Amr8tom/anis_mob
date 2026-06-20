@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\PlanController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\SubscriptionController;
 use App\Http\Controllers\Api\V1\WorkspaceController;
+use App\Http\Controllers\Api\V1\WorkspacePrivateSessionCheckInController;
 use App\Http\Controllers\Api\V1\WorkspaceVisitController;
 use App\Http\Controllers\HealthController;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,7 @@ Route::prefix('v1')->group(function (): void {
 
         // QR workspace attendance
         Route::post('workspace-visits/check-in', [WorkspaceVisitController::class, 'checkIn'])->middleware('idempotent');
+        Route::post('workspace-private-sessions/check-in', [WorkspacePrivateSessionCheckInController::class, 'store'])->middleware('idempotent');
         Route::post('workspace-visits/{visit}/check-out', [WorkspaceVisitController::class, 'checkOut'])->middleware('idempotent');
         Route::post('workspace-visits/{visit}/request-checkout', [WorkspaceVisitController::class, 'requestCheckout']);
         Route::delete('workspace-visits/{visit}/request-checkout', [WorkspaceVisitController::class, 'cancelCheckoutRequest']);
