@@ -107,9 +107,9 @@
 
 @section('content')
     <div class="auth-container">
-        <h1 class="page-title text-center" style="text-align: center;">سجل مساحة العمل الخاصة بك</h1>
+        <h1 class="page-title text-center" style="text-align: center;">{{ __('portal.auth.register.title') }}</h1>
         <p class="page-subtitle text-center" style="text-align: center; margin-bottom: 30px;">
-            انضم إلى شبكة "أنيس" وابدأ باستقبال الطلاب والمستقلين في مساحتك.
+            {{ __('portal.auth.register.subtitle') }}
         </p>
 
         <div class="card">
@@ -118,12 +118,12 @@
 
                 <!-- Owner Account Details -->
                 <div class="section-header">
-                    <i class="fa-solid fa-user-gear"></i> بيانات حساب الشريك (المالك)
+                    <i class="fa-solid fa-user-gear"></i> {{ __('portal.auth.register.section_owner') }}
                 </div>
 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label for="full_name">الاسم بالكامل</label>
+                        <label for="full_name">{{ __('portal.auth.register.full_name') }}</label>
                         <input type="text" id="full_name" name="full_name" class="form-control" value="{{ old('full_name') }}" required>
                         @error('full_name')
                             <div class="form-error">{{ $message }}</div>
@@ -131,7 +131,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="phone_number">رقم الهاتف (لتسجيل الدخول)</label>
+                        <label for="phone_number">{{ __('portal.auth.register.phone') }}</label>
                         <input type="tel" id="phone_number" name="phone_number" class="form-control" placeholder="01xxxxxxxxx" value="{{ old('phone_number') }}" required>
                         @error('phone_number')
                             <div class="form-error">{{ $message }}</div>
@@ -141,7 +141,7 @@
 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label for="whatsapp_number">رقم الواتساب (للتواصل مع العملاء)</label>
+                        <label for="whatsapp_number">{{ __('portal.auth.register.whatsapp') }}</label>
                         <input type="tel" id="whatsapp_number" name="whatsapp_number" class="form-control" placeholder="01xxxxxxxxx" value="{{ old('whatsapp_number') }}" required>
                         @error('whatsapp_number')
                             <div class="form-error">{{ $message }}</div>
@@ -149,7 +149,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="password">كلمة المرور</label>
+                        <label for="password">{{ __('portal.auth.register.password') }}</label>
                         <input type="password" id="password" name="password" class="form-control" required>
                         @error('password')
                             <div class="form-error">{{ $message }}</div>
@@ -159,12 +159,12 @@
 
                 <!-- Workspace Details -->
                 <div class="section-header" style="margin-top: 30px;">
-                    <i class="fa-solid fa-store"></i> بيانات مساحة العمل
+                    <i class="fa-solid fa-store"></i> {{ __('portal.auth.register.section_workspace') }}
                 </div>
 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label for="workspace_name">اسم مساحة العمل</label>
+                        <label for="workspace_name">{{ __('portal.auth.register.workspace_name') }}</label>
                         <input type="text" id="workspace_name" name="workspace_name" class="form-control" value="{{ old('workspace_name') }}" required>
                         @error('workspace_name')
                             <div class="form-error">{{ $message }}</div>
@@ -172,9 +172,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="day_calculation_hours">ساعات احتساب اليوم</label>
+                        <label for="day_calculation_hours">{{ __('portal.auth.register.day_hours') }}</label>
                         <input type="number" id="day_calculation_hours" name="day_calculation_hours" class="form-control" min="1" max="24" value="{{ old('day_calculation_hours', 8) }}" required>
-                        <small style="color: var(--upwork-muted); font-size: 12px; display: block; margin-top: 4px;">عدد الساعات التي تعادل استهلاك يوم اشتراك كامل للعميل.</small>
+                        <small style="color: var(--upwork-muted); font-size: 12px; display: block; margin-top: 4px;">{{ __('portal.auth.register.day_hours_hint') }}</small>
                         @error('day_calculation_hours')
                             <div class="form-error">{{ $message }}</div>
                         @enderror
@@ -182,8 +182,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="description">وصف مساحة العمل</label>
-                    <textarea id="description" name="description" class="form-control" rows="3" placeholder="أخبرنا المزيد عن مساحتك ومميزاتها...">{{ old('description') }}</textarea>
+                    <label for="description">{{ __('portal.auth.register.description') }}</label>
+                    <textarea id="description" name="description" class="form-control" rows="3" placeholder="{{ __('portal.auth.register.description_placeholder') }}">{{ old('description') }}</textarea>
                     @error('description')
                         <div class="form-error">{{ $message }}</div>
                     @enderror
@@ -191,7 +191,7 @@
 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label for="capacity">الطاقة الاستيعابية (عدد الأفراد)</label>
+                        <label for="capacity">{{ __('portal.auth.register.capacity') }}</label>
                         <input type="number" id="capacity" name="capacity" class="form-control" min="1" value="{{ old('capacity') }}">
                         @error('capacity')
                             <div class="form-error">{{ $message }}</div>
@@ -200,14 +200,14 @@
 
                     <div class="grid-2" style="gap: 10px;">
                         <div class="form-group">
-                            <label for="open_time">وقت الفتح</label>
+                            <label for="open_time">{{ __('portal.auth.register.open_time') }}</label>
                             <input type="time" id="open_time" name="open_time" class="form-control" value="{{ old('open_time') }}">
                             @error('open_time')
                                 <div class="form-error">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="close_time">وقت الإغلاق</label>
+                            <label for="close_time">{{ __('portal.auth.register.close_time') }}</label>
                             <input type="time" id="close_time" name="close_time" class="form-control" value="{{ old('close_time') }}">
                             @error('close_time')
                                 <div class="form-error">{{ $message }}</div>
@@ -218,9 +218,9 @@
 
                 <!-- Amenities -->
                 <div class="form-group">
-                    <label>المرافق المتاحة</label>
+                    <label>{{ __('portal.auth.register.amenities_label') }}</label>
                     <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px;">
-                        @php $availableAmenities = ['wifi' => 'واي فاي سريع', 'ac' => 'تكييف مركزي', 'coffee' => 'مشروبات مجانية', 'printing' => 'طباعة وتصوير', 'quiet' => 'منطقة هادئة']; @endphp
+                        @php $availableAmenities = ['wifi' => __('portal.auth.register.amenity_wifi'), 'ac' => __('portal.auth.register.amenity_ac'), 'coffee' => __('portal.auth.register.amenity_coffee'), 'printing' => __('portal.auth.register.amenity_printing'), 'quiet' => __('portal.auth.register.amenity_quiet')]; @endphp
                         @foreach($availableAmenities as $key => $label)
                             <label style="display: flex; align-items: center; gap: 5px; font-weight: normal; font-size: 14px; cursor: pointer;">
                                 <input type="checkbox" name="amenities[]" value="{{ $key }}" {{ in_array($key, old('amenities', [])) ? 'checked' : '' }}>
@@ -235,19 +235,19 @@
 
                 <!-- Images -->
                 <div class="section-header" style="margin-top: 30px;">
-                    <i class="fa-solid fa-images"></i> صور مساحة العمل
+                    <i class="fa-solid fa-images"></i> {{ __('portal.auth.register.section_images') }}
                 </div>
-                
+
                 <div class="grid-2">
                     <div class="form-group">
-                        <label for="cover_image">الصورة الرئيسية (Cover)</label>
+                        <label for="cover_image">{{ __('portal.auth.register.cover') }}</label>
                         <input type="file" id="cover_image" name="cover_image" class="form-control" accept="image/*">
                         @error('cover_image')
                             <div class="form-error">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="gallery_images">صور أخرى (Gallery - يمكن تحديد أكثر من صورة)</label>
+                        <label for="gallery_images">{{ __('portal.auth.register.gallery') }}</label>
                         <input type="file" id="gallery_images" name="gallery_images[]" class="form-control" accept="image/*" multiple>
                         @error('gallery_images')
                             <div class="form-error">{{ $message }}</div>
@@ -257,19 +257,19 @@
 
                 <!-- Drinks / Menu -->
                 <div class="section-header" style="margin-top: 30px;">
-                    <i class="fa-solid fa-mug-hot"></i> قائمة المشروبات
+                    <i class="fa-solid fa-mug-hot"></i> {{ __('portal.auth.register.section_drinks') }}
                 </div>
                 
                 <div id="drinks-container">
                     <!-- Dynamic drinks will be appended here -->
                 </div>
                 <button type="button" class="btn-submit" id="add-drink-btn" style="background-color: var(--upwork-blue); padding: 8px 16px; font-size: 14px; width: auto; margin-bottom: 20px;">
-                    <i class="fa-solid fa-plus"></i> إضافة مشروب
+                    <i class="fa-solid fa-plus"></i> {{ __('portal.auth.register.add_drink') }}
                 </button>
 
                 <div class="form-group">
-                    <label for="address">العنوان بالتفصيل</label>
-                    <input type="text" id="address" name="address" class="form-control" placeholder="مثال: 12 شارع التسعين، التجمع الخامس، القاهرة" value="{{ old('address') }}" required>
+                    <label for="address">{{ __('portal.auth.register.address') }}</label>
+                    <input type="text" id="address" name="address" class="form-control" placeholder="{{ __('portal.auth.register.address_placeholder') }}" value="{{ old('address') }}" required>
                     @error('address')
                         <div class="form-error">{{ $message }}</div>
                     @enderror
@@ -277,22 +277,22 @@
 
                 <!-- Geolocation coordinates (Map) -->
                 <div class="form-group">
-                    <label>الموقع الجغرافي على الخريطة</label>
+                    <label>{{ __('portal.auth.register.map_label') }}</label>
                     <p style="color: var(--upwork-muted); font-size: 13px; margin-bottom: 10px;">
-                        قم بسحب الدبوس أو اضغط على موقع مساحتك على الخريطة لتحديد الإحداثيات بدقة.
+                        {{ __('portal.auth.register.map_hint') }}
                     </p>
                     <div id="map"></div>
-                    
+
                     <div class="grid-2" style="margin-top: 10px;">
                         <div>
-                            <label style="font-size: 12px; color: var(--upwork-muted);">خط العرض (Latitude)</label>
+                            <label style="font-size: 12px; color: var(--upwork-muted);">{{ __('portal.auth.register.latitude') }}</label>
                             <input type="text" id="latitude" name="latitude" class="form-control" value="{{ old('latitude', '30.0444') }}" readonly required>
                             @error('latitude')
                                 <div class="form-error">{{ $message }}</div>
                             @enderror
                         </div>
                         <div>
-                            <label style="font-size: 12px; color: var(--upwork-muted);">خط الطول (Longitude)</label>
+                            <label style="font-size: 12px; color: var(--upwork-muted);">{{ __('portal.auth.register.longitude') }}</label>
                             <input type="text" id="longitude" name="longitude" class="form-control" value="{{ old('longitude', '31.2357') }}" readonly required>
                             @error('longitude')
                                 <div class="form-error">{{ $message }}</div>
@@ -303,20 +303,28 @@
 
                 <button type="submit" class="btn-submit" style="margin-top: 20px;">
                     <i class="fa-solid fa-rocket"></i>
-                    <span>تسجيل المساحة والبدء</span>
+                    <span>{{ __('portal.auth.register.submit') }}</span>
                 </button>
             </form>
         </div>
 
         <div class="auth-footer">
-            لديك حساب مسجل بالفعل؟ <a href="{{ route('workspace.login') }}">تسجيل الدخول من هنا</a>
+            {{ __('portal.auth.register.footer') }} <a href="{{ route('workspace.login') }}">{{ __('portal.auth.register.footer_link') }}</a>
         </div>
     </div>
 @endsection
 
 @section('scripts')
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    @php
+        $registerI18n = [
+            'drink_name' => __('portal.auth.register.drink_name'),
+            'drink_name_placeholder' => __('portal.auth.register.drink_name_placeholder'),
+            'drink_price' => __('portal.auth.register.drink_price'),
+        ];
+    @endphp
     <script>
+        const REGISTER_I18N = {!! json_encode($registerI18n, JSON_UNESCAPED_UNICODE) !!};
         document.addEventListener('DOMContentLoaded', function() {
             // Initial Coordinates (Default Cairo)
             var initialLat = parseFloat(document.getElementById('latitude').value) || 30.0444;
@@ -368,15 +376,15 @@
                 row.style.alignItems = 'end';
                 row.innerHTML = `
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label>اسم المشروب</label>
+                        <label>${REGISTER_I18N.drink_name}</label>
                         <div style="display: flex; gap: 10px;">
                             <input type="text" name="drinks[${drinkIndex}][icon]" class="form-control" style="width: 60px; text-align: center;" value="${icon}" required placeholder="☕">
-                            <input type="text" name="drinks[${drinkIndex}][name]" class="form-control" style="flex: 1;" value="${name}" required placeholder="مثال: قهوة تركي">
+                            <input type="text" name="drinks[${drinkIndex}][name]" class="form-control" style="flex: 1;" value="${name}" required placeholder="${REGISTER_I18N.drink_name_placeholder}">
                         </div>
                     </div>
                     <div class="form-group" style="margin-bottom: 0; display: flex; gap: 10px; align-items: flex-end;">
                         <div style="flex: 1;">
-                            <label>السعر (بالقروش - مثال: 15 جنيه = 1500)</label>
+                            <label>${REGISTER_I18N.drink_price}</label>
                             <input type="number" name="drinks[${drinkIndex}][price_cents]" class="form-control" value="${priceCents}" required min="0">
                         </div>
                         <button type="button" class="btn-remove-drink" style="background: none; border: none; color: var(--upwork-error); cursor: pointer; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--upwork-border); height: 45px;">

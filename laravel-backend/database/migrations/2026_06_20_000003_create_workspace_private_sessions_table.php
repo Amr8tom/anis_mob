@@ -14,7 +14,7 @@ return new class extends Migration
             Schema::create('workspace_private_sessions', function (Blueprint $table) {
                 $table->uuid('id')->primary();
                 $table->foreignUuid('workspace_id')->constrained()->cascadeOnDelete();
-                $table->foreignUuid('created_by_owner_id')->constrained('users')->restrictOnDelete();
+                $table->foreignUuid('created_by_owner_id')->nullable()->constrained('users')->nullOnDelete();
                 $table->string('title');
                 $table->text('description')->nullable();
                 $table->string('host_name')->nullable();
@@ -46,7 +46,10 @@ return new class extends Migration
                 $table->string('status', 24)->default('invited');
                 $table->timestamp('checked_in_at')->nullable();
                 $table->string('checked_in_method', 24)->nullable();
-                $table->foreignUuid('checked_in_by_owner_id')->nullable()->constrained('users')->nullOnDelete();
+                // Explicit short FK name — the auto-generated one exceeds MySQL's 64-char limit.
+                $table->uuid('checked_in_by_owner_id')->nullable();
+                $table->foreign('checked_in_by_owner_id', 'wps_att_checkin_owner_fk')
+                    ->references('id')->on('users')->nullOnDelete();
                 $table->unsignedInteger('amount_cents')->default(0);
                 $table->string('payment_status', 24)->default('paid');
                 $table->timestamps();

@@ -31,9 +31,11 @@ class User extends Authenticatable
     protected $fillable = [
         'full_name',
         'phone_number',
+        'phone_number_normalized',
         'email',
         'whatsapp_number',
         'password',
+        'locale',
         'role',
         'gender',
         'is_guest',
@@ -81,6 +83,22 @@ class User extends Authenticatable
             'streak_days' => 'integer',
             'total_sessions' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (self $user): void {
+            if ($user->isDirty('phone_number')) {
+                $user->phone_number_normalized = self::normalizePhone($user->phone_number);
+            }
+        });
+    }
+
+    public static function normalizePhone(?string $phone): ?string
+    {
+        $normalized = preg_replace('/\D+/', '', (string) $phone) ?? '';
+
+        return $normalized === '' ? null : $normalized;
     }
 
     // ---- Relationships ----

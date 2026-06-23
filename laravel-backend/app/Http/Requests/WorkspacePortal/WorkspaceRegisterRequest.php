@@ -20,7 +20,7 @@ final class WorkspaceRegisterRequest extends FormRequest
     {
         return [
             'full_name' => ['required', 'string', 'max:255'],
-            'phone_number' => ['required', 'string', 'unique:users,phone_number'],
+            'phone_number' => ['required', 'string', 'unique:workspace_owners,phone_number'],
             'password' => ['required', 'string', 'min:6', 'max:72'],
             'whatsapp_number' => ['required', 'string', 'max:30'],
             'workspace_name' => ['required', 'string', 'max:255'],

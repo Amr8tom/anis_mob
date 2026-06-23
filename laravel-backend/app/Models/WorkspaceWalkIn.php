@@ -16,6 +16,16 @@ final class WorkspaceWalkIn extends Model
 
     protected $guarded = ['id'];
 
+    protected static function booted(): void
+    {
+        static::saving(function (self $walkIn): void {
+            if ($walkIn->isDirty('phone_number')) {
+                $normalized = preg_replace('/\D+/', '', (string) $walkIn->phone_number) ?? '';
+                $walkIn->phone_number_normalized = $normalized === '' ? null : $normalized;
+            }
+        });
+    }
+
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);

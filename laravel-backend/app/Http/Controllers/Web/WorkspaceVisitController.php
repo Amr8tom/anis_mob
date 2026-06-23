@@ -112,7 +112,18 @@ class WorkspaceVisitController extends Controller
                 ->when(isset($filters['to']), fn ($q) => $q->where('starts_at', '<', Carbon::parse($filters['to'])->addSecond()))
                 ->when(filled($filters['search'] ?? null), function ($q) use ($filters): void {
                     $search = trim((string) $filters['search']);
-                    $q->where(fn ($qq) => $qq->where('client_name', 'like', "%{$search}%")->orWhere('client_phone', 'like', "%{$search}%"));
+                    $normalizedPhone = preg_replace('/\D+/', '', $search) ?? '';
+                    $q->where(function ($qq) use ($search, $normalizedPhone): void {
+                        if (DB::getDriverName() === 'mysql') {
+                            $qq->whereRaw('MATCH(client_name) AGAINST (? IN BOOLEAN MODE)', [$search.'*']);
+                        } else {
+                            $qq->where('client_name', 'like', "{$search}%");
+                        }
+
+                        if ($normalizedPhone !== '') {
+                            $qq->orWhere('client_phone', 'like', "{$normalizedPhone}%");
+                        }
+                    });
                 })
                 ->latest('created_at')
                 ->get();

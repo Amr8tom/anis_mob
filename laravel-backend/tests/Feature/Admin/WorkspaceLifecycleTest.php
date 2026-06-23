@@ -7,6 +7,7 @@ namespace Tests\Feature\Admin;
 use App\Enums\UserRole;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceOwner;
 use App\Models\WorkspaceVisit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -23,14 +24,13 @@ final class WorkspaceLifecycleTest extends TestCase
 
     private function pendingWorkspace(): Workspace
     {
-        $owner = User::factory()->create([
-            'role' => UserRole::WORKSPACE_OWNER,
+        $owner = WorkspaceOwner::factory()->create([
             'phone_number' => '01088887777',
             'password' => Hash::make('secret123'),
         ]);
 
         return Workspace::factory()->create([
-            'owner_id' => $owner->id,
+            'workspace_owner_id' => $owner->id,
             'lifecycle_status' => 'PENDING',
             'is_active' => false,
         ]);
@@ -45,7 +45,7 @@ final class WorkspaceLifecycleTest extends TestCase
             'password' => 'secret123',
         ]);
 
-        $this->assertGuest();
+        $this->assertGuest('workspace_owner');
         $response->assertSessionHasErrors(['phone_number']);
     }
 
@@ -65,29 +65,27 @@ final class WorkspaceLifecycleTest extends TestCase
 
     public function test_owner_of_approved_workspace_can_login(): void
     {
-        $owner = User::factory()->create([
-            'role' => UserRole::WORKSPACE_OWNER,
+        $owner = WorkspaceOwner::factory()->create([
             'phone_number' => '01088887777',
             'password' => Hash::make('secret123'),
         ]);
-        Workspace::factory()->create(['owner_id' => $owner->id]); // APPROVED + active by default
+        Workspace::factory()->create(['workspace_owner_id' => $owner->id]); // APPROVED + active by default
 
         $this->post('/workspace/login', [
             'phone_number' => '01088887777',
             'password' => 'secret123',
         ])->assertRedirect(route('workspace.settings.edit'));
-        $this->assertAuthenticatedAs($owner);
+        $this->assertAuthenticatedAs($owner, 'workspace_owner');
     }
 
     public function test_owner_of_suspended_workspace_cannot_login(): void
     {
-        $owner = User::factory()->create([
-            'role' => UserRole::WORKSPACE_OWNER,
+        $owner = WorkspaceOwner::factory()->create([
             'phone_number' => '01055554444',
             'password' => Hash::make('secret123'),
         ]);
         Workspace::factory()->create([
-            'owner_id' => $owner->id,
+            'workspace_owner_id' => $owner->id,
             'lifecycle_status' => 'SUSPENDED',
             'is_active' => false,
         ]);
@@ -96,13 +94,13 @@ final class WorkspaceLifecycleTest extends TestCase
             'phone_number' => '01055554444',
             'password' => 'secret123',
         ])->assertSessionHasErrors(['phone_number']);
-        $this->assertGuest();
+        $this->assertGuest('workspace_owner');
     }
 
     public function test_admin_reject_hard_deletes_workspace_and_owner_freeing_phone(): void
     {
         $workspace = $this->pendingWorkspace();
-        $ownerId = $workspace->owner_id;
+        $ownerId = $workspace->workspace_owner_id;
 
         $this->actingAs($this->admin(), 'admin')
             ->post(route('admin.workspaces.reject', $workspace), ['reason' => 'بيانات غير مكتملة'])
@@ -110,7 +108,7 @@ final class WorkspaceLifecycleTest extends TestCase
 
         // Hard-deleted (not soft) so the unique phone number is freed.
         $this->assertDatabaseMissing('workspaces', ['id' => $workspace->id]);
-        $this->assertDatabaseMissing('users', ['id' => $ownerId]);
+        $this->assertDatabaseMissing('workspace_owners', ['id' => $ownerId]);
     }
 
     public function test_admin_can_suspend_and_unsuspend(): void

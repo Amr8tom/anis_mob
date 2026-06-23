@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\AdminWorkspaceController;
 use App\Http\Controllers\Web\AdminWorkspaceSettlementController;
 use App\Http\Controllers\Web\WorkspaceAuthController;
 use App\Http\Controllers\Web\WorkspaceClientController;
+use App\Http\Controllers\Web\WorkspaceEducationController;
 use App\Http\Controllers\Web\WorkspaceFinancialController;
 use App\Http\Controllers\Web\WorkspacePrivateSessionController;
 use App\Http\Controllers\Web\WorkspaceSessionController;
@@ -20,6 +21,9 @@ use Illuminate\Support\Facades\Storage;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Language switcher (works logged-in or not).
+Route::post('locale', [\App\Http\Controllers\Web\LocaleController::class, 'switch'])->name('locale.switch');
 
 // Serves workspace media straight from the configured disk so images render
 // even when the `public/storage` symlink is missing (a common deploy footgun).
@@ -51,11 +55,11 @@ Route::prefix('workspace')->name('workspace.')->group(function () {
     Route::get('pending', [WorkspaceAuthController::class, 'showPending'])->name('pending');
 
     // Guest auth routes
-    Route::middleware('guest')->group(function () {
+    Route::middleware('guest:workspace_owner')->group(function () {
         Route::get('register', [WorkspaceAuthController::class, 'showRegister'])->name('register');
-        Route::post('register', [WorkspaceAuthController::class, 'register']);
+        Route::post('register', [WorkspaceAuthController::class, 'register'])->middleware('throttle:auth');
         Route::get('login', [WorkspaceAuthController::class, 'showLogin'])->name('login');
-        Route::post('login', [WorkspaceAuthController::class, 'login']);
+        Route::post('login', [WorkspaceAuthController::class, 'login'])->middleware('throttle:auth');
     });
 
     // Protected routes for owner
@@ -69,6 +73,17 @@ Route::prefix('workspace')->name('workspace.')->group(function () {
         // Sessions
         Route::resource('sessions', WorkspaceSessionController::class)->except(['show']);
 
+        // Education-center workspace setup: teachers, subjects, and grade levels.
+        Route::prefix('education')->name('education.')->group(function () {
+            Route::get('/', [WorkspaceEducationController::class, 'index'])->name('index');
+            Route::post('teachers', [WorkspaceEducationController::class, 'storeTeacher'])->name('teachers.store');
+            Route::post('subjects', [WorkspaceEducationController::class, 'storeSubject'])->name('subjects.store');
+            Route::post('grade-levels', [WorkspaceEducationController::class, 'storeGradeLevel'])->name('grade-levels.store');
+            Route::post('teachers/{teacher}/toggle', [WorkspaceEducationController::class, 'toggleTeacher'])->name('teachers.toggle');
+            Route::post('subjects/{subject}/toggle', [WorkspaceEducationController::class, 'toggleSubject'])->name('subjects.toggle');
+            Route::post('grade-levels/{gradeLevel}/toggle', [WorkspaceEducationController::class, 'toggleGradeLevel'])->name('grade-levels.toggle');
+        });
+
         // Workspace-private sessions: owner-created, hidden from the public app catalog.
         Route::prefix('private-sessions')->name('private-sessions.')->group(function () {
             Route::get('/', [WorkspacePrivateSessionController::class, 'index'])->name('index');
@@ -78,6 +93,7 @@ Route::prefix('workspace')->name('workspace.')->group(function () {
             Route::get('{privateSession}/qr', [WorkspacePrivateSessionController::class, 'qr'])->name('qr');
             Route::post('{privateSession}/attendees', [WorkspacePrivateSessionController::class, 'storeAttendee'])->name('attendees.store');
             Route::post('{privateSession}/attendees/import', [WorkspacePrivateSessionController::class, 'importAttendees'])->name('attendees.import');
+            Route::post('{privateSession}/attendees/import/confirm', [WorkspacePrivateSessionController::class, 'confirmImportAttendees'])->name('attendees.import.confirm');
             Route::post('{privateSession}/attendees/{attendee}/check-in', [WorkspacePrivateSessionController::class, 'checkInAttendee'])->name('attendees.check-in');
             Route::post('{privateSession}/finish', [WorkspacePrivateSessionController::class, 'finish'])->name('finish');
             Route::post('{privateSession}/cancel', [WorkspacePrivateSessionController::class, 'cancel'])->name('cancel');

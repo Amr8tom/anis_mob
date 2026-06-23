@@ -7,10 +7,9 @@ namespace App\Domain\WorkspacePortal\Repositories;
 use App\Domain\WorkspacePortal\Contracts\WorkspacePortalRepositoryInterface as ContractInterface;
 use App\Domain\WorkspacePortal\Data\WorkspaceRegistrationData;
 use App\Domain\WorkspacePortal\Data\WorkspaceUpdateData;
-use App\Enums\UserRole;
 use App\Enums\WorkspaceLifecycleStatus;
-use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceOwner;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -19,12 +18,12 @@ final class EloquentWorkspacePortalRepository implements ContractInterface
     public function createOwnerAndWorkspace(WorkspaceRegistrationData $data): Workspace
     {
         return DB::transaction(function () use ($data) {
-            $user = User::create([
+            $owner = WorkspaceOwner::create([
                 'full_name' => $data->fullName,
                 'phone_number' => $data->phoneNumber,
-                'whatsapp_number' => $data->whatsappNumber,
+                'email' => null,
                 'password' => $data->password,
-                'role' => UserRole::WORKSPACE_OWNER,
+                'status' => 'active',
             ]);
 
             $disk = (string) config('filesystems.workspace_media_disk');
@@ -41,7 +40,7 @@ final class EloquentWorkspacePortalRepository implements ContractInterface
             }
 
             $workspace = Workspace::create([
-                'owner_id' => $user->id,
+                'workspace_owner_id' => $owner->id,
                 'name' => $data->workspaceName,
                 'address' => $data->address,
                 'latitude' => $data->latitude,
@@ -116,7 +115,7 @@ final class EloquentWorkspacePortalRepository implements ContractInterface
     public function findByOwnerId(string $ownerId): ?Workspace
     {
         return Workspace::query()
-            ->where('owner_id', $ownerId)
+            ->where('workspace_owner_id', $ownerId)
             ->first();
     }
 }

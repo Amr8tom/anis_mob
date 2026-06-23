@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Web;
 
 use App\Domain\Admin\Actions\LogAdminAction;
 use App\Domain\WorkspaceSettlement\Actions\GetWorkspaceVisitReportAction;
-use App\Enums\UserRole;
 use App\Enums\VisitStatus;
 use App\Enums\WorkspaceLifecycleStatus;
 use App\Enums\WorkspaceStatus;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceOwner;
 use App\Models\WorkspaceOwnershipChange;
 use App\Models\WorkspaceOwnershipInvitation;
 use App\Models\WorkspaceVisit;
@@ -37,7 +36,7 @@ class AdminWorkspaceController extends Controller
 
         // Registrations awaiting review are surfaced at the top of the page.
         $pendingWorkspaces = Workspace::query()
-            ->with('owner')
+            ->with(['owner', 'workspaceOwner'])
             ->where('lifecycle_status', WorkspaceLifecycleStatus::PENDING->value)
             ->latest()
             ->get();
@@ -68,15 +67,17 @@ class AdminWorkspaceController extends Controller
         $ownerPhone = $validated['owner_phone'];
         unset($validated['owner_phone']);
         [$workspace, $invitationToken] = DB::transaction(function () use ($validated, $ownerPhone): array {
-            $owner = User::where('phone_number', $ownerPhone)->first();
+            $owner = WorkspaceOwner::query()
+                ->where('phone_number', $ownerPhone)
+                ->orWhere('phone_number_normalized', WorkspaceOwner::normalizePhone($ownerPhone))
+                ->first();
             if ($owner !== null) {
                 abort_if($owner->ownedWorkspace()->exists(), 422, 'This owner already has a workspace.');
-                $owner->update(['role' => UserRole::WORKSPACE_OWNER]);
             }
 
             $workspace = Workspace::create([
                 ...$validated,
-                'owner_id' => $owner?->id,
+                'workspace_owner_id' => $owner?->id,
                 'qr_token' => (string) Str::uuid7(),
                 'status' => WorkspaceStatus::OPEN,
                 'is_active' => true,
@@ -85,9 +86,9 @@ class AdminWorkspaceController extends Controller
             if ($owner !== null) {
                 WorkspaceOwnershipChange::create([
                     'workspace_id' => $workspace->id,
-                    'new_owner_id' => $owner->id,
+                    'new_owner_id' => null,
                     'changed_by_admin_id' => (string) Auth::id(),
-                    'reason' => 'Assigned during admin workspace creation',
+                    'reason' => 'Assigned WorkspaceOwner during admin workspace creation: '.$owner->id,
                 ]);
 
                 return [$workspace, null];
@@ -123,27 +124,26 @@ class AdminWorkspaceController extends Controller
     public function changeOwner(Request $request, Workspace $workspace, LogAdminAction $logger): RedirectResponse
     {
         $validated = $request->validate([
-            'owner_phone' => ['required', 'string', 'exists:users,phone_number'],
+            'owner_phone' => ['required', 'string', 'exists:workspace_owners,phone_number'],
             'reason' => ['required', 'string', 'max:255'],
         ]);
-        $owner = User::where('phone_number', $validated['owner_phone'])->firstOrFail();
+        $owner = WorkspaceOwner::where('phone_number', $validated['owner_phone'])->firstOrFail();
         abort_if($owner->ownedWorkspace()->whereKeyNot($workspace->id)->exists(), 422, 'This owner already has a workspace.');
 
         DB::transaction(function () use ($workspace, $owner, $validated): void {
             $previousOwnerId = $workspace->owner_id;
-            $owner->update(['role' => UserRole::WORKSPACE_OWNER]);
-            $workspace->update(['owner_id' => $owner->id]);
+            $workspace->update(['workspace_owner_id' => $owner->id]);
             WorkspaceOwnershipChange::create([
                 'workspace_id' => $workspace->id,
                 'previous_owner_id' => $previousOwnerId,
-                'new_owner_id' => $owner->id,
+                'new_owner_id' => null,
                 'changed_by_admin_id' => (string) Auth::id(),
-                'reason' => $validated['reason'],
+                'reason' => $validated['reason'].' (WorkspaceOwner: '.$owner->id.')',
             ]);
         });
 
         $logger->handle((string) Auth::id(), 'CHANGE_WORKSPACE_OWNER', 'Workspace', $workspace->id, [
-            'new_owner_id' => $owner->id,
+            'new_workspace_owner_id' => $owner->id,
             'reason' => $validated['reason'],
         ], $request->ip());
 
@@ -152,7 +152,7 @@ class AdminWorkspaceController extends Controller
 
     public function show(Request $request, Workspace $workspace, GetWorkspaceVisitReportAction $report): View
     {
-        $workspace->load('owner');
+        $workspace->load(['owner', 'workspaceOwner']);
 
         // A pending registration has no visit history yet — show the review screen
         // (all submitted data + images) so the admin can approve or reject it.
@@ -338,7 +338,7 @@ class AdminWorkspaceController extends Controller
             'reason' => ['required', 'string', 'max:255'],
         ]);
 
-        $owner = $workspace->owner;
+        $owner = $workspace->workspaceOwner;
 
         $logger->handle(
             adminId: (string) Auth::id(),

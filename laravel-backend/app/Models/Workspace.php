@@ -261,6 +261,12 @@ class Workspace extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    /** @return BelongsTo<WorkspaceOwner, $this> */
+    public function workspaceOwner(): BelongsTo
+    {
+        return $this->belongsTo(WorkspaceOwner::class, 'workspace_owner_id');
+    }
+
     /** @return HasMany<WorkspaceSettlement, $this> */
     public function settlements(): HasMany
     {

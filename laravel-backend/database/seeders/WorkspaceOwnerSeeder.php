@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Availability;
-use App\Enums\UserRole;
-use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceOwner;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,24 +25,20 @@ class WorkspaceOwnerSeeder extends Seeder
         $workspaces = Workspace::orderBy('id')->get();
 
         foreach ($ownerData as $index => $data) {
-            $owner = User::updateOrCreate(
+            $owner = WorkspaceOwner::updateOrCreate(
                 ['phone_number' => $data['phone_number']],
                 [
                     'full_name' => $data['full_name'],
-                    'whatsapp_number' => $data['whatsapp_number'],
                     'password' => Hash::make($ownerPassword),
-                    'role' => UserRole::WORKSPACE_OWNER,
-                    'is_guest' => false,
-                    'availability' => Availability::OFFLINE,
-                    'profile_completed_at' => now(),
+                    'status' => 'active',
                 ]
             );
 
             if (isset($workspaces[$index])) {
                 $workspace = $workspaces[$index];
                 $workspace->update([
-                    'owner_id' => $owner->id,
-                    'admin_phone' => $owner->whatsapp_number,
+                    'workspace_owner_id' => $owner->id,
+                    'admin_phone' => $data['whatsapp_number'],
                 ]);
             }
         }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\WorkspaceOwner;
 
 return [
 
@@ -46,6 +47,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'workspace_owner' => [
+            'driver' => 'session',
+            'provider' => 'workspace_owners',
+        ],
     ],
 
     /*
@@ -71,10 +76,10 @@ return [
             'model' => env('AUTH_MODEL', User::class),
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'workspace_owners' => [
+            'driver' => 'eloquent',
+            'model' => WorkspaceOwner::class,
+        ],
     ],
 
     /*

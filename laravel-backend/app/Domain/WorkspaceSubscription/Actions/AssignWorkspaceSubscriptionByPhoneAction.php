@@ -30,9 +30,10 @@ final readonly class AssignWorkspaceSubscriptionByPhoneAction
         }
 
         $phone = trim($phoneNumber);
+        $normalizedPhone = User::normalizePhone($phone) ?? '';
 
-        return DB::transaction(function () use ($plan, $phone, $ownerId, $name): WorkspaceSubscription {
-            $user = User::query()->where('phone_number', $phone)->first();
+        return DB::transaction(function () use ($plan, $phone, $normalizedPhone, $ownerId, $name): WorkspaceSubscription {
+            $user = User::query()->where('phone_number_normalized', $normalizedPhone)->first();
 
             if ($user !== null) {
                 $subscription = $this->activator->activate(
@@ -52,10 +53,18 @@ final readonly class AssignWorkspaceSubscriptionByPhoneAction
             }
 
             // Not an app user — register as a walk-in for this workspace, then assign.
-            $walkIn = WorkspaceWalkIn::withTrashed()->firstOrCreate(
-                ['workspace_id' => $plan->workspace_id, 'phone_number' => $phone],
-                ['full_name' => filled($name) ? trim((string) $name) : 'زائر'],
-            );
+            $walkIn = WorkspaceWalkIn::withTrashed()
+                ->where('workspace_id', $plan->workspace_id)
+                ->where('phone_number_normalized', $normalizedPhone)
+                ->first();
+            if ($walkIn === null) {
+                $walkIn = WorkspaceWalkIn::create([
+                    'workspace_id' => $plan->workspace_id,
+                    'phone_number' => $phone,
+                    'phone_number_normalized' => $normalizedPhone,
+                    'full_name' => filled($name) ? trim((string) $name) : 'زائر',
+                ]);
+            }
             if ($walkIn->trashed()) {
                 $walkIn->restore();
             }

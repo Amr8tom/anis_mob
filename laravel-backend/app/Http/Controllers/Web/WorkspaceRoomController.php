@@ -191,6 +191,7 @@ class WorkspaceRoomController extends Controller
 
     private function resolveReservableClientName(string $workspaceId, string $phone): string
     {
+        $normalizedPhone = User::normalizePhone($phone) ?? '';
         $existingRoomClient = RoomClient::query()
             ->where('workspace_id', $workspaceId)
             ->where('phone', $phone)
@@ -202,7 +203,7 @@ class WorkspaceRoomController extends Controller
 
         $walkIn = WorkspaceWalkIn::query()
             ->where('workspace_id', $workspaceId)
-            ->where('phone_number', $phone)
+            ->where('phone_number_normalized', $normalizedPhone)
             ->value('full_name');
 
         if (filled($walkIn)) {
@@ -210,7 +211,7 @@ class WorkspaceRoomController extends Controller
         }
 
         $appUser = User::query()
-            ->where('phone_number', $phone)
+            ->where('phone_number_normalized', $normalizedPhone)
             ->value('full_name');
 
         return filled($appUser) ? trim((string) $appUser) : '';

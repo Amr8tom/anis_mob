@@ -5,6 +5,7 @@ use App\Http\Middleware\AdminPermission;
 use App\Http\Middleware\EnsureWorkspaceOwner;
 use App\Http\Middleware\IdempotentRequest;
 use App\Http\Middleware\RequestTelemetry;
+use App\Http\Middleware\SetLocale;
 use App\Support\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -28,9 +29,18 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(RequestTelemetry::class);
+        $middleware->web(append: [
+            SetLocale::class,
+        ]);
+        $middleware->api(append: [
+            SetLocale::class,
+        ]);
         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('admin/*')
             ? route('admin.login')
             : route('workspace.login'));
+        $middleware->redirectUsersTo(fn (Request $request) => $request->is('admin/*')
+            ? route('admin.dashboard')
+            : route('workspace.settings.edit'));
         $middleware->alias([
             'workspace.owner' => EnsureWorkspaceOwner::class,
             'admin' => AdminMiddleware::class,

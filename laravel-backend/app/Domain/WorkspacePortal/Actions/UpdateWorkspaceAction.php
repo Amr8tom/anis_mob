@@ -43,11 +43,19 @@ final readonly class UpdateWorkspaceAction
         }
 
         // 3. Handle Gallery Images
-        $galleryUrls = array_map($this->mediaPath(...), $data->retainedGalleryImages);
         $oldGalleryUrls = $workspace->gallery_images ?? [];
 
-        // Delete deleted gallery images from disk
-        $removedUrls = array_diff($oldGalleryUrls, $data->retainedGalleryImages);
+        // SECURITY: never trust client-supplied "retained" paths verbatim. A
+        // malicious owner could otherwise submit another workspace's image
+        // path (or an arbitrary string) and have it persisted into THEIR
+        // gallery_images column, causing it to be rendered as their own photo
+        // (cross-tenant data exposure / stored IDOR). Whitelist against the
+        // workspace's own existing gallery before doing anything else.
+        $safeRetainedImages = array_values(array_intersect($oldGalleryUrls, $data->retainedGalleryImages));
+        $galleryUrls = array_map($this->mediaPath(...), $safeRetainedImages);
+
+        // Delete gallery images the owner removed from disk
+        $removedUrls = array_diff($oldGalleryUrls, $safeRetainedImages);
         foreach ($removedUrls as $removedUrl) {
             Storage::disk($disk)->delete($this->mediaPath($removedUrl));
         }

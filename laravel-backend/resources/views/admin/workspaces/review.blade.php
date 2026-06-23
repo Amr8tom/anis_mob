@@ -103,15 +103,15 @@
         <div class="grid-2" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
             <div>
                 <div style="font-size: 13px; color: var(--upwork-muted); margin-bottom: 4px;">الاسم</div>
-                <div style="font-weight: 600;">{{ $workspace->owner?->full_name ?? '—' }}</div>
+                <div style="font-weight: 600;">{{ $workspace->workspaceOwner?->full_name ?? $workspace->owner?->full_name ?? '—' }}</div>
             </div>
             <div>
                 <div style="font-size: 13px; color: var(--upwork-muted); margin-bottom: 4px;">رقم الهاتف</div>
-                <div style="font-weight: 600; font-family: monospace;">{{ $workspace->owner?->phone_number ?? '—' }}</div>
+                <div style="font-weight: 600; font-family: monospace;">{{ $workspace->workspaceOwner?->phone_number ?? $workspace->owner?->phone_number ?? '—' }}</div>
             </div>
             <div>
                 <div style="font-size: 13px; color: var(--upwork-muted); margin-bottom: 4px;">واتساب</div>
-                <div style="font-weight: 600; font-family: monospace;">{{ $workspace->owner?->whatsapp_number ?? '—' }}</div>
+                <div style="font-weight: 600; font-family: monospace;">{{ $workspace->admin_phone ?? '—' }}</div>
             </div>
         </div>
     </div>

@@ -3,15 +3,15 @@
 @section('content')
 <div class="settings-container workspace-dark-page workspace-clients-dark">
     <div class="workspace-dark-hero">
-        <h1 class="workspace-dark-title">العملاء والزوار</h1>
+        <h1 class="workspace-dark-title">{{ __('portal.clients.title') }}</h1>
     </div>
 
     <div class="card workspace-dark-card" style="margin-bottom: 20px;">
         <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start; flex-wrap:wrap; margin-bottom:18px;">
             <div>
-                <h3 style="margin:0 0 5px;">سجل الزوار</h3>
+                <h3 style="margin:0 0 5px;">{{ __('portal.clients.log_title') }}</h3>
                 <p style="margin:0; color:var(--upwork-muted); font-size:13px;">
-                    النتائج والإجماليات أدناه تتغير حسب الاسم أو رقم الهاتف، الفترة، والباقة.
+                    {{ __('portal.clients.log_subtitle') }}
                 </p>
             </div>
             @php
@@ -21,43 +21,43 @@
             @endphp
             @if($activeFilterCount > 0)
                 <span style="background:var(--upwork-green-soft); color:var(--upwork-green-dark); padding:7px 12px; border-radius:20px; font-size:13px; font-weight:800;">
-                    {{ $activeFilterCount }} محدد
+                    {{ __('portal.clients.filters_count', ['count' => $activeFilterCount]) }}
                 </span>
             @endif
         </div>
         <form id="search-form" action="{{ route('workspace.clients.index') }}" method="GET">
             <div class="grid-3" style="gap:14px;">
                 <div style="position: relative;">
-                    <label for="search-input">الاسم أو رقم الهاتف</label>
-                    <input type="text" id="search-input" name="search" class="form-control" placeholder="ابحث بالاسم أو الهاتف..." value="{{ request('search') }}">
+                    <label for="search-input">{{ __('portal.clients.search') }}</label>
+                    <input type="text" id="search-input" name="search" class="form-control" placeholder="{{ __('portal.clients.search_placeholder') }}" value="{{ request('search') }}">
                     <div id="search-loader" style="display: none; position: absolute; left: 15px; top: 42px; color: var(--upwork-muted);">
                         <i class="fa-solid fa-spinner fa-spin"></i>
                     </div>
                 </div>
                 <div>
-                    <label for="from">من تاريخ ووقت</label>
+                    <label for="from">{{ __('portal.clients.from') }}</label>
                     <input type="datetime-local" id="from" name="from" class="form-control" value="{{ request('from') }}">
-                    <small style="color:var(--upwork-muted);">يشمل الزيارات من بداية الدقيقة المحددة.</small>
+                    <small style="color:var(--upwork-muted);">{{ __('portal.clients.from_hint') }}</small>
                 </div>
                 <div>
-                    <label for="to">إلى تاريخ ووقت</label>
+                    <label for="to">{{ __('portal.clients.to') }}</label>
                     <input type="datetime-local" id="to" name="to" class="form-control" value="{{ request('to') }}">
-                    <small style="color:var(--upwork-muted);">يشمل الدقيقة المحددة بالكامل.</small>
+                    <small style="color:var(--upwork-muted);">{{ __('portal.clients.to_hint') }}</small>
                 </div>
                 <div>
-                    <label for="plan">الباقة</label>
+                    <label for="plan">{{ __('portal.clients.plan') }}</label>
                     <select id="plan" name="plan" class="form-control">
-                        <option value="">كل الباقات</option>
-                        <option value="FREE" @selected(request('plan') === 'FREE')>مجاني</option>
-                        <option value="GLOBAL_SUBSCRIPTION" @selected(request('plan') === 'GLOBAL_SUBSCRIPTION')>عالمي</option>
-                        <option value="WORKSPACE_SUBSCRIPTION" @selected(request('plan') === 'WORKSPACE_SUBSCRIPTION')>اشتراك مساحة</option>
+                        <option value="">{{ __('portal.clients.all_plans') }}</option>
+                        <option value="FREE" @selected(request('plan') === 'FREE')>{{ __('portal.billing.FREE') }}</option>
+                        <option value="GLOBAL_SUBSCRIPTION" @selected(request('plan') === 'GLOBAL_SUBSCRIPTION')>{{ __('portal.billing.GLOBAL_SUBSCRIPTION') }}</option>
+                        <option value="WORKSPACE_SUBSCRIPTION" @selected(request('plan') === 'WORKSPACE_SUBSCRIPTION')>{{ __('portal.billing.WORKSPACE_SUBSCRIPTION') }}</option>
                     </select>
                 </div>
             </div>
             <div style="display:flex; gap:10px; margin-top:4px;">
-                <button type="submit" class="btn-primary"><i class="fa-solid fa-filter"></i> تطبيق</button>
+                <button type="submit" class="btn-primary"><i class="fa-solid fa-filter"></i> {{ __('portal.clients.apply') }}</button>
                 <a href="{{ route('workspace.clients.index') }}" class="btn-action" style="padding: 11px 20px; border-radius: var(--radius-sm); border: 1px solid var(--upwork-border); text-decoration: none; color: var(--upwork-slate); display: inline-flex; align-items: center;">
-                    مسح
+                    {{ __('portal.clients.clear') }}
                 </a>
             </div>
         </form>
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('تعذر التطبيق.');
+                    throw new Error(@json(__('portal.clients.apply_error')));
                 }
 
                 return response.text();

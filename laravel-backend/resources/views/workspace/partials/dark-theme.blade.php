@@ -121,4 +121,26 @@
         text-decoration:none; color: var(--vd-text-muted); font-weight:700; font-size:14px;
     }
     .visits-dark .vd-clear-link:hover { background: var(--vd-row-hover); color: var(--vd-text); }
+
+    /* ── Mobile tuning ─────────────────────────────────────────── */
+    @media (max-width: 600px) {
+        .visits-dark .vd-header { padding: 14px 16px; }
+        .visits-dark .vd-header h3 { font-size: 17px; }
+        .visits-dark .vd-header p  { font-size: 12px; }
+        .visits-dark .vd-icon { width: 36px; height: 36px; font-size: 15px; border-radius: 10px; }
+        .visits-dark .vd-body { padding: 16px; }
+        .visits-dark .vd-card--pad { padding: 16px; }
+
+        /* The header action button drops to its own full-width line. */
+        .visits-dark .vd-header > .btn-primary,
+        .visits-dark .vd-header > a.btn-primary { width: 100%; justify-content: center; }
+
+        /* Tighter, readable tables on small screens. */
+        .visits-dark th { padding: 10px 10px; font-size: 11px; }
+        .visits-dark td { padding: 10px 10px; font-size: 13px; }
+        .visits-dark tfoot td { padding: 12px 10px; }
+
+        /* Action button groups wrap and stay tappable. */
+        .visits-dark .vd-btn { padding: 9px 12px; }
+    }
 </style>

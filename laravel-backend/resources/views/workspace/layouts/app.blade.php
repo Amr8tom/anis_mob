@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ app()->getLocale() }}" dir="{{ $currentDirection ?? 'rtl' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#14a800">
-    <title>@yield('title', 'بوابة الشركاء — أنيس')</title>
+    <title>@yield('title', __('portal.layout.default_title'))</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -258,7 +258,7 @@
         ═══════════════════════════════════════════ */
         @media (max-width: 960px) {
             .app-sidebar { display: none; }
-            .app-main { margin-right: 0; padding: 20px 16px calc(var(--bottom-nav-h) + env(safe-area-inset-bottom) + 24px); }
+            .app-main { margin-right: 0; padding: 18px 14px calc(var(--bottom-nav-h) + env(safe-area-inset-bottom) + 30px); }
             .content-wrap { max-width: none; }
 
             .mobile-topbar {
@@ -279,6 +279,23 @@
             /* Stack the manage block: add-form first, then the list. */
             .manage-grid { grid-template-columns: 1fr; gap: 16px; }
             .manage-aside { position: static; order: -1; }
+
+            .form-control, .form-input, .form-select {
+                min-height: 46px;
+                font-size: 16px;
+                margin-bottom: 14px;
+            }
+
+            .btn-primary,
+            .btn-submit,
+            .manage-form-panel .btn-primary,
+            .manage-form-panel .btn-submit {
+                min-height: 46px;
+            }
+
+            .manage-form-panel {
+                padding: 16px;
+            }
 
             .bottom-nav {
                 display: flex; position: fixed; bottom: 0; right: 0; left: 0; z-index: 200;
@@ -308,39 +325,245 @@
             .ms-logout-form button { width: 100%; background: none; border: none; cursor: pointer; font-family: inherit; }
         }
 
+        @media (max-width: 640px) {
+            body {
+                overflow-x: hidden;
+            }
+
+            .app-main {
+                padding-inline: 12px;
+            }
+
+            .mobile-topbar {
+                padding-inline: 12px;
+            }
+
+            .card {
+                padding: 16px;
+                border-radius: 12px;
+                margin-bottom: 16px;
+            }
+
+            .page-title,
+            h1 {
+                font-size: 24px !important;
+                line-height: 1.25;
+            }
+
+            h2 {
+                font-size: 21px !important;
+            }
+
+            h3 {
+                font-size: 18px !important;
+            }
+
+            .alert {
+                padding: 12px 14px;
+                align-items: flex-start;
+            }
+
+            .table-responsive {
+                overflow-x: visible;
+            }
+
+            .table-responsive table.mobile-card-table {
+                min-width: 0 !important;
+                width: 100% !important;
+                border-collapse: separate;
+                border-spacing: 0 12px;
+            }
+
+            .mobile-card-table thead {
+                display: none;
+            }
+
+            .mobile-card-table tbody,
+            .mobile-card-table tfoot,
+            .mobile-card-table tr,
+            .mobile-card-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .mobile-card-table tbody tr,
+            .mobile-card-table tfoot tr {
+                border: 1px solid var(--upwork-border) !important;
+                border-radius: var(--radius-md);
+                padding: 10px 12px;
+                margin-bottom: 12px;
+                background: var(--upwork-card-bg);
+                box-shadow: var(--shadow-xs);
+            }
+
+            .workspace-dark-page .mobile-card-table tbody tr,
+            .workspace-dark-page .mobile-card-table tfoot tr,
+            .visits-dark .mobile-card-table tbody tr,
+            .visits-dark .mobile-card-table tfoot tr,
+            .private-session-page .mobile-card-table tbody tr,
+            .private-session-list-page .mobile-card-table tbody tr,
+            .education-page .mobile-card-table tbody tr {
+                background: #16211b !important;
+                border-color: #2c3d33 !important;
+            }
+
+            .mobile-card-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 14px;
+                padding: 8px 0 !important;
+                border-bottom: 1px solid rgba(126, 150, 130, .18) !important;
+                text-align: start !important;
+                white-space: normal !important;
+            }
+
+            .mobile-card-table td:last-child {
+                border-bottom: 0 !important;
+            }
+
+            .mobile-card-table td::before {
+                content: attr(data-label);
+                min-width: 94px;
+                max-width: 42%;
+                color: var(--upwork-muted);
+                font-size: 12px;
+                font-weight: 900;
+                line-height: 1.45;
+            }
+
+            .mobile-card-table td[colspan] {
+                display: block;
+                text-align: center !important;
+            }
+
+            .mobile-card-table td[colspan]::before,
+            .mobile-card-table td[data-label=""]::before {
+                display: none;
+            }
+
+            .mobile-card-table td form,
+            .mobile-card-table td .btn-primary,
+            .mobile-card-table td button,
+            .mobile-card-table td a {
+                max-width: 100%;
+            }
+
+            .mobile-card-table td .btn-primary,
+            .mobile-card-table td button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .uw-pagination__list {
+                justify-content: center;
+            }
+
+            .uw-page__link {
+                min-width: 36px;
+                height: 36px;
+                padding: 0 10px;
+            }
+
+            .private-session-hero,
+            .private-session-list-hero,
+            .education-hero,
+            .vd-header {
+                padding: 16px !important;
+                gap: 14px !important;
+                align-items: stretch !important;
+            }
+
+            .private-session-actions,
+            .vd-header,
+            .education-card-head {
+                flex-direction: column !important;
+            }
+
+            .private-session-actions > *,
+            .private-session-action-main,
+            .session-action-wrap,
+            .session-action-btn,
+            .private-session-create-btn,
+            .vd-header form,
+            .vd-header button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .private-session-filter-grid,
+            .education-grid,
+            .education-inline-form {
+                grid-template-columns: 1fr !important;
+            }
+
+            .private-session-summary-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .workspace-dark-stat h2,
+            .private-session-stat h2 {
+                font-size: 24px !important;
+            }
+
+            [style*="grid-template-columns: repeat(4, 1fr)"],
+            [style*="grid-template-columns:repeat(4,1fr)"],
+            [style*="grid-template-columns: repeat(3, 1fr)"],
+            [style*="grid-template-columns:repeat(3,1fr)"],
+            [style*="grid-template-columns: repeat(2, 1fr)"],
+            [style*="grid-template-columns:repeat(2,1fr)"] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
         /* Guest pages (login/register/pending) have no sidebar */
         body.guest .app-main { margin-right: 0; }
         body.guest .content-wrap { max-width: 560px; margin: 0 auto; }
     </style>
     @yield('styles')
 </head>
-<body class="@guest guest @endguest">
+<body class="{{ Auth::guard('workspace_owner')->guest() ? 'guest' : '' }}">
 
 @php
+    $workspaceOwner = Auth::guard('workspace_owner')->user();
     $navItems = [
-        ['route' => 'workspace.sessions.index',      'match' => 'workspace.sessions.*',      'icon' => 'fa-chalkboard-user',  'label' => 'الجلسات'],
-        ['route' => 'workspace.private-sessions.index', 'match' => 'workspace.private-sessions.*', 'icon' => 'fa-qrcode', 'label' => 'جلسات خاصة'],
-        ['route' => 'workspace.clients.index',        'match' => 'workspace.clients.*',       'icon' => 'fa-users-viewfinder', 'label' => 'السجل'],
-        ['route' => 'workspace.visits.index',         'match' => 'workspace.visits.*',        'icon' => 'fa-right-to-bracket', 'label' => 'تسجيل الزوار'],
-        ['route' => 'workspace.subscriptions.index',  'match' => 'workspace.subscriptions.*', 'icon' => 'fa-ticket',           'label' => 'الاشتراكات'],
-        ['route' => 'workspace.rooms.index',          'match' => 'workspace.rooms.*',         'icon' => 'fa-door-open',        'label' => 'حجوزات الغرف'],
-        ['route' => 'workspace.settings.edit',        'match' => 'workspace.settings*',       'icon' => 'fa-gear',             'label' => 'الإعدادات'],
+        ['route' => 'workspace.sessions.index',      'match' => 'workspace.sessions.*',      'icon' => 'fa-chalkboard-user',  'label' => __('portal.nav.sessions')],
+        ['route' => 'workspace.education.index',     'match' => 'workspace.education.*',     'icon' => 'fa-graduation-cap',   'label' => __('portal.nav.education')],
+        ['route' => 'workspace.private-sessions.index', 'match' => 'workspace.private-sessions.*', 'icon' => 'fa-qrcode', 'label' => __('portal.nav.private_sessions')],
+        ['route' => 'workspace.clients.index',        'match' => 'workspace.clients.*',       'icon' => 'fa-users-viewfinder', 'label' => __('portal.nav.clients')],
+        ['route' => 'workspace.visits.index',         'match' => 'workspace.visits.*',        'icon' => 'fa-right-to-bracket', 'label' => __('portal.nav.visits')],
+        ['route' => 'workspace.subscriptions.index',  'match' => 'workspace.subscriptions.*', 'icon' => 'fa-ticket',           'label' => __('portal.nav.subscriptions')],
+        ['route' => 'workspace.rooms.index',          'match' => 'workspace.rooms.*',         'icon' => 'fa-door-open',        'label' => __('portal.nav.rooms')],
+        ['route' => 'workspace.settings.edit',        'match' => 'workspace.settings*',       'icon' => 'fa-gear',             'label' => __('portal.nav.settings')],
     ];
-    $bottomPrimary = array_slice($navItems, 0, 4);
-    $bottomMore    = array_slice($navItems, 4);
-    $hasWorkspace  = Auth::check() && Auth::user()->ownedWorkspace;
+    $bottomPrimaryRoutes = [
+        'workspace.visits.index',
+        'workspace.clients.index',
+        'workspace.private-sessions.index',
+        'workspace.subscriptions.index',
+    ];
+    $bottomPrimary = collect($bottomPrimaryRoutes)
+        ->map(fn ($route) => collect($navItems)->firstWhere('route', $route))
+        ->filter()
+        ->values()
+        ->all();
+    $bottomMore = collect($navItems)
+        ->reject(fn ($item) => in_array($item['route'], $bottomPrimaryRoutes, true))
+        ->values()
+        ->all();
+    $hasWorkspace  = $workspaceOwner !== null && $workspaceOwner->ownedWorkspace;
 @endphp
 
 {{-- ═══ DESKTOP SIDEBAR ═══ --}}
 @if($hasWorkspace)
 <aside class="app-sidebar">
     <a href="{{ route('landing') }}" class="sb-brand">
-        <span class="logo-mark">أ</span>
-        <span>أنيس شريك</span>
+        <span class="logo-mark">{{ __('portal.layout.brand_mark') }}</span>
+        <span>{{ __('portal.layout.brand') }}</span>
     </a>
 
     <nav class="sb-nav">
-        <div class="sb-section-label">القائمة</div>
+        <div class="sb-section-label">{{ __('portal.layout.menu') }}</div>
         @foreach($navItems as $item)
             <a href="{{ route($item['route']) }}" class="side-link {{ request()->routeIs($item['match']) ? 'active-nav' : '' }}">
                 <i class="fa-solid {{ $item['icon'] }}"></i>
@@ -352,14 +575,24 @@
     <div class="sb-footer">
         <span class="sb-ws">
             <span class="ws-dot"></span>
-            <span class="ws-name">{{ Auth::user()->ownedWorkspace->name }}</span>
+            <span class="ws-name">{{ $workspaceOwner->ownedWorkspace->name }}</span>
         </span>
         <div class="sb-user">
-            <div class="user-avatar">{{ mb_substr(Auth::user()->full_name, 0, 1, 'utf-8') }}</div>
-            <div class="u-meta"><div class="u-name">{{ Auth::user()->full_name }}</div></div>
+            <div class="user-avatar">{{ mb_substr($workspaceOwner->full_name, 0, 1, 'utf-8') }}</div>
+            <div class="u-meta"><div class="u-name">{{ $workspaceOwner->full_name }}</div></div>
+            <form action="{{ route('locale.switch') }}" method="POST" id="locale-switch-form" style="margin:0;">
+                @csrf
+                <select name="locale" onchange="document.getElementById('locale-switch-form').submit()"
+                        title="{{ __('portal.language') }}" aria-label="{{ __('portal.language') }}"
+                        style="border:1px solid var(--upwork-border); border-radius:6px; padding:4px 6px; font-family:inherit; font-size:12px; background:#fff; cursor:pointer;">
+                    @foreach(config('locales.supported') as $code => $meta)
+                        <option value="{{ $code }}" @selected(app()->getLocale() === $code)>{{ $meta['native'] }}</option>
+                    @endforeach
+                </select>
+            </form>
             <form action="{{ route('workspace.logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="btn-logout" title="تسجيل الخروج" aria-label="تسجيل الخروج">
+                <button type="submit" class="btn-logout" title="{{ __('portal.nav.logout') }}" aria-label="{{ __('portal.nav.logout') }}">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
             </form>
@@ -369,16 +602,16 @@
 @endif
 
 {{-- ═══ MOBILE TOP BAR ═══ --}}
-@auth
+@if($workspaceOwner !== null)
 <div class="mobile-topbar">
     @if($hasWorkspace)
-        <span class="mt-ws"><span class="ws-dot"></span><span class="ws-name">{{ Auth::user()->ownedWorkspace->name }}</span></span>
+        <span class="mt-ws"><span class="ws-dot"></span><span class="ws-name">{{ $workspaceOwner->ownedWorkspace->name }}</span></span>
     @else
-        <a href="{{ route('landing') }}" class="sb-brand" style="border:none;padding:0;font-size:17px;"><span class="logo-mark" style="width:32px;height:32px;font-size:16px;">أ</span> أنيس شريك</a>
+        <a href="{{ route('landing') }}" class="sb-brand" style="border:none;padding:0;font-size:17px;"><span class="logo-mark" style="width:32px;height:32px;font-size:16px;">{{ __('portal.layout.brand_mark') }}</span> {{ __('portal.layout.brand') }}</a>
     @endif
-    <div class="user-avatar" style="width:32px;height:32px;font-size:13px;">{{ mb_substr(Auth::user()->full_name, 0, 1, 'utf-8') }}</div>
+    <div class="user-avatar" style="width:32px;height:32px;font-size:13px;">{{ mb_substr($workspaceOwner->full_name, 0, 1, 'utf-8') }}</div>
 </div>
-@endauth
+@endif
 
 <main class="app-main">
     <div class="content-wrap">
@@ -405,14 +638,14 @@
     @php($moreActive = collect($bottomMore)->contains(fn ($i) => request()->routeIs($i['match'])))
     <button type="button" class="bn-item {{ $moreActive ? 'active' : '' }}" onclick="toggleMoreSheet(true)" aria-haspopup="true" aria-controls="moreSheet">
         <i class="fa-solid fa-ellipsis"></i>
-        <span>المزيد</span>
+        <span>{{ __('portal.layout.more') }}</span>
     </button>
 </nav>
 
 <div class="more-sheet-overlay" id="moreSheet" onclick="if(event.target===this) toggleMoreSheet(false)">
-    <div class="more-sheet" role="dialog" aria-modal="true" aria-label="قائمة إضافية">
+    <div class="more-sheet" role="dialog" aria-modal="true" aria-label="{{ __('portal.layout.more_menu') }}">
         <div class="grip"></div>
-        <div class="ms-title">المزيد من الخيارات</div>
+        <div class="ms-title">{{ __('portal.layout.more_options') }}</div>
         @foreach($bottomMore as $item)
             <a href="{{ route($item['route']) }}" class="ms-item {{ request()->routeIs($item['match']) ? 'active' : '' }}">
                 <i class="fa-solid {{ $item['icon'] }}"></i>
@@ -422,12 +655,46 @@
         <div class="ms-divider"></div>
         <form action="{{ route('workspace.logout') }}" method="POST" class="ms-logout-form">
             @csrf
-            <button type="submit" class="ms-item danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> تسجيل الخروج</button>
+            <button type="submit" class="ms-item danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> {{ __('portal.nav.logout') }}</button>
         </form>
     </div>
 </div>
 
 <script>
+    function prepareMobileTables(root) {
+        root = root || document;
+        root.querySelectorAll('.table-responsive table').forEach(function (table) {
+            if (table.dataset.mobilePrepared === '1') {
+                return;
+            }
+
+            const headers = Array.from(table.querySelectorAll('thead th')).map(function (th) {
+                return th.textContent.trim();
+            });
+
+            if (!headers.length) {
+                return;
+            }
+
+            table.classList.add('mobile-card-table');
+            table.querySelectorAll('tbody tr, tfoot tr').forEach(function (row) {
+                let columnIndex = 0;
+                Array.from(row.children).forEach(function (cell) {
+                    if (!cell.hasAttribute('data-label')) {
+                        cell.setAttribute('data-label', headers[columnIndex] || '');
+                    }
+                    columnIndex += Number(cell.getAttribute('colspan') || 1);
+                });
+            });
+
+            table.dataset.mobilePrepared = '1';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        prepareMobileTables(document);
+    });
+
     function toggleMoreSheet(open) {
         var el = document.getElementById('moreSheet');
         if (!el) return;

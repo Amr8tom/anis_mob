@@ -10,6 +10,7 @@ use App\Models\WorkspaceWalkIn;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class WorkspaceClientController extends Controller
@@ -40,7 +41,11 @@ class WorkspaceClientController extends Controller
         if ($search !== '') {
             $normalizedPhone = preg_replace('/\D+/', '', $search);
             $clientsQuery->where(function ($query) use ($search, $normalizedPhone): void {
-                $query->where('full_name_snapshot', 'like', "%{$search}%");
+                if (DB::getDriverName() === 'mysql') {
+                    $query->whereRaw('MATCH(full_name_snapshot) AGAINST (? IN BOOLEAN MODE)', [$search.'*']);
+                } else {
+                    $query->where('full_name_snapshot', 'like', "{$search}%");
+                }
                 if ($normalizedPhone !== '') {
                     $query->orWhere('phone_number_normalized', 'like', "{$normalizedPhone}%");
                 }

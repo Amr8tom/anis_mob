@@ -7,6 +7,9 @@ namespace Tests\Feature\WorkspacePortal;
 use App\Enums\UserRole;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceCenterGradeLevel;
+use App\Models\WorkspaceCenterSubject;
+use App\Models\WorkspaceCenterTeacher;
 use App\Models\WorkspacePrivateSession;
 use App\Models\WorkspacePrivateSessionAttendee;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -31,16 +34,36 @@ final class WorkspacePrivateSessionTest extends TestCase
     public function test_owner_can_create_private_session_with_price(): void
     {
         [$owner, $workspace] = $this->ownerWorkspace();
+        $teacher = WorkspaceCenterTeacher::create([
+            'workspace_id' => $workspace->id,
+            'name' => 'أستاذ أحمد',
+            'is_active' => true,
+        ]);
+        $subject = WorkspaceCenterSubject::create([
+            'workspace_id' => $workspace->id,
+            'name' => 'عربي',
+            'is_active' => true,
+        ]);
+        $gradeLevel = WorkspaceCenterGradeLevel::create([
+            'workspace_id' => $workspace->id,
+            'name' => 'أولى ثانوي',
+            'is_active' => true,
+        ]);
 
         $this->actingAs($owner)
             ->post(route('workspace.private-sessions.store'), [
                 'title' => 'جلسة مذاكرة خاصة',
                 'description' => 'داخل مساحة العمل فقط',
                 'host_name' => 'أحمد',
+                'center_teacher_id' => $teacher->id,
+                'center_subject_id' => $subject->id,
+                'center_grade_level_id' => $gradeLevel->id,
                 'starts_at' => now()->addDay()->format('Y-m-d H:i:s'),
                 'ends_at' => now()->addDay()->addHours(2)->format('Y-m-d H:i:s'),
                 'capacity' => 20,
                 'price_pounds' => 150,
+                'instructor_payout_type' => 'percentage',
+                'instructor_payout_value' => 40,
             ])
             ->assertRedirect();
 
@@ -48,6 +71,11 @@ final class WorkspacePrivateSessionTest extends TestCase
             'workspace_id' => $workspace->id,
             'title' => 'جلسة مذاكرة خاصة',
             'price_cents' => 15000,
+            'center_teacher_id' => $teacher->id,
+            'center_subject_id' => $subject->id,
+            'center_grade_level_id' => $gradeLevel->id,
+            'instructor_payout_type' => 'percentage',
+            'instructor_payout_value' => 4000,
             'status' => 'active',
         ]);
     }
@@ -101,7 +129,7 @@ final class WorkspacePrivateSessionTest extends TestCase
         ]);
     }
 
-    public function test_csv_import_adds_app_user_and_rejects_phone_only_non_user(): void
+    public function test_csv_import_previews_rows_then_confirm_saves_valid_rows_only(): void
     {
         [$owner, $workspace] = $this->ownerWorkspace();
         $user = User::factory()->create([
@@ -121,8 +149,40 @@ final class WorkspacePrivateSessionTest extends TestCase
             ->post(route('workspace.private-sessions.attendees.import', $session), [
                 'attendees_file' => $file,
             ])
-            ->assertRedirect()
-            ->assertSessionHas('import_errors');
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('workspace_private_session_import_batches', [
+            'workspace_private_session_id' => $session->id,
+            'status' => 'preview',
+            'valid_count' => 1,
+            'failed_count' => 1,
+        ]);
+        $this->assertDatabaseHas('workspace_private_session_import_rows', [
+            'workspace_private_session_id' => $session->id,
+            'phone_normalized' => '01033334444',
+            'status' => 'valid',
+        ]);
+
+        $this->assertDatabaseMissing('workspace_private_session_attendees', [
+            'workspace_private_session_id' => $session->id,
+            'phone_normalized' => '01033334444',
+        ]);
+
+        $this->actingAs($owner)
+            ->get(route('workspace.private-sessions.show', $session))
+            ->assertOk()
+            ->assertSee('معاينة استيراد الحضور')
+            ->assertSee('App Visitor')
+            ->assertSee('الاسم مطلوب إذا كان الرقم غير مسجل في التطبيق');
+
+        $this->actingAs($owner)
+            ->post(route('workspace.private-sessions.attendees.import.confirm', $session))
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('workspace_private_session_import_batches', [
+            'workspace_private_session_id' => $session->id,
+            'status' => 'confirmed',
+        ]);
 
         $this->assertDatabaseHas('workspace_private_session_attendees', [
             'workspace_private_session_id' => $session->id,
@@ -135,6 +195,38 @@ final class WorkspacePrivateSessionTest extends TestCase
             'workspace_private_session_id' => $session->id,
             'phone_normalized' => '01099990000',
         ]);
+    }
+
+    public function test_csv_import_preview_marks_duplicate_rows(): void
+    {
+        [$owner, $workspace] = $this->ownerWorkspace();
+        $session = WorkspacePrivateSession::factory()->create([
+            'workspace_id' => $workspace->id,
+            'created_by_owner_id' => $owner->id,
+        ]);
+        WorkspacePrivateSessionAttendee::factory()->create([
+            'workspace_private_session_id' => $session->id,
+            'workspace_id' => $workspace->id,
+            'phone_snapshot' => '01044445555',
+            'phone_normalized' => '01044445555',
+        ]);
+        $file = UploadedFile::fake()->createWithContent(
+            'attendees.csv',
+            "phone,name\n01044445555,Duplicate Visitor\n01088889999,New Visitor\n"
+        );
+
+        $this->actingAs($owner)
+            ->post(route('workspace.private-sessions.attendees.import', $session), [
+                'attendees_file' => $file,
+            ])
+            ->assertRedirect();
+
+        $this->actingAs($owner)
+            ->get(route('workspace.private-sessions.show', $session))
+            ->assertOk()
+            ->assertSee('مكرر')
+            ->assertSee('Duplicate Visitor')
+            ->assertSee('New Visitor');
     }
 
     public function test_app_user_can_check_in_by_qr_when_invited(): void

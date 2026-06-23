@@ -14,23 +14,34 @@ final class EnsureWorkspaceOwner
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! Auth::check()) {
+        $guard = Auth::guard('workspace_owner');
+
+        if (! $guard->check()) {
+            $legacyGuard = Auth::guard('web');
+            $legacyUser = $legacyGuard->user();
+
+            if ($legacyUser !== null && $legacyUser->role === UserRole::WORKSPACE_OWNER) {
+                Auth::shouldUse('web');
+                $workspace = $legacyUser->ownedWorkspace()->first();
+
+                return $this->continueIfWorkspaceIsAllowed($request, $next, $workspace, $legacyGuard);
+            }
+
             return redirect()->route('workspace.login')->with('error', 'يجب تسجيل الدخول أولاً.');
         }
 
-        $user = Auth::user();
-
-        if ($user->role !== UserRole::WORKSPACE_OWNER) {
-            Auth::logout();
-
-            return redirect()->route('workspace.login')->with('error', 'هذا الحساب ليس لديه صلاحية دخول بوابة الشركاء.');
-        }
+        Auth::shouldUse('workspace_owner');
 
         // Check if user has an associated workspace
-        $workspace = $user->ownedWorkspace()->first();
+        $workspace = $guard->user()->ownedWorkspace()->first();
 
+        return $this->continueIfWorkspaceIsAllowed($request, $next, $workspace, $guard);
+    }
+
+    private function continueIfWorkspaceIsAllowed(Request $request, Closure $next, mixed $workspace, mixed $guard): Response
+    {
         if ($workspace === null) {
-            Auth::logout();
+            $guard->logout();
 
             return redirect()->route('workspace.login')->with('error', 'لم يتم العثور على مساحة عمل مرتبطة بهذا الحساب.');
         }
@@ -38,7 +49,7 @@ final class EnsureWorkspaceOwner
         // Only an APPROVED workspace may operate the portal. Pending registrations
         // and admin-suspended workspaces are bounced back to login with a reason.
         if (! $workspace->isApproved()) {
-            Auth::logout();
+            $guard->logout();
 
             $message = $workspace->isSuspended()
                 ? 'تم إيقاف مساحة العمل مؤقتًا من قبل الإدارة'

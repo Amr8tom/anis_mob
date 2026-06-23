@@ -76,7 +76,7 @@
 <div class="grid-2">
     <div class="card">
         <h3 class="card-title">تعيين مالك مساحة العمل</h3>
-        <p style="color:var(--upwork-muted); margin-bottom:18px;">المالك الحالي: {{ $workspace->owner?->full_name ?? 'دعوة معلقة' }}</p>
+        <p style="color:var(--upwork-muted); margin-bottom:18px;">المالك الحالي: {{ $workspace->workspaceOwner?->full_name ?? $workspace->owner?->full_name ?? 'دعوة معلقة' }}</p>
         <form action="{{ route('admin.workspaces.owner.change', $workspace) }}" method="POST">
             @csrf
             <label>رقم هاتف المالك الجديد</label>

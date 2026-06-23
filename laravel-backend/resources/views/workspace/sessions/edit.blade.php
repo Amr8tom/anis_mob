@@ -12,7 +12,7 @@
 
 @section('content')
 <div class="settings-container">
-    <h1 class="page-title">تعديل بيانات الجلسة</h1>
+    <h1 class="page-title">{{ __('portal.sessions.edit_title') }}</h1>
     
     <div class="card">
         <form action="{{ route('workspace.sessions.update', $session) }}" method="POST">
@@ -20,31 +20,31 @@
             @method('PUT')
             
             <div class="form-group">
-                <label>عنوان الجلسة</label>
+                <label>{{ __('portal.sessions.form.title') }}</label>
                 <input type="text" name="title" class="form-control" value="{{ old('title', $session->title) }}" required>
                 @error('title') <div class="form-error">{{ $message }}</div> @enderror
             </div>
 
             <div class="form-group">
-                <label>وصف الجلسة</label>
+                <label>{{ __('portal.sessions.form.description') }}</label>
                 <textarea name="description" class="form-control" rows="4" required>{{ old('description', $session->description) }}</textarea>
                 @error('description') <div class="form-error">{{ $message }}</div> @enderror
             </div>
 
             <div class="form-group">
-                <label>اسم المدرب / المحاضر (اختياري)</label>
+                <label>{{ __('portal.sessions.form.instructor') }}</label>
                 <input type="text" name="instructor_name" class="form-control" value="{{ old('instructor_name', $session->instructor_name) }}">
                 @error('instructor_name') <div class="form-error">{{ $message }}</div> @enderror
             </div>
 
             <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div class="form-group">
-                    <label>وقت البدء</label>
+                    <label>{{ __('portal.sessions.form.start') }}</label>
                     <input type="datetime-local" name="start_time" class="form-control" value="{{ old('start_time', \Carbon\Carbon::parse($session->start_time)->format('Y-m-d\TH:i')) }}" required>
                     @error('start_time') <div class="form-error">{{ $message }}</div> @enderror
                 </div>
                 <div class="form-group">
-                    <label>وقت الانتهاء</label>
+                    <label>{{ __('portal.sessions.form.end') }}</label>
                     <input type="datetime-local" name="end_time" class="form-control" value="{{ old('end_time', \Carbon\Carbon::parse($session->end_time)->format('Y-m-d\TH:i')) }}" required>
                     @error('end_time') <div class="form-error">{{ $message }}</div> @enderror
                 </div>
@@ -52,20 +52,20 @@
 
             <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div class="form-group">
-                    <label>الحد الأقصى للحضور (اختياري)</label>
+                    <label>{{ __('portal.sessions.form.max') }}</label>
                     <input type="number" name="max_participants" class="form-control" min="1" value="{{ old('max_participants', $session->max_participants) }}">
                     @error('max_participants') <div class="form-error">{{ $message }}</div> @enderror
                 </div>
                 <div class="form-group">
-                    <label>السعر (بالقروش - مجاني = 0)</label>
+                    <label>{{ __('portal.sessions.form.price') }}</label>
                     <input type="number" name="price_cents" class="form-control" min="0" value="{{ old('price_cents', $session->price_cents) }}" required>
                     @error('price_cents') <div class="form-error">{{ $message }}</div> @enderror
                 </div>
             </div>
 
             <div style="margin-top: 30px; display: flex; gap: 15px;">
-                <button type="submit" class="btn-save">حفظ التعديلات</button>
-                <a href="{{ route('workspace.sessions.index') }}" style="padding: 12px 24px; color: var(--upwork-muted); text-decoration: none;">إلغاء</a>
+                <button type="submit" class="btn-save">{{ __('portal.sessions.save_edit') }}</button>
+                <a href="{{ route('workspace.sessions.index') }}" style="padding: 12px 24px; color: var(--upwork-muted); text-decoration: none;">{{ __('portal.sessions.cancel') }}</a>
             </div>
         </form>
     </div>

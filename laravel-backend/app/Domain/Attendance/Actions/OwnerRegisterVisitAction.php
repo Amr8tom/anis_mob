@@ -33,15 +33,24 @@ final readonly class OwnerRegisterVisitAction
     {
         return DB::transaction(function () use ($workspace, $phone, $name, $registeredBy, $visitorPassword): WorkspaceVisit {
             $phone = trim($phone);
-            $user = User::where('phone_number', $phone)->first();
+            $normalizedPhone = User::normalizePhone($phone) ?? '';
+            $user = User::where('phone_number_normalized', $normalizedPhone)->first();
             if ($user !== null) {
                 return $this->registerAppUser($workspace, $user, $registeredBy, $visitorPassword);
             }
 
-            $walkIn = WorkspaceWalkIn::withTrashed()->firstOrCreate(
-                ['workspace_id' => $workspace->id, 'phone_number' => $phone],
-                ['full_name' => filled($name) ? trim((string) $name) : 'زائر'],
-            );
+            $walkIn = WorkspaceWalkIn::withTrashed()
+                ->where('workspace_id', $workspace->id)
+                ->where('phone_number_normalized', $normalizedPhone)
+                ->first();
+            if ($walkIn === null) {
+                $walkIn = WorkspaceWalkIn::create([
+                    'workspace_id' => $workspace->id,
+                    'phone_number' => $phone,
+                    'phone_number_normalized' => $normalizedPhone,
+                    'full_name' => filled($name) ? trim((string) $name) : 'زائر',
+                ]);
+            }
             if ($walkIn->trashed()) {
                 $walkIn->restore();
             }

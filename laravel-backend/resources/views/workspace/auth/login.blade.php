@@ -86,9 +86,9 @@
 
 @section('content')
     <div class="auth-card">
-        <h1 class="page-title text-center" style="text-align: center; margin-bottom: 8px;">بوابة الشركاء</h1>
+        <h1 class="page-title text-center" style="text-align: center; margin-bottom: 8px;">{{ __('portal.auth.login.title') }}</h1>
         <p class="page-subtitle text-center" style="text-align: center; margin-bottom: 30px;">
-            سجل الدخول لإدارة تفاصيل مساحتك ومعرض الصور الخاص بها.
+            {{ __('portal.auth.login.subtitle') }}
         </p>
 
         <div class="card">
@@ -96,7 +96,7 @@
                 @csrf
 
                 <div class="form-group">
-                    <label for="phone_number">رقم الهاتف</label>
+                    <label for="phone_number">{{ __('portal.auth.phone') }}</label>
                     <input type="tel" id="phone_number" name="phone_number" class="form-control" placeholder="01xxxxxxxxx" value="{{ old('phone_number') }}" required autocomplete="username">
                     @error('phone_number')
                         <div class="form-error">{{ $message }}</div>
@@ -104,7 +104,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="password">كلمة المرور</label>
+                    <label for="password">{{ __('portal.auth.password') }}</label>
                     <input type="password" id="password" name="password" class="form-control" required autocomplete="current-password">
                     @error('password')
                         <div class="form-error">{{ $message }}</div>
@@ -113,13 +113,13 @@
 
                 <button type="submit" class="btn-submit" style="margin-top: 10px;">
                     <i class="fa-solid fa-arrow-left-to-bracket"></i>
-                    <span>تسجيل الدخول</span>
+                    <span>{{ __('portal.auth.login.submit') }}</span>
                 </button>
             </form>
         </div>
 
         <div class="auth-footer">
-            ليس لديك حساب شريك؟ <a href="{{ route('workspace.register') }}">سجل مساحتك الآن</a>
+            {{ __('portal.auth.login.no_account') }} <a href="{{ route('workspace.register') }}">{{ __('portal.auth.login.register_now') }}</a>
         </div>
     </div>
 @endsection

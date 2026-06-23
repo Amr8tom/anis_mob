@@ -299,18 +299,18 @@
 
 @section('content')
     <div class="settings-container">
-        <h1 class="page-title">إعدادات مساحة العمل</h1>
-        <p class="page-subtitle">قم بتحديث تفاصيل مساحة العمل الخاصة بك ومعرض الصور والرمز المخصص لعمليات الدخول.</p>
+        <h1 class="page-title">{{ __('portal.settings.title') }}</h1>
+        <p class="page-subtitle">{{ __('portal.settings.subtitle') }}</p>
 
         <!-- Tabs Navigation -->
         <div class="tabs-header">
-            <button type="button" class="tab-btn active" onclick="switchTab(event, 'details-tab')">البيانات الأساسية</button>
-            <button type="button" class="tab-btn" onclick="switchTab(event, 'location-tab')">الموقع الجغرافي</button>
-            <button type="button" class="tab-btn" onclick="switchTab(event, 'gallery-tab')">معرض الصور</button>
-            <button type="button" class="tab-btn" onclick="switchTab(event, 'amenities-tab')">المميزات</button>
-            <button type="button" class="tab-btn" onclick="switchTab(event, 'drinks-tab')">قائمة المشروبات</button>
-            <button type="button" class="tab-btn" onclick="switchTab(event, 'occupancy-tab')">الحالة المباشرة</button>
-            <button type="button" class="tab-btn" onclick="switchTab(event, 'qr-tab')">رمز الاستجابة السريعة (QR)</button>
+            <button type="button" class="tab-btn active" onclick="switchTab(event, 'details-tab')">{{ __('portal.settings.tabs.details') }}</button>
+            <button type="button" class="tab-btn" onclick="switchTab(event, 'location-tab')">{{ __('portal.settings.tabs.location') }}</button>
+            <button type="button" class="tab-btn" onclick="switchTab(event, 'gallery-tab')">{{ __('portal.settings.tabs.gallery') }}</button>
+            <button type="button" class="tab-btn" onclick="switchTab(event, 'amenities-tab')">{{ __('portal.settings.tabs.amenities') }}</button>
+            <button type="button" class="tab-btn" onclick="switchTab(event, 'drinks-tab')">{{ __('portal.settings.tabs.drinks') }}</button>
+            <button type="button" class="tab-btn" onclick="switchTab(event, 'occupancy-tab')">{{ __('portal.settings.tabs.occupancy') }}</button>
+            <button type="button" class="tab-btn" onclick="switchTab(event, 'qr-tab')">{{ __('portal.settings.tabs.qr') }}</button>
         </div>
 
         <form action="{{ route('workspace.settings.update') }}" method="POST" enctype="multipart/form-data" id="settings-form">
@@ -322,12 +322,12 @@
                 <div class="card">
                     <div class="card-title">
                         <i class="fa-solid fa-pen-to-square" style="color: var(--upwork-green);"></i>
-                        <span>البيانات الأساسية للمساحة</span>
+                        <span>{{ __('portal.settings.details.card_title') }}</span>
                     </div>
 
                     <div class="grid-2">
                         <div class="form-group">
-                            <label for="name">اسم مساحة العمل</label>
+                            <label for="name">{{ __('portal.settings.details.name') }}</label>
                             <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $workspace->name) }}" required>
                             @error('name')
                                 <div class="form-error">{{ $message }}</div>
@@ -335,7 +335,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="admin_phone">رقم الواتساب / مسؤول المساحة</label>
+                            <label for="admin_phone">{{ __('portal.settings.details.admin_phone') }}</label>
                             <input type="tel" id="admin_phone" name="admin_phone" class="form-control" value="{{ old('admin_phone', $workspace->admin_phone) }}" required>
                             @error('admin_phone')
                                 <div class="form-error">{{ $message }}</div>
@@ -344,8 +344,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="description">وصف المساحة</label>
-                        <textarea id="description" name="description" class="form-control" placeholder="اكتب وصفاً جذاباً لمساحة العمل الخاصة بك... (الخدمات، الجو العام، شروط الاستخدام)">{{ old('description', $workspace->description) }}</textarea>
+                        <label for="description">{{ __('portal.settings.details.description') }}</label>
+                        <textarea id="description" name="description" class="form-control" placeholder="{{ __('portal.settings.details.description_placeholder') }}">{{ old('description', $workspace->description) }}</textarea>
                         @error('description')
                             <div class="form-error">{{ $message }}</div>
                         @enderror
@@ -353,7 +353,7 @@
 
                     <div class="grid-2">
                         <div class="form-group">
-                            <label for="capacity">السعة الإجمالية (عدد الأفراد)</label>
+                            <label for="capacity">{{ __('portal.settings.details.capacity') }}</label>
                             <input type="number" id="capacity" name="capacity" class="form-control" min="0" value="{{ old('capacity', $workspace->capacity) }}">
                             @error('capacity')
                                 <div class="form-error">{{ $message }}</div>
@@ -361,9 +361,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="day_calculation_hours">ساعات احتساب اليوم</label>
+                            <label for="day_calculation_hours">{{ __('portal.settings.details.day_hours') }}</label>
                             <input type="number" id="day_calculation_hours" name="day_calculation_hours" class="form-control" min="1" max="24" value="{{ old('day_calculation_hours', $workspace->day_calculation_hours ?? 8) }}" required>
-                            <small style="color: var(--upwork-muted); font-size: 12px; display: block; margin-top: 4px;">الحد الأدنى لساعات الحضور لاحتساب يوم كامل من الاشتراك.</small>
+                            <small style="color: var(--upwork-muted); font-size: 12px; display: block; margin-top: 4px;">{{ __('portal.settings.details.day_hours_hint') }}</small>
                             @error('day_calculation_hours')
                                 <div class="form-error">{{ $message }}</div>
                             @enderror
@@ -372,15 +372,15 @@
 
                     <div class="grid-2">
                         <div class="form-group">
-                            <label for="hour_multiplier">معامل سعر الساعة (hour_multiplier)</label>
+                            <label for="hour_multiplier">{{ __('portal.settings.details.hour_multiplier') }}</label>
                             <input type="number" id="hour_multiplier" name="hour_multiplier" class="form-control"
                                    min="0" max="10" step="0.01"
                                    value="{{ old('hour_multiplier', $workspace->hour_multiplier ?? 1.0) }}" required>
                             <small style="color: var(--upwork-muted); font-size: 12px; display: block; margin-top: 4px;">
-                                يحدد كم دقيقة اشتراك تُستهلك عن كل ساعة حضور فعلي.<br>
-                                <strong>1.0</strong> = الأسعار القياسية &nbsp;|&nbsp;
-                                <strong>2.0</strong> = بريميوم (يُستهلك ضعف الوقت) &nbsp;|&nbsp;
-                                <strong>0.0</strong> = مجاني
+                                {{ __('portal.settings.details.hour_multiplier_hint_1') }}<br>
+                                <strong>1.0</strong> = {{ __('portal.settings.details.hour_multiplier_standard') }} &nbsp;|&nbsp;
+                                <strong>2.0</strong> = {{ __('portal.settings.details.hour_multiplier_premium') }} &nbsp;|&nbsp;
+                                <strong>0.0</strong> = {{ __('portal.settings.details.hour_multiplier_free') }}
                             </small>
                             @error('hour_multiplier')
                                 <div class="form-error">{{ $message }}</div>
@@ -388,18 +388,18 @@
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-self:start;">
                             <div style="background:var(--upwork-bg); border:1px solid var(--upwork-border); border-radius:var(--radius-sm); padding:16px;">
-                                <div style="font-size:12px; color:var(--upwork-muted); font-weight:700; margin-bottom:6px;">سعر الساعة الأساسي</div>
+                                <div style="font-size:12px; color:var(--upwork-muted); font-weight:700; margin-bottom:6px;">{{ __('portal.settings.details.base_rate') }}</div>
                                 <div style="font-size:22px; font-weight:900; color:var(--upwork-slate);">
                                     {{ number_format($workspace->baseHourlyRateEgp(), 2) }}
-                                    <small style="font-size:12px; color:var(--upwork-muted);">ج.م</small>
+                                    <small style="font-size:12px; color:var(--upwork-muted);">{{ __('portal.settings.currency_egp') }}</small>
                                 </div>
-                                <div style="font-size:11px; color:var(--upwork-muted); margin-top:6px;">تحدده إدارة أنيس</div>
+                                <div style="font-size:11px; color:var(--upwork-muted); margin-top:6px;">{{ __('portal.settings.details.base_rate_note') }}</div>
                             </div>
                             <div style="background:var(--upwork-green-soft); border:1px solid rgba(20,168,0,.2); border-radius:var(--radius-sm); padding:16px;">
-                                <div style="font-size:12px; color:var(--upwork-green-dark); font-weight:700; margin-bottom:6px;">سعر الساعة بعد المعامل</div>
+                                <div style="font-size:12px; color:var(--upwork-green-dark); font-weight:700; margin-bottom:6px;">{{ __('portal.settings.details.effective_rate') }}</div>
                                 <div style="font-size:22px; font-weight:900; color:var(--upwork-green-dark);">
                                     {{ number_format($workspace->effectiveHourlyRateEgp(), 2) }}
-                                    <small style="font-size:12px;">ج.م</small>
+                                    <small style="font-size:12px;">{{ __('portal.settings.currency_egp') }}</small>
                                 </div>
                                 <div style="font-size:11px; color:var(--upwork-muted); margin-top:6px;">
                                     {{ number_format($workspace->baseHourlyRateEgp(), 2) }} × {{ number_format($workspace->hour_multiplier, 2) }}
@@ -410,7 +410,7 @@
 
                     <div class="grid-2">
                         <div class="form-group">
-                            <label for="open_time">وقت فتح المساحة</label>
+                            <label for="open_time">{{ __('portal.settings.details.open_time') }}</label>
                             <input type="text" id="open_time" name="open_time" class="form-control" placeholder="08:00" value="{{ old('open_time', $workspace->open_time) }}">
                             @error('open_time')
                                 <div class="form-error">{{ $message }}</div>
@@ -418,7 +418,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="close_time">وقت إغلاق المساحة</label>
+                            <label for="close_time">{{ __('portal.settings.details.close_time') }}</label>
                             <input type="text" id="close_time" name="close_time" class="form-control" placeholder="23:00" value="{{ old('close_time', $workspace->close_time) }}">
                             @error('close_time')
                                 <div class="form-error">{{ $message }}</div>
@@ -433,11 +433,11 @@
                 <div class="card">
                     <div class="card-title">
                         <i class="fa-solid fa-map-location-dot" style="color: var(--upwork-green);"></i>
-                        <span>الموقع الجغرافي والعنوان</span>
+                        <span>{{ __('portal.settings.location.card_title') }}</span>
                     </div>
 
                     <div class="form-group">
-                        <label for="address">العنوان بالكامل</label>
+                        <label for="address">{{ __('portal.settings.location.address') }}</label>
                         <input type="text" id="address" name="address" class="form-control" value="{{ old('address', $workspace->address) }}" required>
                         @error('address')
                             <div class="form-error">{{ $message }}</div>
@@ -445,16 +445,16 @@
                     </div>
 
                     <div class="form-group">
-                        <label>حدد موقع المساحة بدقة على الخريطة</label>
+                        <label>{{ __('portal.settings.location.pick_on_map') }}</label>
                         <div id="map"></div>
-                        
+
                         <div class="grid-2" style="margin-top: 15px;">
                             <div>
-                                <label style="font-size: 12px; color: var(--upwork-muted);">خط العرض (Latitude)</label>
+                                <label style="font-size: 12px; color: var(--upwork-muted);">{{ __('portal.settings.location.latitude') }}</label>
                                 <input type="text" id="latitude" name="latitude" class="form-control" value="{{ old('latitude', $workspace->latitude) }}" readonly required>
                             </div>
                             <div>
-                                <label style="font-size: 12px; color: var(--upwork-muted);">خط الطول (Longitude)</label>
+                                <label style="font-size: 12px; color: var(--upwork-muted);">{{ __('portal.settings.location.longitude') }}</label>
                                 <input type="text" id="longitude" name="longitude" class="form-control" value="{{ old('longitude', $workspace->longitude) }}" readonly required>
                             </div>
                         </div>
@@ -467,12 +467,12 @@
                 <div class="card">
                     <div class="card-title">
                         <i class="fa-solid fa-images" style="color: var(--upwork-green);"></i>
-                        <span>صور المعرض والغلاف</span>
+                        <span>{{ __('portal.settings.gallery.card_title') }}</span>
                     </div>
 
                     <!-- Cover Image Section -->
                     <div class="form-group" style="padding-bottom: 24px; border-bottom: 1px solid var(--upwork-border);">
-                        <label for="cover_image">صورة الغلاف الأساسية</label>
+                        <label for="cover_image">{{ __('portal.settings.gallery.cover_label') }}</label>
 
                         <div id="cover-dropzone"
                              style="border: 2px dashed var(--upwork-border); border-radius: var(--radius-md);
@@ -483,8 +483,8 @@
                              ondragleave="this.style.borderColor='var(--upwork-border)'; this.style.background='var(--upwork-bg)';"
                              ondrop="handleCoverDrop(event)">
                             <i class="fa-solid fa-image" style="font-size:24px; color:var(--upwork-green); margin-bottom:6px; display:block;"></i>
-                            <span style="font-weight:700; color:var(--upwork-slate); font-size:13px;">اسحب صورة الغلاف هنا أو اضغط للاختيار</span><br>
-                            <span style="color:var(--upwork-muted); font-size:12px;">يُفضّل 1920×1080 أو أعلى — يتم ضغطها تلقائياً</span>
+                            <span style="font-weight:700; color:var(--upwork-slate); font-size:13px;">{{ __('portal.settings.gallery.cover_drop') }}</span><br>
+                            <span style="color:var(--upwork-muted); font-size:12px;">{{ __('portal.settings.gallery.cover_hint') }}</span>
                         </div>
 
                         <input type="file" id="cover_image" name="cover_image" accept="image/*" style="display:none;">
@@ -496,17 +496,17 @@
                                     border-radius:var(--radius-sm); font-size:13px; font-weight:700; color:var(--upwork-green-dark);
                                     align-items:center; gap:8px;">
                             <i class="fa-solid fa-spinner fa-spin"></i>
-                            <span>جاري ضغط صورة الغلاف…</span>
+                            <span>{{ __('portal.settings.gallery.cover_compressing') }}</span>
                         </div>
 
                         @if($workspace->cover_image_url)
                             <div id="cover-current-preview">
-                                <label style="font-size: 12px; color: var(--upwork-muted); margin-top: 12px; display: block;">الصورة الحالية:</label>
+                                <label style="font-size: 12px; color: var(--upwork-muted); margin-top: 12px; display: block;">{{ __('portal.settings.gallery.current_image') }}</label>
                                 <img src="{{ $workspace->cover_image_url }}" alt="Cover Image" class="cover-preview" id="cover-preview-img">
                             </div>
                         @else
                             <div id="cover-current-preview" style="display:none;">
-                                <label style="font-size: 12px; color: var(--upwork-muted); margin-top: 12px; display: block;">المعاينة:</label>
+                                <label style="font-size: 12px; color: var(--upwork-muted); margin-top: 12px; display: block;">{{ __('portal.settings.gallery.preview') }}</label>
                                 <img src="" alt="Cover Preview" class="cover-preview" id="cover-preview-img">
                             </div>
                         @endif
@@ -518,7 +518,7 @@
 
                     <!-- Gallery Section -->
                     <div class="form-group" style="margin-top: 24px;">
-                        <label for="gallery_images">أضف صور جديدة للمعرض</label>
+                        <label for="gallery_images">{{ __('portal.settings.gallery.add_label') }}</label>
 
                         {{-- Drop-zone wrapper --}}
                         <div id="gallery-dropzone"
@@ -530,8 +530,8 @@
                              ondragleave="this.style.borderColor='var(--upwork-border)'; this.style.background='var(--upwork-bg)';"
                              ondrop="handleGalleryDrop(event)">
                             <i class="fa-solid fa-cloud-arrow-up" style="font-size:28px; color:var(--upwork-green); margin-bottom:8px; display:block;"></i>
-                            <span style="font-weight:700; color:var(--upwork-slate); font-size:14px;">اسحب الصور هنا أو اضغط للاختيار</span><br>
-                            <span style="color:var(--upwork-muted); font-size:12px;">PNG / JPG / WEBP — يتم ضغط الصور تلقائياً قبل الرفع</span>
+                            <span style="font-weight:700; color:var(--upwork-slate); font-size:14px;">{{ __('portal.settings.gallery.drop') }}</span><br>
+                            <span style="color:var(--upwork-muted); font-size:12px;">{{ __('portal.settings.gallery.formats_hint') }}</span>
                         </div>
 
                         <input type="file" id="gallery_images" name="gallery_images[]"
@@ -544,7 +544,7 @@
                                     border-radius:var(--radius-sm); font-size:13px; font-weight:700; color:var(--upwork-green-dark);
                                     align-items:center; gap:8px;">
                             <i class="fa-solid fa-spinner fa-spin"></i>
-                            <span id="gallery-compress-text">جاري ضغط الصور…</span>
+                            <span id="gallery-compress-text">{{ __('portal.settings.gallery.compressing') }}</span>
                         </div>
 
                         {{-- New images preview --}}
@@ -557,7 +557,7 @@
                             <div class="form-error">{{ $message }}</div>
                         @enderror
 
-                        <label style="font-weight: 700; margin-top: 24px; display: block; font-size: 14px;">الصور الحالية بالمعرض (اضغط لحذف أي صورة):</label>
+                        <label style="font-weight: 700; margin-top: 24px; display: block; font-size: 14px;">{{ __('portal.settings.gallery.current_images') }}</label>
                         <div class="gallery-grid" id="gallery-container">
                             @php
                                 // gallery_images = raw DB paths  → used for hidden inputs (server needs them)
@@ -572,7 +572,7 @@
                                     <div class="gallery-item" data-url="{{ $rawPath }}">
                                         {{-- hidden input keeps the raw path so the server can compare / delete correctly --}}
                                         <input type="hidden" name="retained_gallery_images[]" value="{{ $rawPath }}">
-                                        <img src="{{ $imgSrc }}" alt="صورة المعرض"
+                                        <img src="{{ $imgSrc }}" alt="{{ __('portal.settings.gallery.image_alt') }}"
                                              loading="lazy"
                                              onerror="this.src=''; this.parentElement.querySelector('.gallery-broken').style.display='flex';">
                                         {{-- fallback shown if image fails to load --}}
@@ -580,7 +580,7 @@
                                              background:#fafafa; align-items:center; justify-content:center;
                                              flex-direction:column; gap:6px; color:var(--upwork-muted);">
                                             <i class="fa-solid fa-image-slash" style="font-size:22px;"></i>
-                                            <span style="font-size:11px;">تعذّر تحميل الصورة</span>
+                                            <span style="font-size:11px;">{{ __('portal.settings.gallery.load_failed') }}</span>
                                         </div>
                                         <button type="button" class="btn-delete-img" onclick="deleteGalleryImage(this)">
                                             <i class="fa-solid fa-trash-can"></i>
@@ -589,7 +589,7 @@
                                 @endforeach
                             @else
                                 <p style="color: var(--upwork-muted); font-size: 14px; grid-column: 1/-1; text-align: center; padding: 20px;">
-                                    لا يوجد صور في المعرض حالياً.
+                                    {{ __('portal.settings.gallery.empty') }}
                                 </p>
                             @endif
                         </div>
@@ -602,21 +602,21 @@
                 <div class="card">
                     <div class="card-title">
                         <i class="fa-solid fa-mug-hot" style="color: var(--upwork-green);"></i>
-                        <span>المميزات والخدمات المتوفرة</span>
+                        <span>{{ __('portal.settings.amenities.card_title') }}</span>
                     </div>
 
                     <p style="color: var(--upwork-muted); font-size: 14px; margin-bottom: 20px;">
-                        اختر الخدمات والمميزات المتوفرة في مساحتك لتسهيل عثور المستخدمين عليها في محركات البحث.
+                        {{ __('portal.settings.amenities.intro') }}
                     </p>
 
                     @php
                         $workspaceAmenities = $workspace->amenities ?? [];
                         $availableAmenities = [
-                            'wifi' => ['label' => 'إنترنت سريع (WiFi)', 'icon' => 'fa-wifi'],
-                            'ac' => ['label' => 'تكييف هواء', 'icon' => 'fa-wind'],
-                            'coffee' => ['label' => 'مشروبات وقهوة', 'icon' => 'fa-coffee'],
-                            'printing' => ['label' => 'خدمات الطباعة والنسخ', 'icon' => 'fa-print'],
-                            'quiet' => ['label' => 'غرف هادئة / للمذاكرة', 'icon' => 'fa-volume-mute']
+                            'wifi' => ['label' => __('portal.settings.amenities.wifi'), 'icon' => 'fa-wifi'],
+                            'ac' => ['label' => __('portal.settings.amenities.ac'), 'icon' => 'fa-wind'],
+                            'coffee' => ['label' => __('portal.settings.amenities.coffee'), 'icon' => 'fa-coffee'],
+                            'printing' => ['label' => __('portal.settings.amenities.printing'), 'icon' => 'fa-print'],
+                            'quiet' => ['label' => __('portal.settings.amenities.quiet'), 'icon' => 'fa-volume-mute']
                         ];
                     @endphp
 
@@ -637,11 +637,11 @@
                 <div class="card">
                     <div class="card-title">
                         <i class="fa-solid fa-mug-hot" style="color: var(--upwork-green);"></i>
-                        <span>قائمة المشروبات</span>
+                        <span>{{ __('portal.settings.drinks.card_title') }}</span>
                     </div>
 
                     <p style="color: var(--upwork-muted); font-size: 14px; margin-bottom: 20px;">
-                        أضف المشروبات المتاحة في مساحتك مع تحديد السعر.
+                        {{ __('portal.settings.drinks.intro') }}
                     </p>
 
                     <div id="drinks-container">
@@ -649,15 +649,15 @@
                             <div class="grid-2 drink-row" style="margin-bottom: 15px; align-items: end;">
                                 <input type="hidden" name="drinks[{{ $index }}][id]" value="{{ $drink->id }}">
                                 <div class="form-group" style="margin-bottom: 0;">
-                                    <label>اسم المشروب</label>
+                                    <label>{{ __('portal.settings.drinks.name') }}</label>
                                     <div style="display: flex; gap: 10px;">
                                         <input type="text" name="drinks[{{ $index }}][icon]" class="form-control" style="width: 60px; text-align: center;" value="{{ $drink->icon }}" required placeholder="☕">
-                                        <input type="text" name="drinks[{{ $index }}][name]" class="form-control" style="flex: 1;" value="{{ $drink->name }}" required placeholder="مثال: قهوة تركي">
+                                        <input type="text" name="drinks[{{ $index }}][name]" class="form-control" style="flex: 1;" value="{{ $drink->name }}" required placeholder="{{ __('portal.settings.drinks.name_placeholder') }}">
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin-bottom: 0; display: flex; gap: 10px; align-items: flex-end;">
                                     <div style="flex: 1;">
-                                        <label>السعر (بالقروش)</label>
+                                        <label>{{ __('portal.settings.drinks.price') }}</label>
                                         <input type="number" name="drinks[{{ $index }}][price_cents]" class="form-control" value="{{ $drink->price_cents }}" required min="0">
                                     </div>
                                     <button type="button" class="btn-remove-drink" onclick="this.closest('.drink-row').remove();" style="background: none; border: none; color: var(--upwork-error); cursor: pointer; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--upwork-border); height: 45px;">
@@ -669,7 +669,7 @@
                     </div>
                     
                     <button type="button" class="btn-submit" id="add-drink-btn" style="background-color: var(--upwork-blue); padding: 8px 16px; font-size: 14px; width: auto; margin-bottom: 20px; margin-top: 10px;">
-                        <i class="fa-solid fa-plus"></i> إضافة مشروب
+                        <i class="fa-solid fa-plus"></i> {{ __('portal.settings.drinks.add') }}
                     </button>
                 </div>
             </div>
@@ -679,26 +679,26 @@
                 <div class="card">
                     <div class="card-title">
                         <i class="fa-solid fa-users" style="color: var(--upwork-green);"></i>
-                        <span>الحالة المباشرة والإشغال</span>
+                        <span>{{ __('portal.settings.occupancy.card_title') }}</span>
                     </div>
 
                     <div class="grid-2">
                         <div class="form-group">
-                            <label for="manual_occupancy">تعديل عدد العملاء الحاليين يدوياً</label>
-                            <input type="number" id="manual_occupancy" name="manual_occupancy" class="form-control" min="0" value="{{ old('manual_occupancy', $workspace->manual_occupancy) }}" placeholder="اتركه فارغاً للاعتماد على التطبيق">
-                            <small style="color: var(--upwork-muted); font-size: 12px; display: block; margin-top: 4px;">إذا تم إدخال رقم هنا، سيتجاهل النظام العدد المحسوب تلقائياً من التطبيق.</small>
+                            <label for="manual_occupancy">{{ __('portal.settings.occupancy.manual_label') }}</label>
+                            <input type="number" id="manual_occupancy" name="manual_occupancy" class="form-control" min="0" value="{{ old('manual_occupancy', $workspace->manual_occupancy) }}" placeholder="{{ __('portal.settings.occupancy.manual_placeholder') }}">
+                            <small style="color: var(--upwork-muted); font-size: 12px; display: block; margin-top: 4px;">{{ __('portal.settings.occupancy.manual_hint') }}</small>
                             @error('manual_occupancy')
                                 <div class="form-error">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="status">حالة المساحة الآن</label>
+                            <label for="status">{{ __('portal.settings.occupancy.status_label') }}</label>
                             <select id="status" name="status" class="form-control" required>
-                                <option value="OPEN" {{ old('status', $workspace->status->value) == 'OPEN' ? 'selected' : '' }}>مفتوح (OPEN)</option>
-                                <option value="BUSY" {{ old('status', $workspace->status->value) == 'BUSY' ? 'selected' : '' }}>مزدحم (BUSY)</option>
-                                <option value="FULL" {{ old('status', $workspace->status->value) == 'FULL' ? 'selected' : '' }}>ممتلئ (FULL)</option>
-                                <option value="CLOSED" {{ old('status', $workspace->status->value) == 'CLOSED' ? 'selected' : '' }}>مغلق (CLOSED)</option>
+                                <option value="OPEN" {{ old('status', $workspace->status->value) == 'OPEN' ? 'selected' : '' }}>{{ __('portal.settings.occupancy.status_open') }}</option>
+                                <option value="BUSY" {{ old('status', $workspace->status->value) == 'BUSY' ? 'selected' : '' }}>{{ __('portal.settings.occupancy.status_busy') }}</option>
+                                <option value="FULL" {{ old('status', $workspace->status->value) == 'FULL' ? 'selected' : '' }}>{{ __('portal.settings.occupancy.status_full') }}</option>
+                                <option value="CLOSED" {{ old('status', $workspace->status->value) == 'CLOSED' ? 'selected' : '' }}>{{ __('portal.settings.occupancy.status_closed') }}</option>
                             </select>
                             @error('status')
                                 <div class="form-error">{{ $message }}</div>
@@ -709,23 +709,23 @@
                     {{-- Checkout mode: control how paid visitors leave --}}
                     @php $currentCheckoutMode = old('checkout_mode', $workspace->checkout_mode?->value ?? 'DIRECT'); @endphp
                     <div class="form-group" style="margin-top:10px; padding-top:20px; border-top:1px solid var(--upwork-border);">
-                        <label style="margin-bottom:4px;">طريقة تسجيل خروج الزوار</label>
+                        <label style="margin-bottom:4px;">{{ __('portal.settings.occupancy.checkout_label') }}</label>
                         <p style="color:var(--upwork-muted); font-size:13px; margin:0 0 14px;">
-                            ينطبق على أصحاب الباقات المدفوعة (فضي / ذهبي) فقط. الزوار في الباقة المجانية يسجّلون خروجهم مباشرة دائماً.
+                            {{ __('portal.settings.occupancy.checkout_intro') }}
                         </p>
                         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:14px;">
                             <label class="checkbox-card" style="align-items:flex-start;">
                                 <input type="radio" name="checkout_mode" value="DIRECT" {{ $currentCheckoutMode === 'DIRECT' ? 'checked' : '' }} style="margin-top:3px;">
                                 <span>
-                                    <strong>خروج مباشر</strong><br>
-                                    <span style="font-weight:500; color:var(--upwork-muted); font-size:13px;">يستطيع الزائر تسجيل خروجه بنفسه فوراً من التطبيق.</span>
+                                    <strong>{{ __('portal.settings.occupancy.checkout_direct') }}</strong><br>
+                                    <span style="font-weight:500; color:var(--upwork-muted); font-size:13px;">{{ __('portal.settings.occupancy.checkout_direct_desc') }}</span>
                                 </span>
                             </label>
                             <label class="checkbox-card" style="align-items:flex-start;">
                                 <input type="radio" name="checkout_mode" value="APPROVAL" {{ $currentCheckoutMode === 'APPROVAL' ? 'checked' : '' }} style="margin-top:3px;">
                                 <span>
-                                    <strong>يتطلب موافقتي</strong><br>
-                                    <span style="font-weight:500; color:var(--upwork-muted); font-size:13px;">يرسل الزائر طلب خروج، ويظهر لك في صفحة "تسجيل الزوار" للموافقة عليه.</span>
+                                    <strong>{{ __('portal.settings.occupancy.checkout_approval') }}</strong><br>
+                                    <span style="font-weight:500; color:var(--upwork-muted); font-size:13px;">{{ __('portal.settings.occupancy.checkout_approval_desc') }}</span>
                                 </span>
                             </label>
                         </div>
@@ -741,12 +741,12 @@
                 <div class="card">
                     <div class="card-title">
                         <i class="fa-solid fa-qrcode" style="color: var(--upwork-green);"></i>
-                        <span>رمز الاستجابة السريعة (QR Code) للمساحة</span>
+                        <span>{{ __('portal.settings.qr.card_title') }}</span>
                     </div>
 
                     <div class="qr-section">
                         <p style="color: var(--upwork-muted); font-size: 15px; max-width: 580px; margin-bottom: 24px;">
-                            هذا الرمز مخصص للمساحة. يجب على الطلاب والمستخدمين مسحه عند الحضور والانصراف لحساب الوقت بشكل دقيق من خلال تطبيق "أنيس".
+                            {{ __('portal.settings.qr.intro') }}
                         </p>
 
                         <!-- Element where the QR Code will render -->
@@ -757,11 +757,11 @@
                         <div class="qr-actions no-print">
                             <button type="button" class="btn-action btn-action-primary" onclick="downloadQrPdf()">
                                 <i class="fa-solid fa-file-pdf"></i>
-                                <span>تحميل كملف PDF</span>
+                                <span>{{ __('portal.settings.qr.download_pdf') }}</span>
                             </button>
                             <button type="button" class="btn-action btn-action-secondary" onclick="printQrPoster()">
                                 <i class="fa-solid fa-print"></i>
-                                <span>طباعة الملصق</span>
+                                <span>{{ __('portal.settings.qr.print') }}</span>
                             </button>
                         </div>
                     </div>
@@ -772,7 +772,7 @@
             <div class="submit-section no-print">
                 <button type="submit" class="btn-save">
                     <i class="fa-solid fa-floppy-disk"></i>
-                    <span>حفظ جميع التغييرات</span>
+                    <span>{{ __('portal.settings.save_all') }}</span>
                 </button>
             </div>
         </form>
@@ -782,12 +782,12 @@
     <div id="print-area">
         <div style="border: 10px solid #14a800; border-radius: 20px; padding: 40px; text-align: center; max-width: 600px; width: 100%;">
             <div style="background-color: #14a800; color: #ffffff; padding: 12px 30px; font-weight: 900; font-size: 26px; border-radius: 99px; display: inline-block; margin-bottom: 30px;">
-                تطبيق أنيس
+                {{ __('portal.settings.poster.app') }}
             </div>
-            
-            <h1 style="font-size: 34px; font-weight: 800; margin-bottom: 10px; color: #001e00;">سجل دخولك هنا</h1>
+
+            <h1 style="font-size: 34px; font-weight: 800; margin-bottom: 10px; color: #001e00;">{{ __('portal.settings.poster.checkin_here') }}</h1>
             <p style="font-size: 18px; color: #5e6d55; margin-bottom: 40px; font-weight: 500;">
-                افتح تطبيق أنيس، وامسح الرمز لبدء جلستك في مساحة:
+                {{ __('portal.settings.poster.instructions') }}
                 <br>
                 <strong style="font-size: 26px; color: #14a800; display: block; margin-top: 10px;">{{ $workspace->name }}</strong>
             </p>
@@ -797,7 +797,7 @@
             </div>
 
             <p style="font-size: 14px; color: #5e6d55;">
-                ذاكر مع ناس، مش لوحدك.
+                {{ __('portal.settings.poster.tagline') }}
             </p>
         </div>
     </div>
@@ -810,7 +810,25 @@
     <!-- jsPDF client side renderer -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+    @php
+        $settingsI18n = [
+            'drink_name' => __('portal.settings.drinks.name'),
+            'drink_name_placeholder' => __('portal.settings.drinks.name_placeholder'),
+            'drink_price_full' => __('portal.settings.drinks.price_full'),
+            'gallery_empty' => __('portal.settings.gallery.empty'),
+            'pdf_error' => __('portal.settings.js.pdf_error'),
+            'compressing_n' => __('portal.settings.js.compressing_n'),
+            'images_ready' => __('portal.settings.js.images_ready'),
+            'saved_percent' => __('portal.settings.js.saved_percent'),
+            'preview' => __('portal.settings.js.preview'),
+            'too_large_title' => __('portal.settings.js.too_large_title'),
+            'too_large_desc' => __('portal.settings.js.too_large_desc'),
+        ];
+    @endphp
     <script>
+        // Localized strings for dynamically-rendered UI
+        const SETTINGS_I18N = {!! json_encode($settingsI18n, JSON_UNESCAPED_UNICODE) !!};
+
         // Tab switching logic
         function switchTab(evt, tabId) {
             // Hide all tab content
@@ -851,15 +869,15 @@
                     row.style.alignItems = 'end';
                     row.innerHTML = `
                         <div class="form-group" style="margin-bottom: 0;">
-                            <label>اسم المشروب</label>
+                            <label>${SETTINGS_I18N.drink_name}</label>
                             <div style="display: flex; gap: 10px;">
                                 <input type="text" name="drinks[${drinkIndex}][icon]" class="form-control" style="width: 60px; text-align: center;" value="☕" required placeholder="☕">
-                                <input type="text" name="drinks[${drinkIndex}][name]" class="form-control" style="flex: 1;" value="" required placeholder="مثال: قهوة تركي">
+                                <input type="text" name="drinks[${drinkIndex}][name]" class="form-control" style="flex: 1;" value="" required placeholder="${SETTINGS_I18N.drink_name_placeholder}">
                             </div>
                         </div>
                         <div class="form-group" style="margin-bottom: 0; display: flex; gap: 10px; align-items: flex-end;">
                             <div style="flex: 1;">
-                                <label>السعر (بالقروش - مثال: 15 جنيه = 1500)</label>
+                                <label>${SETTINGS_I18N.drink_price_full}</label>
                                 <input type="number" name="drinks[${drinkIndex}][price_cents]" class="form-control" value="" required min="0">
                             </div>
                             <button type="button" class="btn-remove-drink" onclick="this.closest('.drink-row').remove();" style="background: none; border: none; color: var(--upwork-error); cursor: pointer; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--upwork-border); height: 45px;">
@@ -883,7 +901,7 @@
             // Check if container is empty
             var container = document.getElementById("gallery-container");
             if (container.children.length === 0) {
-                container.innerHTML = '<p style="color: var(--upwork-muted); font-size: 14px; grid-column: 1/-1; text-align: center; padding: 20px;">لا يوجد صور في المعرض حالياً.</p>';
+                container.innerHTML = '<p style="color: var(--upwork-muted); font-size: 14px; grid-column: 1/-1; text-align: center; padding: 20px;">' + SETTINGS_I18N.gallery_empty + '</p>';
             }
         }
 
@@ -1002,7 +1020,7 @@
 
                 doc.save("workspace-qr-{{ Str::slug($workspace->name) }}.pdf");
             } else {
-                alert("تعذر إنشاء ملف PDF، يرجى المحاولة مرة أخرى.");
+                alert(SETTINGS_I18N.pdf_error);
             }
         }
 
@@ -1036,8 +1054,8 @@
                     banner.innerHTML =
                         '<i class="fa-solid fa-circle-xmark" style="margin-top:2px;font-size:16px;"></i>' +
                         '<div>' +
-                        '<div>الصور المختارة كبيرة جداً حتى بعد الضغط (' + formatBytes(totalBytes) + ' إجمالاً).</div>' +
-                        '<div style="font-weight:500; margin-top:4px; color:#6b1111;">يُرجى تقليل عدد الصور أو اختيار صور أصغر. الحد الأقصى المسموح به هو 50MB في كل مرة.</div>' +
+                        '<div>' + SETTINGS_I18N.too_large_title.replace(':size', formatBytes(totalBytes)) + '</div>' +
+                        '<div style="font-weight:500; margin-top:4px; color:#6b1111;">' + SETTINGS_I18N.too_large_desc + '</div>' +
                         '</div>';
 
                     // Insert before the gallery dropzone
@@ -1122,7 +1140,7 @@
 
             const compressed = [];
             for (let i = 0; i < files.length; i++) {
-                statusText.textContent = `جاري ضغط الصورة ${i + 1} من ${files.length}…`;
+                statusText.textContent = SETTINGS_I18N.compressing_n.replace(':current', i + 1).replace(':total', files.length);
                 const f = files[i];
                 const out = f.size > 300 * 1024 ? await compressImageFile(f) : f;
                 compressed.push({ file: out, originalSize: f.size });
@@ -1138,8 +1156,8 @@
             const totalNew  = compressed.reduce((s, { file }) => s + file.size, 0);
             const saved     = Math.round((1 - totalNew / totalOrig) * 100);
             statusText.innerHTML =
-                `<i class="fa-solid fa-circle-check"></i>&nbsp; ${files.length} صورة جاهزة — ` +
-                `${formatBytes(totalOrig)} ← <strong>${formatBytes(totalNew)}</strong> (وفّرت ${saved}%)`;
+                `<i class="fa-solid fa-circle-check"></i>&nbsp; ${SETTINGS_I18N.images_ready.replace(':count', files.length)} ` +
+                `${formatBytes(totalOrig)} ← <strong>${formatBytes(totalNew)}</strong> ${SETTINGS_I18N.saved_percent.replace(':percent', saved)}`;
 
             // Preview compressed images
             const previewGrid = document.getElementById('gallery-new-previews');
@@ -1148,7 +1166,7 @@
                 const url = URL.createObjectURL(file);
                 const div = document.createElement('div');
                 div.className = 'gallery-item';
-                div.innerHTML = `<img src="${url}" alt="معاينة" style="width:100%;height:100%;object-fit:cover;">
+                div.innerHTML = `<img src="${url}" alt="${SETTINGS_I18N.preview}" style="width:100%;height:100%;object-fit:cover;">
                     <div style="position:absolute;bottom:4px;right:6px;background:rgba(0,0,0,.55);color:#fff;
                                 font-size:10px;padding:2px 6px;border-radius:4px;">${formatBytes(file.size)}</div>`;
                 previewGrid.appendChild(div);
@@ -1191,7 +1209,7 @@
             const saved = Math.round((1 - out.size / file.size) * 100);
             statusEl.innerHTML =
                 `<i class="fa-solid fa-circle-check" style="color:var(--upwork-green);"></i>
-                 <span>${formatBytes(file.size)} ← <strong>${formatBytes(out.size)}</strong> (وفّرت ${saved}%)</span>`;
+                 <span>${formatBytes(file.size)} ← <strong>${formatBytes(out.size)}</strong> ${SETTINGS_I18N.saved_percent.replace(':percent', saved)}</span>`;
         }
 
         document.getElementById('cover_image').addEventListener('change', function () {

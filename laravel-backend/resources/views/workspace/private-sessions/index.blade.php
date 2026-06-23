@@ -1,21 +1,66 @@
 @extends('workspace.layouts.app')
 
-@section('title', 'الجلسات الخاصة | بوابة مساحة العمل')
+@section('title', __('portal.private_sessions.meta_title'))
 
 @section('content')
 <div class="private-session-list-page">
     <div class="private-session-list-hero">
         <div>
-            <h1 class="private-session-list-title">الجلسات الخاصة</h1>
-            <p class="private-session-list-subtitle">جلسات داخل مساحة العمل فقط. لا تظهر في جلسات التطبيق العامة، والحضور يتم بقائمة أرقام و QR.</p>
+            <h1 class="private-session-list-title">{{ __('portal.private_sessions.title') }}</h1>
+            <p class="private-session-list-subtitle">{{ __('portal.private_sessions.subtitle') }}</p>
         </div>
-        <a href="{{ route('workspace.private-sessions.create') }}" class="btn-primary private-session-create-btn" style="text-decoration:none;"><i class="fa-solid fa-plus"></i> إنشاء جلسة خاصة</a>
+        <a href="{{ route('workspace.private-sessions.create') }}" class="btn-primary private-session-create-btn" style="text-decoration:none;"><i class="fa-solid fa-plus"></i> {{ __('portal.private_sessions.create_btn') }}</a>
     </div>
+
+    <form action="{{ route('workspace.private-sessions.index') }}" method="GET" class="card private-session-dark-card private-session-filter-card">
+        <div class="private-session-filter-grid">
+            <div>
+                <label>{{ __('portal.private_sessions.filter.teacher') }}</label>
+                <select name="teacher" class="form-control">
+                    <option value="">{{ __('portal.private_sessions.filter.all_teachers') }}</option>
+                    @foreach($teachers as $teacher)
+                        <option value="{{ $teacher->id }}" @selected(($filters['teacher'] ?? '') === $teacher->id)>{{ $teacher->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label>{{ __('portal.private_sessions.filter.subject') }}</label>
+                <select name="subject" class="form-control">
+                    <option value="">{{ __('portal.private_sessions.filter.all_subjects') }}</option>
+                    @foreach($subjects as $subject)
+                        <option value="{{ $subject->id }}" @selected(($filters['subject'] ?? '') === $subject->id)>{{ $subject->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label>{{ __('portal.private_sessions.filter.grade') }}</label>
+                <select name="grade_level" class="form-control">
+                    <option value="">{{ __('portal.private_sessions.filter.all_grades') }}</option>
+                    @foreach($gradeLevels as $gradeLevel)
+                        <option value="{{ $gradeLevel->id }}" @selected(($filters['grade_level'] ?? '') === $gradeLevel->id)>{{ $gradeLevel->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label>{{ __('portal.private_sessions.filter.status') }}</label>
+                <select name="status" class="form-control">
+                    <option value="">{{ __('portal.private_sessions.filter.all_statuses') }}</option>
+                    <option value="active" @selected(($filters['status'] ?? '') === 'active')>{{ __('portal.private_sessions.status.active') }}</option>
+                    <option value="finished" @selected(($filters['status'] ?? '') === 'finished')>{{ __('portal.private_sessions.status.finished') }}</option>
+                    <option value="cancelled" @selected(($filters['status'] ?? '') === 'cancelled')>{{ __('portal.private_sessions.status.cancelled') }}</option>
+                </select>
+            </div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn-primary" type="submit"><i class="fa-solid fa-filter"></i> {{ __('portal.private_sessions.filter.apply') }}</button>
+            <a href="{{ route('workspace.private-sessions.index') }}" class="private-session-clear-link">{{ __('portal.private_sessions.filter.clear') }}</a>
+        </div>
+    </form>
 
     @if($sessions->isEmpty())
         <div class="card empty-state private-session-dark-card">
             <i class="fa-solid fa-qrcode"></i>
-            لا توجد جلسات خاصة بعد.
+            {{ __('portal.private_sessions.list.empty') }}
         </div>
     @else
         <div class="card private-session-dark-card">
@@ -23,13 +68,15 @@
                 <table style="width:100%; border-collapse:collapse; text-align:right;">
                     <thead>
                         <tr>
-                            <th style="padding:10px;">الجلسة</th>
-                            <th style="padding:10px;">الموعد</th>
-                            <th style="padding:10px;">السعر</th>
-                            <th style="padding:10px;">الحضور</th>
-                            <th style="padding:10px;">الإيراد</th>
-                            <th style="padding:10px;">الحالة</th>
-                            <th style="padding:10px;">إجراء</th>
+                            <th style="padding:10px;">{{ __('portal.private_sessions.list.th_session') }}</th>
+                            <th style="padding:10px;">{{ __('portal.private_sessions.list.th_education') }}</th>
+                            <th style="padding:10px;">{{ __('portal.private_sessions.list.th_schedule') }}</th>
+                            <th style="padding:10px;">{{ __('portal.private_sessions.list.th_price') }}</th>
+                            <th style="padding:10px;">{{ __('portal.private_sessions.list.th_attendance') }}</th>
+                            <th style="padding:10px;">{{ __('portal.private_sessions.list.th_revenue') }}</th>
+                            <th style="padding:10px;">{{ __('portal.private_sessions.list.th_instructor_net') }}</th>
+                            <th style="padding:10px;">{{ __('portal.private_sessions.list.th_status') }}</th>
+                            <th style="padding:10px;">{{ __('portal.private_sessions.list.th_action') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,12 +84,20 @@
                             @php $summary = $session->summary(); @endphp
                             <tr>
                                 <td style="padding:10px; font-weight:700;">{{ $session->title }}</td>
+                                <td style="padding:10px;">
+                                    <div style="font-weight:800;">{{ $session->centerTeacher?->name ?? $session->host_name ?? '—' }}</div>
+                                    <small>{{ $session->centerSubject?->name ?? __('portal.private_sessions.no_subject') }} · {{ $session->centerGradeLevel?->name ?? __('portal.private_sessions.no_grade') }}</small>
+                                </td>
                                 <td style="padding:10px;"><small>{{ $session->starts_at->format('Y/m/d H:i') }}</small></td>
-                                <td style="padding:10px;">{{ number_format($session->priceEgp(), 2) }} ج.م</td>
+                                <td style="padding:10px;">{{ number_format($session->priceEgp(), 2) }} {{ __('portal.egp') }}</td>
                                 <td style="padding:10px;">{{ $summary['attended'] }} / {{ $summary['invited'] }}</td>
-                                <td class="private-session-money" style="padding:10px;">{{ number_format($summary['actual_revenue_cents'] / 100, 2) }} ج.م</td>
-                                <td style="padding:10px;"><span class="private-session-status private-session-status-{{ $session->status }}">{{ ['active'=>'فعالة','finished'=>'منتهية','cancelled'=>'ملغية'][$session->status] ?? $session->status }}</span></td>
-                                <td style="padding:10px;"><a href="{{ route('workspace.private-sessions.show', $session) }}" class="private-session-manage-link">إدارة</a></td>
+                                <td class="private-session-money" style="padding:10px;">{{ number_format($summary['actual_revenue_cents'] / 100, 2) }} {{ __('portal.egp') }}</td>
+                                <td style="padding:10px;">
+                                    <div>{{ number_format($summary['instructor_payout_cents'] / 100, 2) }} {{ __('portal.egp') }}</div>
+                                    <small>{{ __('portal.private_sessions.list.net') }} {{ number_format($summary['center_net_cents'] / 100, 2) }} {{ __('portal.egp') }}</small>
+                                </td>
+                                <td style="padding:10px;"><span class="private-session-status private-session-status-{{ $session->status }}">{{ __('portal.private_sessions.status.'.$session->status) }}</span></td>
+                                <td style="padding:10px;"><a href="{{ route('workspace.private-sessions.show', $session) }}" class="private-session-manage-link">{{ __('portal.private_sessions.list.manage') }}</a></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -111,6 +166,38 @@
         color: var(--ps-text) !important;
         border: 1px solid var(--ps-border) !important;
         box-shadow: 0 12px 30px rgba(0, 0, 0, .18) !important;
+    }
+
+    .private-session-filter-card {
+        margin-bottom: 18px;
+    }
+
+    .private-session-filter-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .private-session-list-page label {
+        color: var(--ps-muted);
+    }
+
+    .private-session-list-page .form-control {
+        background: var(--ps-input) !important;
+        border-color: var(--ps-border) !important;
+        color: var(--ps-text) !important;
+    }
+
+    .private-session-clear-link {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 16px;
+        border: 1px solid var(--ps-border);
+        border-radius: var(--radius-sm);
+        color: var(--ps-text);
+        text-decoration: none;
+        font-weight: 800;
     }
 
     .private-session-list-page table {
@@ -183,6 +270,12 @@
 
     .private-session-list-page .empty-state {
         color: var(--ps-muted);
+    }
+
+    @media (max-width: 1000px) {
+        .private-session-filter-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 @endsection
