@@ -9,10 +9,10 @@ class URL {
   ///   • Android emulator               → http://10.0.2.2:8000/api/v1
   ///   • Physical device                → http://[your-machine-LAN-IP]:8000/api/v1
   // static const String baseUrl = String.fromEnvironment(
-    // 'ANIS_API_BASE',
-    // defaultValue:
-  static const String baseUrl='https://anis.hejaz2.com/api/v1';
-    // defaultValue: 'http://127.0.0.1:8000/api/v1',
+  // 'ANIS_API_BASE',
+  // defaultValue:
+  static const String baseUrl = 'https://anis.hejaz2.com/api/v1';
+  // defaultValue: 'http://127.0.0.1:8000/api/v1',
   // );
 
   // ── Auth ────────────────────────────────────────────────────────────────
@@ -20,6 +20,9 @@ class URL {
   static const String createInfo = '$baseUrl/auth/register';
   static const String me = '$baseUrl/auth/me';
   static const String logout = '$baseUrl/auth/logout';
+
+  // ── Push notifications (FCM device tokens) ────────────────────────────────
+  static const String deviceTokens = '$baseUrl/device-tokens';
 
   // ── Home ────────────────────────────────────────────────────────────────
   static const String homeProfile = '$baseUrl/home/profile';

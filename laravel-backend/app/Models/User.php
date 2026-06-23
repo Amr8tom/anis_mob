@@ -160,4 +160,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(WorkspaceSubscription::class);
     }
+
+    /** @return HasMany<DeviceToken, $this> */
+    public function devices(): HasMany
+    {
+        return $this->hasMany(DeviceToken::class);
+    }
+
+    /**
+     * Targets for the FCM notification channel: every registered device token.
+     *
+     * @return array<int, string>
+     */
+    public function routeNotificationForFcm(): array
+    {
+        return $this->devices()->pluck('token')->all();
+    }
 }

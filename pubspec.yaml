@@ -81,11 +81,11 @@ dependencies:
   upgrader: ^12.1.0 # app store
 
   #firebase mirroring and minitoring
-#  firebase_core:
+  firebase_core: ^4.11.0
+  firebase_messaging: ^16.0.2
 #  firebase_crashlytics:
 #  firebase_analytics:
 #  flutter_otp_text_field: ^1.5.1+1
-#  firebase_messaging: ^16.0.2
   flutter_local_notifications: ^19.4.2
   flutter_dash: ^1.0.0
 

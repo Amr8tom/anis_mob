@@ -7,8 +7,10 @@ import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/colors.dart';
 import '../../../../../core/extentions/navigation_extension.dart';
 import '../../../../../core/routing/route_names.dart';
+import '../../../../../core/service_locator/service_locator.dart';
 import '../../../../../core/utils/validators.dart';
 import '../../../../../generated/l10n.dart';
+import '../../../../notifications/presentation/controller/notifications_cubit.dart';
 import '../../controller/login/login_cubit.dart';
 import 'login_action_buttons_section.dart';
 import 'login_dark_field_widget.dart';
@@ -42,6 +44,9 @@ class _LoginFormSectionState extends State<LoginFormSection> {
 
   void _handleState(BuildContext context, LoginState state) {
     if (state.status.isLoggedIn) {
+      // Token is already persisted at this point — register this device for
+      // push so the user starts receiving notifications right after login.
+      serviceLocator<NotificationsCubit>().syncToken();
       context.pushReplacementNamed(
         state.profileCompleted
             ? DRoutesName.navigationMenuRoute

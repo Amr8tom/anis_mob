@@ -13,6 +13,7 @@ import 'buddy_service_locator.dart';
 import 'home_service_locator.dart';
 import 'language_service_locator.dart';
 import 'navigation_servise_locator.dart';
+import 'notifications_service_locator.dart';
 import 'onboarding_service_locator.dart';
 import 'profile_service_locator.dart';
 import 'workspaces_service_locator.dart';
@@ -47,6 +48,7 @@ class DI {
     await WorkspacesServiceLocator.execute(serviceLocator: serviceLocator);
     await BuddyServiceLocator.execute(serviceLocator: serviceLocator);
     await ProfileServiceLocator.execute(serviceLocator: serviceLocator);
+    await NotificationsServiceLocator.execute(serviceLocator: serviceLocator);
 
     // ── Utilities ─────────────────────────────────────────────────────────────
     await LanguageServiceLocator.execute(serviceLocator: serviceLocator);
