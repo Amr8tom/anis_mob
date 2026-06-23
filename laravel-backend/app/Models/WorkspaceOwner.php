@@ -34,6 +34,7 @@ class WorkspaceOwner extends Authenticatable
         'status',
         'last_login_at',
         'locale',
+        'theme',
     ];
 
     protected $hidden = [

@@ -6,6 +6,7 @@ use App\Http\Middleware\EnsureWorkspaceOwner;
 use App\Http\Middleware\IdempotentRequest;
 use App\Http\Middleware\RequestTelemetry;
 use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\SetTheme;
 use App\Support\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -31,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(RequestTelemetry::class);
         $middleware->web(append: [
             SetLocale::class,
+            SetTheme::class,
         ]);
         $middleware->api(append: [
             SetLocale::class,

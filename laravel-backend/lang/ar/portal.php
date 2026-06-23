@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 return [
     'language' => 'اللغة',
+    'theme' => [
+        'light' => 'الوضع الفاتح',
+        'dark' => 'الوضع الداكن',
+        'toggle' => 'تبديل المظهر',
+    ],
     'egp' => 'ج.م',
     'billing' => [
         'FREE' => 'مجاني',

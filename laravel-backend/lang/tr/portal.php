@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 return [
     'language' => 'Dil',
+    'theme' => [
+        'light' => 'Açık Tema',
+        'dark' => 'Koyu Tema',
+        'toggle' => 'Temayı Değiştir',
+    ],
     'egp' => 'EGP',
     'billing' => [
         'FREE' => 'Ücretsiz',

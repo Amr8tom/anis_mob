@@ -25,6 +25,9 @@ Route::get('/', function () {
 // Language switcher (works logged-in or not).
 Route::post('locale', [\App\Http\Controllers\Web\LocaleController::class, 'switch'])->name('locale.switch');
 
+// Theme switcher (works logged-in or not).
+Route::post('theme', [\App\Http\Controllers\Web\ThemeController::class, 'switch'])->name('theme.switch');
+
 // Serves workspace media straight from the configured disk so images render
 // even when the `public/storage` symlink is missing (a common deploy footgun).
 // Public, read-only, path-traversal guarded.

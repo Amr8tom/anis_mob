@@ -12,13 +12,13 @@
     </div>
 
     @if(session('success'))
-        <div class="card workspace-dark-card" style="margin-bottom:16px; border-right:4px solid #2bd968;">{{ session('success') }}</div>
+        <div class="card workspace-dark-card" style="margin-bottom:16px; border-right:4px solid var(--wd-accent, #2bd968);">{{ session('success') }}</div>
     @endif
     @if($errors->any())
         <div class="card workspace-dark-card" style="margin-bottom:16px; border-right:4px solid #f87171;">{{ $errors->first() }}</div>
     @endif
     @if(session('generated_workspace_codes'))
-        <div class="card workspace-dark-card" style="margin-bottom:16px; border-right:4px solid #2bd968;">
+        <div class="card workspace-dark-card" style="margin-bottom:16px; border-right:4px solid var(--wd-accent, #2bd968);">
             <h3 style="margin-top:0;">{{ __('portal.subscriptions.new_codes_title') }}</h3>
             @foreach(session('generated_workspace_codes') as $generatedCode)
                 <code style="display:inline-block; direction:ltr; padding:8px 12px; margin:4px; background:var(--upwork-bg); border-radius:6px;">{{ $generatedCode }}</code>
@@ -278,7 +278,7 @@
         border: 1px solid var(--wd-border);
         background:
             radial-gradient(circle at 10% 20%, rgba(43, 217, 104, .13), transparent 28%),
-            linear-gradient(135deg, #16211b 0%, #1d2c24 100%);
+            linear-gradient(135deg, var(--wd-surface, #16211b) 0%, var(--wd-surface-2, #1d2c24) 100%);
         box-shadow: 0 14px 34px rgba(0, 0, 0, .18);
     }
 
@@ -359,7 +359,7 @@
     }
 
     .workspace-dark-page tbody tr:hover {
-        background: #21322a;
+        background: var(--wd-row-hover, #21322a);
     }
 
     .workspace-dark-page th {

@@ -127,7 +127,7 @@
         border: 1px solid var(--edu-border);
         background:
             radial-gradient(circle at 10% 20%, rgba(43, 217, 104, .13), transparent 28%),
-            linear-gradient(135deg, #16211b 0%, #1d2c24 100%);
+            linear-gradient(135deg, var(--edu-surface, #16211b) 0%, var(--edu-surface-2, #1d2c24) 100%);
         color: var(--edu-text);
         box-shadow: 0 14px 34px rgba(0, 0, 0, .18);
     }

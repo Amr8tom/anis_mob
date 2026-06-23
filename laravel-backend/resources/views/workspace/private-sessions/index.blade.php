@@ -134,7 +134,7 @@
         border: 1px solid var(--ps-border);
         background:
             radial-gradient(circle at 10% 20%, rgba(43, 217, 104, .13), transparent 28%),
-            linear-gradient(135deg, #16211b 0%, #1d2c24 100%);
+            linear-gradient(135deg, var(--ps-surface, #16211b) 0%, var(--ps-surface-2, #1d2c24) 100%);
         box-shadow: 0 14px 34px rgba(0, 0, 0, .18);
     }
 
@@ -214,7 +214,7 @@
     }
 
     .private-session-list-page tbody tr:hover {
-        background: #21322a;
+        background: var(--ps-row-hover, #21322a);
     }
 
     .private-session-list-page th {

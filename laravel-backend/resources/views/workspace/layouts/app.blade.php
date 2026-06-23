@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" dir="{{ $currentDirection ?? 'rtl' }}">
+<html lang="{{ app()->getLocale() }}" dir="{{ $currentDirection ?? 'rtl' }}" data-theme="{{ $currentTheme ?? 'dark' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -135,15 +135,37 @@
         }
         .sb-user .u-meta { flex: 1; min-width: 0; }
         .sb-user .u-name { font-size: 13.5px; font-weight: 800; color: var(--upwork-slate); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .btn-logout {
+        .btn-icon {
             display: inline-flex; align-items: center; justify-content: center;
-            background: none; border: 1px solid var(--upwork-border);
-            color: var(--upwork-muted); font-family: inherit;
-            width: 38px; height: 38px; border-radius: 10px;
+            background: var(--upwork-bg); border: 1px solid var(--upwork-border);
+            color: var(--upwork-slate); font-family: inherit; font-size: 16px;
+            width: 38px; height: 38px; border-radius: var(--radius-sm);
             cursor: pointer; transition: var(--transition); flex-shrink: 0;
         }
-        .btn-logout span { display: none; }
-        .btn-logout:hover { border-color: var(--upwork-error); color: var(--upwork-error); background: #fff5f5; }
+        .btn-icon:hover { border-color: var(--upwork-green); color: var(--upwork-green-dark); background: var(--upwork-green-soft); }
+        .btn-icon.is-danger:hover { border-color: var(--upwork-error); color: var(--upwork-error); background: #fff5f5; }
+
+        .footer-utils {
+            display: flex; gap: 8px; margin-top: 14px;
+        }
+        .footer-utils > form { margin: 0; }
+        .lang-select-wrapper { flex: 1; min-width: 0; }
+        .lang-select {
+            width: 100%; border: 1px solid var(--upwork-border); border-radius: var(--radius-sm);
+            padding: 0 12px; height: 38px; font-family: inherit; font-size: 13.5px;
+            font-weight: 700; color: var(--upwork-slate); background: var(--upwork-bg); cursor: pointer;
+            outline: none; transition: var(--transition);
+        }
+        .lang-select:focus { border-color: var(--upwork-green); box-shadow: 0 0 0 3px rgba(20,168,0,0.12); }
+
+        .theme-toggle-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; height: 38px; border: 1px solid var(--upwork-border);
+            border-radius: var(--radius-sm); background: var(--upwork-bg);
+            color: var(--upwork-slate); font-family: inherit; font-size: 13px; font-weight: 800;
+            cursor: pointer; transition: var(--transition); white-space: nowrap;
+        }
+        .theme-toggle-btn:hover { border-color: var(--upwork-green); color: var(--upwork-green-dark); background: var(--upwork-green-soft); }
 
         /* ═══════════════════════════════════════════
            MAIN  (full remaining width)
@@ -397,14 +419,23 @@
             }
 
             .workspace-dark-page .mobile-card-table tbody tr,
-            .workspace-dark-page .mobile-card-table tfoot tr,
+            .workspace-dark-page .mobile-card-table tfoot tr {
+                background: var(--wd-surface, #16211b) !important;
+                border-color: var(--wd-border, #2c3d33) !important;
+            }
             .visits-dark .mobile-card-table tbody tr,
-            .visits-dark .mobile-card-table tfoot tr,
+            .visits-dark .mobile-card-table tfoot tr {
+                background: var(--vd-surface, #16211b) !important;
+                border-color: var(--vd-border, #2c3d33) !important;
+            }
             .private-session-page .mobile-card-table tbody tr,
-            .private-session-list-page .mobile-card-table tbody tr,
+            .private-session-list-page .mobile-card-table tbody tr {
+                background: var(--ps-surface, #16211b) !important;
+                border-color: var(--ps-border, #2c3d33) !important;
+            }
             .education-page .mobile-card-table tbody tr {
-                background: #16211b !important;
-                border-color: #2c3d33 !important;
+                background: var(--edu-surface, #16211b) !important;
+                border-color: var(--edu-border, #2c3d33) !important;
             }
 
             .mobile-card-table td {
@@ -520,6 +551,7 @@
         body.guest .app-main { margin-right: 0; }
         body.guest .content-wrap { max-width: 560px; margin: 0 auto; }
     </style>
+    @include('workspace.partials.light-theme')
     @yield('styles')
 </head>
 <body class="{{ Auth::guard('workspace_owner')->guest() ? 'guest' : '' }}">
@@ -580,20 +612,32 @@
         <div class="sb-user">
             <div class="user-avatar">{{ mb_substr($workspaceOwner->full_name, 0, 1, 'utf-8') }}</div>
             <div class="u-meta"><div class="u-name">{{ $workspaceOwner->full_name }}</div></div>
-            <form action="{{ route('locale.switch') }}" method="POST" id="locale-switch-form" style="margin:0;">
+            <form action="{{ route('workspace.logout') }}" method="POST" style="margin:0;">
                 @csrf
-                <select name="locale" onchange="document.getElementById('locale-switch-form').submit()"
-                        title="{{ __('portal.language') }}" aria-label="{{ __('portal.language') }}"
-                        style="border:1px solid var(--upwork-border); border-radius:6px; padding:4px 6px; font-family:inherit; font-size:12px; background:#fff; cursor:pointer;">
+                <button type="submit" class="btn-icon is-danger" title="{{ __('portal.nav.logout') }}" aria-label="{{ __('portal.nav.logout') }}">
+                    <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 16px; height: 16px; fill: currentColor;"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 177.3 16 248c0 132.5 107.5 240 240 240s240-107.5 240-240c0-70.7-33.7-132.6-86.5-176.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z"></path></svg>
+                </button>
+            </form>
+        </div>
+        <div class="footer-utils">
+            <form action="{{ route('locale.switch') }}" method="POST" id="locale-switch-form" class="lang-select-wrapper">
+                @csrf
+                <select name="locale" class="lang-select" onchange="document.getElementById('locale-switch-form').submit()" title="{{ __('portal.language') }}" aria-label="{{ __('portal.language') }}">
                     @foreach(config('locales.supported') as $code => $meta)
                         <option value="{{ $code }}" @selected(app()->getLocale() === $code)>{{ $meta['native'] }}</option>
                     @endforeach
                 </select>
             </form>
-            <form action="{{ route('workspace.logout') }}" method="POST">
+            <form action="{{ route('theme.switch') }}" method="POST" style="flex:1; min-width:0;">
                 @csrf
-                <button type="submit" class="btn-logout" title="{{ __('portal.nav.logout') }}" aria-label="{{ __('portal.nav.logout') }}">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <input type="hidden" name="theme" value="{{ ($currentTheme ?? 'dark') === 'dark' ? 'light' : 'dark' }}">
+                <button type="submit" class="theme-toggle-btn" title="{{ __('portal.theme.toggle') }}">
+                    @if(($currentTheme ?? 'dark') === 'dark')
+                        <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 15px; height: 15px; fill: currentColor;"><path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1l90.3-62.3c4.5-3.1 10.2-3.7 15.2-1.6zM256 160a96 96 0 1 0 0 192 96 96 0 1 0 0-192z"></path></svg>
+                    @else
+                        <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" style="width: 14px; height: 14px; fill: currentColor;"><path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path></svg>
+                    @endif
+                    <span>{{ ($currentTheme ?? 'dark') === 'dark' ? __('portal.theme.light') : __('portal.theme.dark') }}</span>
                 </button>
             </form>
         </div>
@@ -652,10 +696,22 @@
                 {{ $item['label'] }}
             </a>
         @endforeach
+        <form action="{{ route('theme.switch') }}" method="POST" style="margin:0;">
+            @csrf
+            <input type="hidden" name="theme" value="{{ ($currentTheme ?? 'dark') === 'dark' ? 'light' : 'dark' }}">
+            <button type="submit" class="ms-item" style="width:100%; background:none; border:none; text-align:start; cursor:pointer; font-family:inherit;">
+                @if(($currentTheme ?? 'dark') === 'dark')
+                    <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; margin-inline-end: 10px; fill: currentColor;"><path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1l90.3-62.3c4.5-3.1 10.2-3.7 15.2-1.6zM256 160a96 96 0 1 0 0 192 96 96 0 1 0 0-192z"></path></svg>
+                @else
+                    <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" style="width: 14px; height: 18px; margin-inline-end: 10px; fill: currentColor;"><path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path></svg>
+                @endif
+                {{ ($currentTheme ?? 'dark') === 'dark' ? __('portal.theme.light') : __('portal.theme.dark') }}
+            </button>
+        </form>
         <div class="ms-divider"></div>
         <form action="{{ route('workspace.logout') }}" method="POST" class="ms-logout-form">
             @csrf
-            <button type="submit" class="ms-item danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> {{ __('portal.nav.logout') }}</button>
+            <button type="submit" class="ms-item danger"><svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; margin-inline-end: 10px; fill: currentColor;"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 177.3 16 248c0 132.5 107.5 240 240 240s240-107.5 240-240c0-70.7-33.7-132.6-86.5-176.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z"></path></svg> {{ __('portal.nav.logout') }}</button>
         </form>
     </div>
 </div>

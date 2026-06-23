@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 return [
     'language' => 'Language',
+    'theme' => [
+        'light' => 'Light Mode',
+        'dark' => 'Dark Mode',
+        'toggle' => 'Toggle Theme',
+    ],
     'egp' => 'EGP',
     'billing' => [
         'FREE' => 'Free',
