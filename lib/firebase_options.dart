@@ -51,19 +51,18 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCfbxujfBhetazhEEog2zFxfKkRmraD6QM',
-    appId: '1:198528572554:android:d79f11866df2c3316ce173',
-    messagingSenderId: '198528572554',
-    projectId: 'cement-tech-app',
-    storageBucket: 'cement-tech-app.firebasestorage.app',
+    apiKey: 'AIzaSyBZPSdGWc0S8EMazpOCkqJ_nEmlxcKPliU',
+    appId: '1:556767459329:android:3882a406cc4037340ce800',
+    messagingSenderId: '556767459329',
+    projectId: 'anis-mob-app',
+    storageBucket: 'anis-mob-app.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCTB4x2xjq0dP0h2TUOiTfgB8cnP0vU7hs',
-    appId: '1:198528572554:ios:7996200ece9f9d3e6ce173',
-    messagingSenderId: '198528572554',
-    projectId: 'cement-tech-app',
-    storageBucket: 'cement-tech-app.firebasestorage.app',
+    apiKey: 'AIzaSyDuHmewmIpOrT9v_dA4GuGDYhFEjiioLgA',
+    appId: '1:556767459329:ios:a35f6d9865d741f30ce800',
+    messagingSenderId: '556767459329',
+    projectId: 'anis-mob-app',
+    storageBucket: 'anis-mob-app.firebasestorage.app',
     iosBundleId: 'com.anisByAmrAlaa.anis',
   );
 }
