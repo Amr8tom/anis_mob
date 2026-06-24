@@ -3,6 +3,7 @@
 use App\Http\Controllers\Web\AdminAccountingController;
 use App\Http\Controllers\Web\AdminAuthController;
 use App\Http\Controllers\Web\AdminDashboardController;
+use App\Http\Controllers\Web\AdminNotificationController;
 use App\Http\Controllers\Web\AdminPlanCodeController;
 use App\Http\Controllers\Web\AdminWorkspaceController;
 use App\Http\Controllers\Web\AdminWorkspaceSettlementController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Web\WorkspaceAuthController;
 use App\Http\Controllers\Web\WorkspaceClientController;
 use App\Http\Controllers\Web\WorkspaceEducationController;
 use App\Http\Controllers\Web\WorkspaceFinancialController;
+use App\Http\Controllers\Web\WorkspaceNotificationController;
 use App\Http\Controllers\Web\WorkspacePrivateSessionController;
 use App\Http\Controllers\Web\WorkspaceSessionController;
 use App\Http\Controllers\Web\WorkspaceSettingsController;
@@ -19,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('workspace.login');
 });
 
 // Language switcher (works logged-in or not).
@@ -106,6 +108,15 @@ Route::prefix('workspace')->name('workspace.')->group(function () {
         Route::get('clients', [WorkspaceClientController::class, 'index'])->name('clients.index');
         Route::get('clients/{client}', [WorkspaceClientController::class, 'show'])->name('clients.show');
 
+        // Notifications
+        Route::prefix('notifications')->name('notifications.')->group(function () {
+            Route::get('/', [WorkspaceNotificationController::class, 'index'])->name('index');
+            Route::get('search', [WorkspaceNotificationController::class, 'searchUsers'])->name('search');
+            Route::get('sessions', [WorkspaceNotificationController::class, 'sessions'])->name('sessions');
+            Route::post('send', [WorkspaceNotificationController::class, 'send'])
+                ->middleware('throttle:auth')->name('send');
+        });
+
         // Manual visitor check-in / check-out (owner-registered visitors)
         Route::get('visits', [WorkspaceVisitController::class, 'index'])->name('visits.index');
         Route::post('visits', [WorkspaceVisitController::class, 'store'])->middleware('throttle:auth')->name('visits.store');
@@ -181,5 +192,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('plancodes', [AdminPlanCodeController::class, 'index'])->middleware('admin.permission:codes.view')->name('plancodes.index');
         Route::post('plancodes', [AdminPlanCodeController::class, 'store'])->middleware('admin.permission:codes.manage')->name('plancodes.store');
         Route::post('plancodes/{planCode}/revoke', [AdminPlanCodeController::class, 'revoke'])->middleware('admin.permission:codes.manage')->name('plancodes.revoke');
+
+        // Broadcast push notifications to all app users.
+        Route::get('notifications', [AdminNotificationController::class, 'index'])->middleware('admin.permission:notifications.send')->name('notifications.index');
+        Route::post('notifications/send', [AdminNotificationController::class, 'send'])->middleware(['admin.permission:notifications.send', 'throttle:auth'])->name('notifications.send');
     });
 });
+
+// Web fallback: unknown browser routes should land on the workspace owner login
+// instead of showing a blank/404 page. API routes are defined separately.
+Route::fallback(fn () => redirect()->route('workspace.login'))->name('web.fallback');

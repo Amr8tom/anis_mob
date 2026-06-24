@@ -107,7 +107,8 @@ class HomeHeaderWidget extends StatelessWidget {
               // Location selector pill
               BlocBuilder<HomeCubit, HomeState>(
                 builder: (context, state) {
-                  final locationText = state.locationName ?? 'تحديد الموقع الحالي';
+                  final locationText =
+                      state.locationName ?? 'تحديد الموقع الحالي';
                   return Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: InkWell(
@@ -203,7 +204,8 @@ class HomeHeaderWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4.r),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFFFBBF24).withValues(alpha: 0.45),
+                              color: const Color(0xFFFBBF24)
+                                  .withValues(alpha: 0.45),
                               blurRadius: 6.r,
                               offset: const Offset(0, 1),
                             ),
@@ -290,7 +292,8 @@ class HomeHeaderWidget extends StatelessWidget {
   }
 
   String _usedDaysText(BuildContext context) {
-    final used = profile.subscriptionTotalDays - profile.subscriptionDaysRemaining;
+    final used =
+        profile.subscriptionTotalDays - profile.subscriptionDaysRemaining;
     return S.current.subscriptionDaysUsed(used);
   }
 
@@ -318,9 +321,8 @@ class _StreakBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
-    final label = isAr
-        ? 'م.${_toArabicDigits(streakDays.toString())}'
-        : 'S.$streakDays';
+    final label =
+        isAr ? 'م.${_toArabicDigits(streakDays.toString())}' : 'S.$streakDays';
 
     return Container(
       width: 38.r,

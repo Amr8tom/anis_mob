@@ -47,7 +47,10 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { -webkit-text-size-adjust: 100%; }
+        html {
+            -webkit-text-size-adjust: 100%;
+            overflow-x: hidden;
+        }
 
         body {
             font-family: var(--font-family);
@@ -55,6 +58,8 @@
             color: var(--upwork-slate);
             line-height: 1.6;
             min-height: 100vh;
+            max-width: 100%;
+            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -175,7 +180,7 @@
             min-height: 100vh;
             padding: 36px 40px;
         }
-        .content-wrap { width: 100%; max-width: 1480px; }
+        .content-wrap { width: 100%; max-width: 1480px; min-width: 0; }
 
         h1, h2, h3, h4 { font-weight: 800; color: var(--upwork-slate); letter-spacing: -0.2px; }
         .page-title    { font-size: 28px; margin-bottom: 8px; }
@@ -193,6 +198,7 @@
             padding: 28px;
             box-shadow: var(--shadow);
             margin-bottom: 24px;
+            min-width: 0;
         }
         .card-title { font-size: 20px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--upwork-border); display: flex; align-items: center; gap: 10px; }
 
@@ -206,10 +212,12 @@
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr;       gap: 24px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr;   gap: 24px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+        .grid-2 > *, .grid-3 > *, .grid-4 > * { min-width: 0; }
 
         /* "Manage" block: list/table = wide primary column, add-form = side panel.
            RTL: the 1fr (main/table) sits on the right, the form on the left. */
         .manage-grid { display: grid; grid-template-columns: 1fr 340px; gap: 22px; align-items: start; }
+        .manage-grid > * { min-width: 0; }
         .manage-aside { position: sticky; top: 24px; }
         .manage-form-panel {
             background: var(--upwork-bg);
@@ -232,7 +240,9 @@
             width: 100%; padding: 12px 14px; font-family: var(--font-family); font-size: 15px;
             border: 1px solid var(--upwork-input-border); border-radius: var(--radius-sm); background: #fff;
             color: var(--upwork-slate); transition: var(--transition); margin-bottom: 16px;
+            min-width: 0;
         }
+        textarea.form-control, textarea.form-input { max-width: 100%; }
         .form-control:focus, .form-input:focus, .form-select:focus { outline: none; border-color: var(--upwork-green); box-shadow: 0 0 0 3px rgba(20,168,0,0.12); }
         .form-error { color: var(--upwork-error); font-size: 13px; font-weight: 600; margin-top: 6px; }
 
@@ -550,6 +560,85 @@
         /* Guest pages (login/register/pending) have no sidebar */
         body.guest .app-main { margin-right: 0; }
         body.guest .content-wrap { max-width: 560px; margin: 0 auto; }
+
+        /* Workspace-wide responsive guardrails.
+           These protect every owner-portal tab from half-visible forms caused by
+           wide inline grids/flex rows, sticky side panels, or long table content. */
+        .content-wrap *,
+        .content-wrap *::before,
+        .content-wrap *::after {
+            max-width: 100%;
+        }
+
+        .content-wrap [style*="display:flex"],
+        .content-wrap [style*="display: flex"],
+        .content-wrap [style*="display:grid"],
+        .content-wrap [style*="display: grid"] {
+            min-width: 0;
+        }
+
+        .content-wrap [style*="display:flex"] > *,
+        .content-wrap [style*="display: flex"] > *,
+        .content-wrap [style*="display:grid"] > *,
+        .content-wrap [style*="display: grid"] > * {
+            min-width: 0;
+        }
+
+        .content-wrap input,
+        .content-wrap select,
+        .content-wrap textarea,
+        .content-wrap button {
+            max-width: 100%;
+        }
+
+        .content-wrap img,
+        .content-wrap video,
+        .content-wrap canvas {
+            max-width: 100%;
+        }
+
+        @media (max-width: 1100px) {
+            .content-wrap [style*="position: sticky"],
+            .content-wrap [style*="position:sticky"],
+            .manage-aside {
+                position: static !important;
+                top: auto !important;
+            }
+
+            .notif-grid,
+            .manage-grid,
+            .private-session-filter-grid,
+            .education-grid,
+            .education-inline-form {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .content-wrap [style*="display:flex"],
+            .content-wrap [style*="display: flex"] {
+                flex-wrap: wrap !important;
+            }
+
+            .content-wrap [style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            .settings-container,
+            .auth-card,
+            .notif-grid,
+            .manage-main,
+            .manage-aside {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .content-wrap .btn-primary,
+            .content-wrap .btn-submit,
+            .content-wrap button[type="submit"] {
+                max-width: 100%;
+            }
+        }
     </style>
     @include('workspace.partials.light-theme')
     @yield('styles')
@@ -566,6 +655,7 @@
         ['route' => 'workspace.visits.index',         'match' => 'workspace.visits.*',        'icon' => 'fa-right-to-bracket', 'label' => __('portal.nav.visits')],
         ['route' => 'workspace.subscriptions.index',  'match' => 'workspace.subscriptions.*', 'icon' => 'fa-ticket',           'label' => __('portal.nav.subscriptions')],
         ['route' => 'workspace.rooms.index',          'match' => 'workspace.rooms.*',         'icon' => 'fa-door-open',        'label' => __('portal.nav.rooms')],
+        ['route' => 'workspace.notifications.index',  'match' => 'workspace.notifications.*', 'icon' => 'fa-bell',             'label' => __('portal.nav.notifications')],
         ['route' => 'workspace.settings.edit',        'match' => 'workspace.settings*',       'icon' => 'fa-gear',             'label' => __('portal.nav.settings')],
     ];
     $bottomPrimaryRoutes = [
@@ -719,7 +809,7 @@
 <script>
     function prepareMobileTables(root) {
         root = root || document;
-        root.querySelectorAll('.table-responsive table').forEach(function (table) {
+        root.querySelectorAll('.content-wrap table, .table-responsive table').forEach(function (table) {
             if (table.dataset.mobilePrepared === '1') {
                 return;
             }

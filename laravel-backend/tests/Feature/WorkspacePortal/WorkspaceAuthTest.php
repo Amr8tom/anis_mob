@@ -74,6 +74,18 @@ final class WorkspaceAuthTest extends TestCase
             ->assertViewIs('workspace.auth.login');
     }
 
+    public function test_domain_root_redirects_to_workspace_login(): void
+    {
+        $this->get('/')
+            ->assertRedirect(route('workspace.login'));
+    }
+
+    public function test_unknown_web_routes_redirect_to_workspace_login(): void
+    {
+        $this->get('/unknown-web-route')
+            ->assertRedirect(route('workspace.login'));
+    }
+
     public function test_authenticated_workspace_owner_login_route_redirects_to_portal_not_public_home(): void
     {
         $owner = WorkspaceOwner::factory()->create();
@@ -91,7 +103,8 @@ final class WorkspaceAuthTest extends TestCase
     {
         $this->get('/workspace/login?lang=en')
             ->assertOk()
-            ->assertSee('<html lang="en" dir="ltr">', false)
+            ->assertSee('lang="en"', false)
+            ->assertSee('dir="ltr"', false)
             ->assertSessionHas('locale', 'en');
     }
 

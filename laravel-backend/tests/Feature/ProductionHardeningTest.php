@@ -12,6 +12,7 @@ use App\Models\Subscription;
 use App\Models\SubscriptionRefund;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceOwner;
 use App\Models\WorkspaceOwnershipInvitation;
 use App\Models\WorkspaceVisit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -150,10 +151,10 @@ final class ProductionHardeningTest extends TestCase
             'password_confirmation' => 'strong-password',
         ])->assertRedirect(route('workspace.settings.edit'));
 
-        $owner = User::where('phone_number', '01077778888')->firstOrFail();
-        $this->assertSame(UserRole::WORKSPACE_OWNER, $owner->role);
-        $this->assertSame($owner->id, $workspace->fresh()->owner_id);
-        $this->assertDatabaseHas('workspace_ownership_changes', ['workspace_id' => $workspace->id, 'new_owner_id' => $owner->id]);
+        $owner = WorkspaceOwner::where('phone_number', '01077778888')->firstOrFail();
+        $this->assertSame('active', $owner->status);
+        $this->assertSame($owner->id, $workspace->fresh()->workspace_owner_id);
+        $this->assertDatabaseHas('workspace_ownership_changes', ['workspace_id' => $workspace->id, 'new_owner_id' => $workspace->owner_id]);
     }
 
     public function test_refund_adds_minutes_and_writes_immutable_records(): void

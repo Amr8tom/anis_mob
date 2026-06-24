@@ -11,7 +11,7 @@ class URL {
   // static const String baseUrl = String.fromEnvironment(
   // 'ANIS_API_BASE',
   // defaultValue:
-  static const String baseUrl = 'https://anis.hejaz2.com/api/v1';
+  static const String baseUrl = 'http://anis.hejaz2.com/api/v1';
   // defaultValue: 'http://127.0.0.1:8000/api/v1',
   // );
 

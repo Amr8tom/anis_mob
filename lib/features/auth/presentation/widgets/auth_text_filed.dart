@@ -73,6 +73,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
             onTap: widget.onTap,
             obscureText: widget.isPassword && !_showPassword,
             keyboardType: _getKeyboardType(),
+            textDirection: widget.isPhone ? TextDirection.ltr : null,
             inputFormatters: _getFormatters(),
             validator: widget.validator,
             decoration: InputDecoration(
@@ -167,7 +168,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
 
   TextInputType _getKeyboardType() {
     if (widget.isEmail) return TextInputType.emailAddress;
-    if (widget.isPhone) return TextInputType.phone;
+    if (widget.isPhone) return TextInputType.number;
     if (widget.isDate) return TextInputType.datetime;
     return TextInputType.text;
   }

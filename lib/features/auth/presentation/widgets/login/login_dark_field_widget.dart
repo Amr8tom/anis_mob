@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:anis/common/widgets/sizeboxs/sizer.dart';
 import 'package:anis/core/constants/app_sizes.dart';
 import 'package:anis/core/constants/colors.dart';
@@ -14,6 +15,8 @@ class LoginDarkField extends StatelessWidget {
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
   final TextInputType keyboardType;
+  final TextDirection? textDirection;
+  final List<TextInputFormatter>? inputFormatters;
 
   const LoginDarkField({
     super.key,
@@ -25,6 +28,8 @@ class LoginDarkField extends StatelessWidget {
     this.suffixIcon,
     this.validator,
     this.keyboardType = TextInputType.text,
+    this.textDirection,
+    this.inputFormatters,
   });
 
   @override
@@ -45,6 +50,8 @@ class LoginDarkField extends StatelessWidget {
           obscureText: obscure,
           keyboardType: keyboardType,
           validator: validator,
+          textDirection: textDirection,
+          inputFormatters: inputFormatters,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: ColorRes.anisTextDark,
                 fontWeight: FontWeight.w500,

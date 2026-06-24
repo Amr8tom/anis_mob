@@ -25,6 +25,15 @@ class LanguageCubit extends Cubit<LanguageState> {
     final result = await _getLanguageUseCase.call();
     storedLang = result.getOrElse(() => "ar");
     currentLanguage = Locale(storedLang);
+    
+    if (storedLang == 'en') {
+      showLang = 'EN';
+    } else if (storedLang == 'tr') {
+      showLang = 'TR';
+    } else {
+      showLang = 'AR';
+    }
+    
     emit(LanguageSuccess());
   }
 

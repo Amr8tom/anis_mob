@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../common/custom_ui.dart';
@@ -104,7 +105,11 @@ class _LoginFormSectionState extends State<LoginFormSection> {
                 label: S.current.phoneNumber,
                 hint: S.current.phoneHint,
                 prefixIcon: Icons.phone_outlined,
-                keyboardType: TextInputType.phone,
+                keyboardType: TextInputType.text,
+                textDirection: TextDirection.ltr,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
+                ],
                 validator: Validators.phone,
               ),
 

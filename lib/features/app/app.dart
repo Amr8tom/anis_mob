@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,6 +20,7 @@ class AnisApp extends StatelessWidget {
   Widget build(BuildContext context) {
     DDeviceUtils.setStatusBarColor(ColorRes.primary);
     DDeviceUtils.setNavigationBarColor(ColorRes.white);
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<LanguageCubit>(

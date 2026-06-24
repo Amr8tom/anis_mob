@@ -302,6 +302,9 @@
                         <a href="{{ route('admin.plancodes.index') }}" style="color: var(--upwork-slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px;" class="{{ request()->routeIs('admin.plancodes.*') ? 'active-nav' : '' }}">
                             <i class="fa-solid fa-ticket"></i> أكواد الباقات
                         </a>
+                        <a href="{{ route('admin.notifications.index') }}" style="color: var(--upwork-slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px;" class="{{ request()->routeIs('admin.notifications.*') ? 'active-nav' : '' }}">
+                            <i class="fa-solid fa-bell"></i> الإشعارات
+                        </a>
                     </div>
 
                     <div class="user-dropdown">

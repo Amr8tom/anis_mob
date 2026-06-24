@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:anis/common/widgets/sizeboxs/sizer.dart';
 import 'package:anis/core/constants/app_sizes.dart';
 import 'package:anis/core/constants/colors.dart';
@@ -68,7 +69,11 @@ class StepAccountWidget extends StatelessWidget {
             label: S.current.phoneNumber,
             hint: S.current.phoneHint,
             icon: Icons.phone_outlined,
-            keyboardType: TextInputType.phone,
+            keyboardType: TextInputType.text,
+            textDirection: TextDirection.ltr,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
+            ],
             onChanged: cubit.setPhone,
           ),
           const Sizer(height: 16),
@@ -77,7 +82,11 @@ class StepAccountWidget extends StatelessWidget {
             label: S.current.whatsAppNumber,
             hint: S.current.whatsAppNumberHint,
             icon: Icons.chat_bubble_outline_rounded,
-            keyboardType: TextInputType.phone,
+            keyboardType: TextInputType.text,
+            textDirection: TextDirection.ltr,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
+            ],
             onChanged: cubit.setWhatsAppNumber,
           ),
           const Sizer(height: 16),

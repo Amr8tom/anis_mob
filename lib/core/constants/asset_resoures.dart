@@ -212,6 +212,10 @@ class AssetRes {
       'assets/images/pngs/active_residence.png';
   static const String activeProfile = 'assets/images/pngs/profile.png';
   static const String homeLottieIcon = 'assets/lotties/home.json';
+  static const String aniLottie = 'assets/lotties/3 Ani.json';
+  static const String teamWorkLottie = 'assets/lotties/team work.json';
+  static const String girlChatLottie = 'assets/lotties/Girl chatting with online friends..json';
+
 
   /// services
   static const String study = 'assets/images/pngs/study.png';

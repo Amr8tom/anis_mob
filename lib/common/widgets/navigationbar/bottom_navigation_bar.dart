@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/asset_resoures.dart';
@@ -17,7 +18,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     final controller = context.watch<NavigationCubit>();
 
     final items = [
-      _NavItem(icon: AssetRes.home, label: S.current.homeTab),
+      _NavItem(icon: AssetRes.homeLottieIcon, label: S.current.homeTab),
       _NavItem(icon: AssetRes.groups, label: S.current.buddiesTab),
       _NavItem(icon: AssetRes.services, label: S.current.workspacesTab),
       _NavItem(icon: AssetRes.profile, label: S.current.profileTab),
@@ -43,6 +44,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               final isActive = controller.indx == index;
               return Expanded(
                 child: _NavTabItem(
+                  isLottie: index == 0,
                   item: items[index],
                   isActive: isActive,
                   onTap: () =>
@@ -62,11 +64,13 @@ class CustomBottomNavigationBar extends StatelessWidget {
 class _NavTabItem extends StatelessWidget {
   final _NavItem item;
   final bool isActive;
+  final bool isLottie;
   final VoidCallback onTap;
 
   const _NavTabItem({
     required this.item,
     required this.isActive,
+    required this.isLottie,
     required this.onTap,
   });
 
@@ -96,13 +100,25 @@ class _NavTabItem extends StatelessWidget {
           ),
 
           // ── Icon ─────────────────────────────────────────
-          AnimatedScale(
+         isLottie ? Lottie.asset(
+           item.icon,
+           width: 25.w,
+           height: 23.h,
+           delegates: LottieDelegates(
+             values: [
+               ValueDelegate.colorFilter(
+                 ['**'],
+                 value: ColorFilter.mode(color, BlendMode.srcIn),
+               ),
+             ],
+           ),
+         ) : AnimatedScale(
             scale: isActive ? 1.08 : 1.0,
             duration: const Duration(milliseconds: 200),
             child: SvgPicture.asset(
               item.icon,
-              width: 22.w,
-              height: 22.w,
+              width: 25.w,
+              height: 23.h,
               colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             ),
           ),

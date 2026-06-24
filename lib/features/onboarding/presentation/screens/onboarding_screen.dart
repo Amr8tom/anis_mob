@@ -66,130 +66,183 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: ColorRes.white,
-        body: SafeArea(
-          child: Stack(
-            children: [
-              // ── Page content ──────────────────────────────────
-              Column(
-                children: [
-                  Expanded(
-                    child: PageView.builder(
-                      controller: _pageController,
-                      onPageChanged: _onPageChanged,
-                      itemCount: pages.length,
-                      itemBuilder: (_, i) => OnboardingPageWidget(
-                        page: pages[i],
-                        index: i,
-                      ),
+        backgroundColor: ColorRes.anisMintBg,
+        body: Stack(
+          children: [
+            // ── Page content ──────────────────────────────────
+            Column(
+              children: [
+                Expanded(
+                  child: PageView.builder(
+                    controller: _pageController,
+                    onPageChanged: _onPageChanged,
+                    itemCount: pages.length,
+                    itemBuilder: (_, i) => OnboardingPageWidget(
+                      page: pages[i],
+                      index: i,
                     ),
                   ),
+                ),
 
-                  // ── Bottom controls ───────────────────────────
-                  Container(
-                    color: ColorRes.white,
-                    padding: EdgeInsets.fromLTRB(
-                      AppSizes.xl,
-                      AppSizes.sm,
-                      AppSizes.xl,
-                      AppSizes.ld,
-                    ),
-                    child: Column(
-                      children: [
-                        // Dot indicators
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(pages.length, (i) {
-                            final active = i == _currentPage;
-                            return AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              width: active ? 24 : 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                color: active
-                                    ? ColorRes.anisGreen
-                                    : ColorRes.anisLine,
-                                borderRadius: BorderRadius.circular(
-                                  AppSizes.borderRadiusXXLg,
+                // ── Bottom controls ───────────────────────────
+                Container(
+                  padding: EdgeInsets.fromLTRB(
+                    AppSizes.xl,
+                    AppSizes.sm,
+                    AppSizes.xl,
+                    AppSizes.ld +
+                        24, // extra bottom padding for safe area since we removed SafeArea
+                  ),
+                  child: Column(
+                    children: [
+                      // Dot indicators
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(pages.length, (i) {
+                          final active = i == _currentPage;
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeOutCubic,
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            width: active ? 32 : 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: active
+                                  ? ColorRes.anisGreen
+                                  : ColorRes.anisGreen.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.borderRadiusXXLg,
+                              ),
+                              boxShadow: active
+                                  ? [
+                                      BoxShadow(
+                                        color: ColorRes.anisGreen
+                                            .withValues(alpha: 0.4),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ]
+                                  : null,
+                            ),
+                          );
+                        }),
+                      ),
+
+                      const Sizer(height: 32),
+
+                      // Continue / Get Started button
+                      BlocBuilder<OnboardingCubit, OnboardingState>(
+                        buildWhen: (p, c) => p.status != c.status,
+                        builder: (_, state) {
+                          final loading = state.status.isLoading;
+                          return Container(
+                            width: double.infinity,
+                            height: 56, // Slightly taller button
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: ColorRes.anisGreen
+                                      .withValues(alpha: 0.25),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: ElevatedButton(
+                              onPressed: loading ? null : _next,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: ColorRes.anisGreen,
+                                foregroundColor: ColorRes.white,
+                                disabledBackgroundColor:
+                                    ColorRes.anisGreen.withValues(alpha: 0.55),
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(28),
                                 ),
                               ),
-                            );
-                          }),
-                        ),
-
-                        const Sizer(height: 20),
-
-                        // Continue / Get Started button
-                        BlocBuilder<OnboardingCubit, OnboardingState>(
-                          buildWhen: (p, c) => p.status != c.status,
-                          builder: (_, state) {
-                            final loading = state.status.isLoading;
-                            return SizedBox(
-                              width: double.infinity,
-                              height: AppSizes.buttonHeight,
-                              child: ElevatedButton(
-                                onPressed: loading ? null : _next,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: ColorRes.anisGreen,
-                                  foregroundColor: ColorRes.white,
-                                  disabledBackgroundColor: ColorRes.anisGreen
-                                      .withValues(alpha: 0.55),
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      AppSizes.borderRadiusMd,
-                                    ),
-                                  ),
-                                ),
-                                child: loading
-                                    ? const SizedBox(
-                                        width: 22,
-                                        height: 22,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2.5,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                            ColorRes.white,
-                                          ),
-                                        ),
-                                      )
-                                    : Text(
-                                        _isLast
-                                            ? S.current.getStarted
-                                            : S.current.continuee,
-                                        style: tt.titleSmall?.copyWith(
-                                          fontWeight: FontWeight.w700,
-                                          color: ColorRes.white,
-                                          fontSize: 15,
+                              child: loading
+                                  ? const SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2.5,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          ColorRes.white,
                                         ),
                                       ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          _isLast
+                                              ? S.current.getStarted
+                                              : S.current.continuee,
+                                          style: tt.titleSmall?.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            color: ColorRes.white,
+                                            fontSize: 16,
+                                            letterSpacing: 0.5,
+                                          ),
+                                        ),
+                                        if (!_isLast) ...[
+                                          const SizedBox(width: 8),
+                                          const Icon(
+                                            Icons.arrow_forward_rounded,
+                                            size: 20,
+                                            color: ColorRes.white,
+                                          ),
+                                        ],
+                                        if (_isLast) ...[
+                                          const SizedBox(width: 8),
+                                          const Icon(
+                                            Icons.check_circle_outline_rounded,
+                                            size: 20,
+                                            color: ColorRes.white,
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
 
-              // ── Skip button (top trailing) ────────────────────
-              SafeArea(
-                child: Align(
-                  alignment: AlignmentDirectional.topEnd,
-                  child: Padding(
-                    padding: EdgeInsets.all(AppSizes.md),
-                    child: AnimatedOpacity(
-                      opacity: _isLast ? 0.0 : 1.0,
-                      duration: const Duration(milliseconds: 250),
+            // ── Skip button (top trailing) ────────────────────
+            SafeArea(
+              child: Align(
+                alignment: AlignmentDirectional.topEnd,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: AppSizes.md, vertical: AppSizes.sm),
+                  child: AnimatedOpacity(
+                    opacity: _isLast ? 0.0 : 1.0,
+                    duration: const Duration(milliseconds: 250),
+                    child: IgnorePointer(
+                      ignoring: _isLast,
                       child: TextButton(
-                        onPressed: _isLast ? null : _finish,
+                        onPressed: _finish,
+                        style: TextButton.styleFrom(
+                          backgroundColor:
+                              ColorRes.white.withValues(alpha: 0.6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
                         child: Text(
                           S.current.skip,
                           style: tt.labelLarge?.copyWith(
-                            color: ColorRes.anisTextMuted,
-                            fontWeight: FontWeight.w600,
+                            color: ColorRes.anisNavy,
+                            fontWeight: FontWeight.w700,
                             fontSize: 13,
                           ),
                         ),
@@ -198,8 +251,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
