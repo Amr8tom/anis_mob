@@ -167,6 +167,12 @@ class User extends Authenticatable
         return $this->hasMany(DeviceToken::class);
     }
 
+    /** @return HasOne<UserNotificationPreference, $this> */
+    public function notificationPreferences(): HasOne
+    {
+        return $this->hasOne(UserNotificationPreference::class);
+    }
+
     /**
      * Targets for the FCM notification channel: every registered device token.
      *
@@ -174,6 +180,9 @@ class User extends Authenticatable
      */
     public function routeNotificationForFcm(): array
     {
-        return $this->devices()->pluck('token')->all();
+        return $this->devices()
+            ->where('is_active', true)
+            ->pluck('token')
+            ->all();
     }
 }

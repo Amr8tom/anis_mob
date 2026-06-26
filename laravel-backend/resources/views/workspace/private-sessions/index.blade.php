@@ -120,6 +120,18 @@
         --ps-muted: #9db0a4;
         --ps-dim: #6c7e73;
         --ps-accent: #2bd968;
+        --ps-hero-title: #eef3f0;
+        --ps-hero-muted: #9db0a4;
+        --ps-link: #7ef7a4;
+        --ps-success-text: #7ef7a4;
+        --ps-success-bg: rgba(43, 217, 104, .16);
+        --ps-success-border: rgba(43, 217, 104, .38);
+        --ps-info-text: #bfdbfe;
+        --ps-info-bg: rgba(59, 130, 246, .14);
+        --ps-info-border: rgba(96, 165, 250, .28);
+        --ps-danger-text: #fecaca;
+        --ps-danger-bg: rgba(185, 28, 28, .16);
+        --ps-danger-border: rgba(248, 113, 113, .32);
     }
 
     .private-session-list-hero {
@@ -140,7 +152,7 @@
 
     .private-session-list-title {
         margin: 0 0 8px;
-        color: var(--ps-text);
+        color: var(--ps-hero-title);
         font-size: 34px;
         font-weight: 900;
         line-height: 1.2;
@@ -148,7 +160,7 @@
 
     .private-session-list-subtitle {
         margin: 0;
-        color: var(--ps-muted);
+        color: var(--ps-hero-muted);
         font-size: 15px;
         font-weight: 700;
     }
@@ -227,15 +239,24 @@
         color: var(--ps-text);
     }
 
+    .private-session-list-page td small {
+        color: var(--ps-muted);
+        font-weight: 700;
+    }
+
     .private-session-money {
         color: var(--ps-accent) !important;
         font-weight: 900;
     }
 
     .private-session-manage-link {
-        color: #7ef7a4;
+        color: var(--ps-link);
         text-decoration: none;
         font-weight: 800;
+    }
+
+    .private-session-manage-link:hover {
+        text-decoration: underline;
     }
 
     .private-session-status {
@@ -251,21 +272,21 @@
     }
 
     .private-session-status-active {
-        color: #7ef7a4;
-        background: rgba(43, 217, 104, .12);
-        border-color: rgba(43, 217, 104, .34);
+        color: var(--ps-success-text);
+        background: var(--ps-success-bg);
+        border-color: var(--ps-success-border);
     }
 
     .private-session-status-finished {
-        color: #bfdbfe;
-        background: rgba(59, 130, 246, .14);
-        border-color: rgba(96, 165, 250, .28);
+        color: var(--ps-info-text);
+        background: var(--ps-info-bg);
+        border-color: var(--ps-info-border);
     }
 
     .private-session-status-cancelled {
-        color: #fecaca;
-        background: rgba(185, 28, 28, .16);
-        border-color: rgba(248, 113, 113, .32);
+        color: var(--ps-danger-text);
+        background: var(--ps-danger-bg);
+        border-color: var(--ps-danger-border);
     }
 
     .private-session-list-page .empty-state {

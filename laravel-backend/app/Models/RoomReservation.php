@@ -51,6 +51,18 @@ class RoomReservation extends Model
         return $this->belongsTo(RoomClient::class, 'room_client_id');
     }
 
+    /** @return BelongsTo<User, $this> */
+    public function legacyOwner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by_owner_id');
+    }
+
+    /** @return BelongsTo<WorkspaceOwner, $this> */
+    public function workspaceOwner(): BelongsTo
+    {
+        return $this->belongsTo(WorkspaceOwner::class, 'created_by_workspace_owner_id');
+    }
+
     public function durationMinutes(): int
     {
         return (int) abs($this->starts_at->diffInMinutes($this->ends_at));

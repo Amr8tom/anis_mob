@@ -29,6 +29,7 @@ enum StorageKeys {
   luggageList,
   currentCountry,
   todayNotification,
+  notificationPreferences,
   permissionTimes,
   permissionTypes,
   allServices,

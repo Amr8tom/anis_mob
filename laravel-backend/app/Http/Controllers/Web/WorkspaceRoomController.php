@@ -153,8 +153,15 @@ class WorkspaceRoomController extends Controller
             until: isset($validated['until']) ? Carbon::parse($validated['until']) : null,
         );
 
+        $workspaceOwnerId = Auth::guard('workspace_owner')->check()
+            ? (string) Auth::guard('workspace_owner')->id()
+            : null;
+        $legacyOwnerId = $workspaceOwnerId === null && Auth::guard('web')->check()
+            ? (string) Auth::guard('web')->id()
+            : null;
+
         try {
-            $result = $action->handle($workspace->id, (string) Auth::id(), $data);
+            $result = $action->handle($workspace->id, $legacyOwnerId, $data, $workspaceOwnerId);
         } catch (ApiException $e) {
             return back()->withErrors(['room_id' => $e->getMessage()])->withInput();
         }

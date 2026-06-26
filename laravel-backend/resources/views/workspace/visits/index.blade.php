@@ -362,12 +362,12 @@
                 const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
                 if (!res.ok) return;
                 const html = await res.text();
-                // Only swap if the pending-request state actually changed, so we
+                // Only swap if the active list state actually changed, so we
                 // don't interrupt a confirm() dialog the owner is mid-way through.
-                const current = container.querySelector('#active-visitors-card')?.dataset.pending;
+                const current = container.querySelector('#active-visitors-card')?.dataset.state;
                 const tmp = document.createElement('div');
                 tmp.innerHTML = html;
-                const incoming = tmp.querySelector('#active-visitors-card')?.dataset.pending;
+                const incoming = tmp.querySelector('#active-visitors-card')?.dataset.state;
                 if (current !== incoming) {
                     container.innerHTML = html;
                     if (typeof prepareMobileTables === 'function') {

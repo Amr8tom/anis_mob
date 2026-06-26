@@ -113,6 +113,8 @@ Route::prefix('workspace')->name('workspace.')->group(function () {
             Route::get('/', [WorkspaceNotificationController::class, 'index'])->name('index');
             Route::get('search', [WorkspaceNotificationController::class, 'searchUsers'])->name('search');
             Route::get('sessions', [WorkspaceNotificationController::class, 'sessions'])->name('sessions');
+            Route::post('preview', [WorkspaceNotificationController::class, 'preview'])
+                ->middleware('throttle:auth')->name('preview');
             Route::post('send', [WorkspaceNotificationController::class, 'send'])
                 ->middleware('throttle:auth')->name('send');
         });
@@ -195,7 +197,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Broadcast push notifications to all app users.
         Route::get('notifications', [AdminNotificationController::class, 'index'])->middleware('admin.permission:notifications.send')->name('notifications.index');
+        Route::post('notifications/preview', [AdminNotificationController::class, 'preview'])->middleware(['admin.permission:notifications.send', 'throttle:auth'])->name('notifications.preview');
         Route::post('notifications/send', [AdminNotificationController::class, 'send'])->middleware(['admin.permission:notifications.send', 'throttle:auth'])->name('notifications.send');
+        Route::get('notifications/{campaign}', [AdminNotificationController::class, 'show'])->middleware('admin.permission:notifications.send')->name('notifications.show');
+        Route::post('notifications/{campaign}/retry-failed', [AdminNotificationController::class, 'retryFailed'])->middleware(['admin.permission:notifications.send', 'throttle:auth'])->name('notifications.retry-failed');
     });
 });
 

@@ -1,4 +1,6 @@
-<div id="active-visitors-card" data-pending="{{ $pendingCheckoutCount }}">
+<div id="active-visitors-card"
+     data-pending="{{ $pendingCheckoutCount }}"
+     data-state="{{ $activeVisits->pluck('id')->implode('|') }}:{{ $pendingCheckoutCount }}">
     <h3 style="margin:0 0 16px; color:var(--vd-text); display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
         {{ __('portal.visits.active.present_now', ['count' => $activeVisits->count()]) }}
         @if($pendingCheckoutCount > 0)

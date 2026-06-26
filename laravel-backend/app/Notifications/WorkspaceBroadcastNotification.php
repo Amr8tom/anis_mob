@@ -19,7 +19,8 @@ final class WorkspaceBroadcastNotification extends Notification implements Shoul
         public readonly string $title,
         public readonly string $body,
         public readonly ?string $imageUrl,
-        public readonly string $workspaceId
+        public readonly string $workspaceId,
+        public readonly array $data = [],
     ) {
     }
 
@@ -40,9 +41,27 @@ final class WorkspaceBroadcastNotification extends Notification implements Shoul
 
         return FcmMessage::create()
             ->notification($notification)
-            ->data([
+            ->data(array_merge([
                 'type' => 'workspace_broadcast',
                 'workspace_id' => $this->workspaceId,
-            ]);
+            ], $this->stringData()));
+    }
+
+    /**
+     * FCM data payload values must be strings.
+     *
+     * @return array<string, string>
+     */
+    private function stringData(): array
+    {
+        $data = [];
+
+        foreach ($this->data as $key => $value) {
+            if (is_scalar($value) || $value === null) {
+                $data[(string) $key] = (string) $value;
+            }
+        }
+
+        return $data;
     }
 }

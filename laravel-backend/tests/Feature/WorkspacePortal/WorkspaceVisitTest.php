@@ -14,6 +14,7 @@ use App\Models\RoomReservation;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceOwner;
 use App\Models\WorkspaceRoom;
 use App\Models\WorkspaceSubscription;
 use App\Models\WorkspaceVisit;
@@ -48,6 +49,92 @@ final class WorkspaceVisitTest extends TestCase
             'subscription_id' => null,
             'plan_tier_snapshot' => PlanTier::FREE->value,
         ]);
+    }
+
+    public function test_workspace_owner_guard_can_register_a_free_walk_in_visit(): void
+    {
+        $owner = WorkspaceOwner::factory()->create();
+        $workspace = Workspace::factory()->create(['workspace_owner_id' => $owner->id]);
+
+        $this->actingAs($owner, 'workspace_owner')
+            ->post(route('workspace.visits.store'), [
+                'phone_number' => '2323',
+                'name' => 'Walk In Visitor',
+            ])
+            ->assertRedirect()
+            ->assertSessionHasNoErrors();
+
+        $walkIn = WorkspaceWalkIn::where('phone_number', '2323')->firstOrFail();
+
+        $this->assertDatabaseHas('workspace_visits', [
+            'user_id' => null,
+            'walk_in_id' => $walkIn->id,
+            'workspace_id' => $workspace->id,
+            'registered_by' => null,
+            'registered_by_workspace_owner_id' => $owner->id,
+            'subscription_id' => null,
+            'plan_tier_snapshot' => PlanTier::FREE->value,
+        ]);
+    }
+
+    public function test_owner_can_register_walk_in_when_old_completed_visit_has_stale_active_flag(): void
+    {
+        $owner = User::factory()->create(['role' => UserRole::WORKSPACE_OWNER]);
+        $workspace = Workspace::factory()->create(['owner_id' => $owner->id]);
+        $walkIn = WorkspaceWalkIn::create([
+            'workspace_id' => $workspace->id,
+            'phone_number' => '4343434',
+            'full_name' => 'Old Visitor',
+        ]);
+        $oldVisit = WorkspaceVisit::factory()->checkedOut(30)->create([
+            'user_id' => null,
+            'walk_in_id' => $walkIn->id,
+            'workspace_id' => $workspace->id,
+            'active_flag' => 1,
+        ]);
+
+        $this->actingAs($owner)
+            ->from(route('workspace.visits.index'))
+            ->post(route('workspace.visits.store'), [
+                'phone_number' => '4343434',
+                'name' => 'New Visitor',
+            ])
+            ->assertRedirect(route('workspace.visits.index'))
+            ->assertSessionHasNoErrors();
+
+        $this->assertNull($oldVisit->fresh()->active_flag);
+        $this->assertSame(1, WorkspaceVisit::query()
+            ->where('walk_in_id', $walkIn->id)
+            ->where('status', \App\Enums\VisitStatus::CHECKED_IN->value)
+            ->where('active_flag', 1)
+            ->count());
+    }
+
+    public function test_owner_can_register_app_user_when_old_completed_visit_has_stale_active_flag(): void
+    {
+        $owner = User::factory()->create(['role' => UserRole::WORKSPACE_OWNER]);
+        $workspace = Workspace::factory()->create(['owner_id' => $owner->id]);
+        $appUser = User::factory()->create(['phone_number' => '01044445555']);
+        $oldVisit = WorkspaceVisit::factory()->checkedOut(30)->create([
+            'user_id' => $appUser->id,
+            'workspace_id' => $workspace->id,
+            'active_flag' => 1,
+        ]);
+
+        $this->actingAs($owner)
+            ->from(route('workspace.visits.index'))
+            ->post(route('workspace.visits.store'), [
+                'phone_number' => $appUser->phone_number,
+            ])
+            ->assertRedirect(route('workspace.visits.index'))
+            ->assertSessionHasNoErrors();
+
+        $this->assertNull($oldVisit->fresh()->active_flag);
+        $this->assertSame(1, WorkspaceVisit::query()
+            ->where('user_id', $appUser->id)
+            ->where('status', \App\Enums\VisitStatus::CHECKED_IN->value)
+            ->where('active_flag', 1)
+            ->count());
     }
 
     public function test_owner_can_register_a_free_existing_app_user(): void

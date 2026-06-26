@@ -354,6 +354,54 @@ class MessageLookup extends MessageLookupByLibrary {
       "No workspaces found",
     ),
     "notification": MessageLookupByLibrary.simpleMessage("Notifications"),
+    "notificationOffersMarketing": MessageLookupByLibrary.simpleMessage(
+      "Offers and marketing",
+    ),
+    "notificationOffersMarketingDesc": MessageLookupByLibrary.simpleMessage(
+      "Promotions, discounts, and non-essential campaigns.",
+    ),
+    "notificationPermissionBody": MessageLookupByLibrary.simpleMessage(
+      "Get session reminders, subscription alerts, and important workspace updates at the right time.",
+    ),
+    "notificationPermissionButton": MessageLookupByLibrary.simpleMessage(
+      "Enable notifications",
+    ),
+    "notificationPermissionEnabledBody": MessageLookupByLibrary.simpleMessage(
+      "You can choose exactly what you receive below.",
+    ),
+    "notificationPermissionEnabledTitle": MessageLookupByLibrary.simpleMessage(
+      "Notifications are enabled",
+    ),
+    "notificationPermissionTitle": MessageLookupByLibrary.simpleMessage(
+      "Turn on notifications",
+    ),
+    "notificationPreferencesSaved": MessageLookupByLibrary.simpleMessage(
+      "Notification settings saved",
+    ),
+    "notificationPreferencesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Choose what you want to receive. Important reminders stay separate from offers so you do not need to disable everything.",
+    ),
+    "notificationPreferencesTitle": MessageLookupByLibrary.simpleMessage(
+      "Notification Settings",
+    ),
+    "notificationSessionReminders": MessageLookupByLibrary.simpleMessage(
+      "Session reminders",
+    ),
+    "notificationSessionRemindersDesc": MessageLookupByLibrary.simpleMessage(
+      "Reminders before study sessions and private sessions.",
+    ),
+    "notificationSubscriptionAlerts": MessageLookupByLibrary.simpleMessage(
+      "Subscription alerts",
+    ),
+    "notificationSubscriptionAlertsDesc": MessageLookupByLibrary.simpleMessage(
+      "Warnings before subscriptions expire or remaining hours become low.",
+    ),
+    "notificationWorkspaceUpdates": MessageLookupByLibrary.simpleMessage(
+      "Workspace updates",
+    ),
+    "notificationWorkspaceUpdatesDesc": MessageLookupByLibrary.simpleMessage(
+      "Important updates from workspaces you visit.",
+    ),
     "onboarding1Desc": MessageLookupByLibrary.simpleMessage(
       "With a single subscription, walk into any nearby workspace and study in a focused, distraction-free environment — no extra costs, ever.",
     ),

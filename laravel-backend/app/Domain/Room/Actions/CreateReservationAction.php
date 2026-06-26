@@ -33,9 +33,14 @@ final readonly class CreateReservationAction
         private RoomReservationRepositoryInterface $reservations,
     ) {}
 
-    public function handle(string $workspaceId, string $ownerId, CreateReservationData $data): ReservationResult
+    public function handle(
+        string $workspaceId,
+        ?string $ownerId,
+        CreateReservationData $data,
+        ?string $workspaceOwnerId = null,
+    ): ReservationResult
     {
-        return DB::transaction(function () use ($workspaceId, $ownerId, $data): ReservationResult {
+        return DB::transaction(function () use ($workspaceId, $ownerId, $data, $workspaceOwnerId): ReservationResult {
             // Lock the room: serializes all bookings for this room so two requests
             // can't slip overlapping reservations past each other.
             $room = $this->rooms->lockActive($data->roomId, $workspaceId);
@@ -76,7 +81,8 @@ final readonly class CreateReservationAction
                     'status' => RoomReservationStatus::RESERVED->value,
                     'note' => $data->note,
                     'series_id' => $seriesId,
-                    'created_by_owner_id' => $ownerId,
+                    'created_by_owner_id' => $workspaceOwnerId === null ? $ownerId : null,
+                    'created_by_workspace_owner_id' => $workspaceOwnerId,
                 ]);
             }
 

@@ -53,6 +53,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withSchedule(function (Schedule $schedule): void {
         $schedule->command('visits:auto-checkout')->everyFiveMinutes()->onOneServer()->withoutOverlapping();
         $schedule->command('workspace-subscriptions:expire')->everyFifteenMinutes()->onOneServer()->withoutOverlapping();
+        $schedule->command('notifications:process-scheduled')->everyFiveMinutes()->onOneServer()->withoutOverlapping();
+        $schedule->command('notifications:dispatch-due-campaigns')->everyMinute()->onOneServer()->withoutOverlapping();
+        $schedule->command('notifications:prune-recipients')->dailyAt('03:20')->onOneServer()->withoutOverlapping();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Map framework exceptions into the standard { success, message, errors, data } envelope for API requests.

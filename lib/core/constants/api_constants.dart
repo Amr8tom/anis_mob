@@ -23,6 +23,9 @@ class URL {
 
   // ── Push notifications (FCM device tokens) ────────────────────────────────
   static const String deviceTokens = '$baseUrl/device-tokens';
+  static const String notificationPreferences =
+      '$baseUrl/notification-preferences';
+  static const String notificationEvents = '$baseUrl/notifications/events';
 
   // ── Home ────────────────────────────────────────────────────────────────
   static const String homeProfile = '$baseUrl/home/profile';

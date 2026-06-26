@@ -34,7 +34,7 @@
     </div>
 
     {{-- ── Per-tier breakdown ────────────────────────────────────────────── --}}
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:16px; margin-bottom:24px;">
         @foreach([
             [__('portal.financials.tier_free'),  'free',   '#5e6d55'],
             [__('portal.financials.tier_global'),    'global_subscription', '#607d8b'],

@@ -45,9 +45,9 @@ class _LoginFormSectionState extends State<LoginFormSection> {
 
   void _handleState(BuildContext context, LoginState state) {
     if (state.status.isLoggedIn) {
-      // Token is already persisted at this point — register this device for
-      // push so the user starts receiving notifications right after login.
-      serviceLocator<NotificationsCubit>().syncToken();
+      // Register this device only if notification permission is already on.
+      // The settings screen owns the educational permission prompt.
+      serviceLocator<NotificationsCubit>().syncTokenIfPermissionGranted();
       context.pushReplacementNamed(
         state.profileCompleted
             ? DRoutesName.navigationMenuRoute

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -7,11 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/constants/colors.dart';
 import '../../core/device/device_utility.dart';
 import '../../core/routing/route_names.dart';
+import '../../core/routing/app_navigator.dart';
 import '../../core/routing/routes.dart';
 import '../../core/service_locator/service_locator.dart';
 import '../../core/theme/theme.dart';
 import '../../generated/l10n.dart';
 import '../language/presentation/controller/language_cubit.dart';
+import '../notifications/presentation/controller/notifications_cubit.dart';
 
 class AnisApp extends StatelessWidget {
   const AnisApp({super.key});
@@ -26,6 +26,9 @@ class AnisApp extends StatelessWidget {
         BlocProvider<LanguageCubit>(
           create: (context) => serviceLocator<LanguageCubit>(),
         ),
+        BlocProvider<NotificationsCubit>(
+          create: (context) => serviceLocator<NotificationsCubit>()..start(),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),
@@ -37,6 +40,7 @@ class AnisApp extends StatelessWidget {
             buildWhen: (previous, current) => previous != current,
             builder: (context, state) {
               return MaterialApp(
+                navigatorKey: AppNavigator.key,
                 onGenerateRoute: RouteGenerator.generateRoute,
                 initialRoute: DRoutesName.splashSRoute,
                 title: 'Anis',

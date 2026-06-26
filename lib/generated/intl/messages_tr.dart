@@ -349,6 +349,54 @@ class MessageLookup extends MessageLookupByLibrary {
       "Çalışma alanı bulunamadı",
     ),
     "notification": MessageLookupByLibrary.simpleMessage("Bildirimler"),
+    "notificationOffersMarketing": MessageLookupByLibrary.simpleMessage(
+      "Teklifler ve pazarlama",
+    ),
+    "notificationOffersMarketingDesc": MessageLookupByLibrary.simpleMessage(
+      "Kampanyalar, indirimler ve zorunlu olmayan duyurular.",
+    ),
+    "notificationPermissionBody": MessageLookupByLibrary.simpleMessage(
+      "Oturum hatırlatmalarını, abonelik uyarılarını ve önemli çalışma alanı güncellemelerini doğru zamanda alın.",
+    ),
+    "notificationPermissionButton": MessageLookupByLibrary.simpleMessage(
+      "Bildirimleri etkinleştir",
+    ),
+    "notificationPermissionEnabledBody": MessageLookupByLibrary.simpleMessage(
+      "Aşağıdan tam olarak hangi bildirimleri almak istediğinizi seçebilirsiniz.",
+    ),
+    "notificationPermissionEnabledTitle": MessageLookupByLibrary.simpleMessage(
+      "Bildirimler etkin",
+    ),
+    "notificationPermissionTitle": MessageLookupByLibrary.simpleMessage(
+      "Bildirimleri açın",
+    ),
+    "notificationPreferencesSaved": MessageLookupByLibrary.simpleMessage(
+      "Bildirim ayarları kaydedildi",
+    ),
+    "notificationPreferencesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Almak istediğiniz bildirimleri seçin. Önemli hatırlatmalar tekliflerden ayrı tutulur.",
+    ),
+    "notificationPreferencesTitle": MessageLookupByLibrary.simpleMessage(
+      "Bildirim Ayarları",
+    ),
+    "notificationSessionReminders": MessageLookupByLibrary.simpleMessage(
+      "Oturum hatırlatmaları",
+    ),
+    "notificationSessionRemindersDesc": MessageLookupByLibrary.simpleMessage(
+      "Çalışma oturumları ve özel oturumlar öncesindeki hatırlatmalar.",
+    ),
+    "notificationSubscriptionAlerts": MessageLookupByLibrary.simpleMessage(
+      "Abonelik uyarıları",
+    ),
+    "notificationSubscriptionAlertsDesc": MessageLookupByLibrary.simpleMessage(
+      "Abonelik bitmeden veya kalan saatler azaldığında gelen uyarılar.",
+    ),
+    "notificationWorkspaceUpdates": MessageLookupByLibrary.simpleMessage(
+      "Çalışma alanı güncellemeleri",
+    ),
+    "notificationWorkspaceUpdatesDesc": MessageLookupByLibrary.simpleMessage(
+      "Ziyaret ettiğiniz çalışma alanlarından önemli güncellemeler.",
+    ),
     "onboarding1Desc": MessageLookupByLibrary.simpleMessage(
       "Tek bir abonelikle, yakındaki herhangi bir çalışma alanına girin ve odaklanmış, dikkat dağıtıcı unsurlardan uzak bir ortamda çalışın — ek ücret yok.",
     ),

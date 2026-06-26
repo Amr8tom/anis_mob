@@ -13,6 +13,7 @@ use App\Models\RoomReservation;
 use App\Models\RoomClient;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceOwner;
 use App\Models\WorkspaceRoom;
 use App\Models\WorkspaceWalkIn;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -200,6 +201,39 @@ final class RoomReservationTest extends TestCase
             'workspace_id' => $workspace->id,
             'client_name' => 'Walk In Room Guest',
             'note' => 'يحتاج شاشة',
+        ]);
+    }
+
+    public function test_workspace_owner_guard_can_reserve_room(): void
+    {
+        $workspaceOwner = WorkspaceOwner::factory()->create();
+        $workspace = Workspace::factory()->create([
+            'owner_id' => null,
+            'workspace_owner_id' => $workspaceOwner->id,
+        ]);
+        $room = WorkspaceRoom::factory()->create([
+            'workspace_id' => $workspace->id,
+            'hourly_price_cents' => 50000,
+        ]);
+
+        $this->actingAs($workspaceOwner, 'workspace_owner')
+            ->post(route('workspace.rooms.reservations.store'), [
+                'room_id' => $room->id,
+                'client_name' => 'tester2',
+                'client_phone' => '01011577055',
+                'date' => now()->addDay()->toDateString(),
+                'start_time' => '10:00',
+                'duration_minutes' => 60,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('room_reservations', [
+            'workspace_id' => $workspace->id,
+            'client_name' => 'tester2',
+            'client_phone' => '01011577055',
+            'created_by_owner_id' => null,
+            'created_by_workspace_owner_id' => $workspaceOwner->id,
         ]);
     }
 

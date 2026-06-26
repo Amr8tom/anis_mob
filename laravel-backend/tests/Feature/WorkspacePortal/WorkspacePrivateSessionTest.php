@@ -55,6 +55,7 @@ final class WorkspacePrivateSessionTest extends TestCase
                 'title' => 'جلسة مذاكرة خاصة',
                 'description' => 'داخل مساحة العمل فقط',
                 'host_name' => 'أحمد',
+                'use_education_data' => '1',
                 'center_teacher_id' => $teacher->id,
                 'center_subject_id' => $subject->id,
                 'center_grade_level_id' => $gradeLevel->id,
@@ -314,5 +315,51 @@ final class WorkspacePrivateSessionTest extends TestCase
             ->assertSee('إنهاء = الجلسة تمت وانتهت')
             ->assertSee('استخدمه عندما تكون الجلسة انعقدت بالفعل')
             ->assertSee('استخدمه إذا لم تُعقد الجلسة');
+    }
+
+    public function test_attended_table_renders_pagination_context_and_total_summary_row(): void
+    {
+        [$owner, $workspace] = $this->ownerWorkspace();
+        $session = WorkspacePrivateSession::factory()->create([
+            'workspace_id' => $workspace->id,
+            'created_by_owner_id' => $owner->id,
+            'price_cents' => 3000,
+        ]);
+
+        WorkspacePrivateSessionAttendee::factory()->create([
+            'workspace_private_session_id' => $session->id,
+            'workspace_id' => $workspace->id,
+            'name_snapshot' => 'QR Attendee',
+            'phone_snapshot' => '01010000001',
+            'phone_normalized' => '01010000001',
+            'status' => 'attended',
+            'checked_in_method' => 'qr',
+            'checked_in_at' => now(),
+            'amount_cents' => 3000,
+        ]);
+        WorkspacePrivateSessionAttendee::factory()->create([
+            'workspace_private_session_id' => $session->id,
+            'workspace_id' => $workspace->id,
+            'name_snapshot' => 'Manual Attendee',
+            'phone_snapshot' => '01010000002',
+            'phone_normalized' => '01010000002',
+            'status' => 'attended',
+            'checked_in_method' => 'owner',
+            'checked_in_at' => now(),
+            'amount_cents' => 3000,
+        ]);
+
+        $this->actingAs($owner)
+            ->get(route('workspace.private-sessions.show', $session))
+            ->assertOk()
+            ->assertSee('private-session-total-row', false)
+            ->assertSee('المضافين')
+            ->assertSee('حضروا')
+            ->assertSee('QR: 1 / يدوي: 1')
+            ->assertSee('إيراد فعلي')
+            ->assertSee('مكسب المحاضر')
+            ->assertSee('صافي السنتر')
+            ->assertSee('60.00')
+            ->assertSee('uw-pagination', false);
     }
 }

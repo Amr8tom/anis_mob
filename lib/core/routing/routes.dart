@@ -10,6 +10,7 @@ import '../../features/buddy/presentation/screens/create_session_screen.dart';
 import '../../features/buddy/presentation/screens/session_details_loader_screen.dart';
 import '../../features/buddy/presentation/screens/session_details_screen.dart';
 import '../../features/navigation/presentation/screens/navigation_menu_screen.dart';
+import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/profile/presentation/screens/plans_screen.dart';
 import '../../features/profile/presentation/controller/profile_completion_cubit.dart';
 import '../../features/profile/presentation/screens/profile_completion_screen.dart';
@@ -296,6 +297,14 @@ class RouteGenerator {
         final currentPlan = args?['currentPlan'] as String? ?? 'free';
         return PageTransition(
           child: PlansScreen(currentPlan: currentPlan),
+          type: PageTransitionType.rightToLeft,
+          settings: settings,
+        );
+
+      /// Notification preferences
+      case DRoutesName.notificationsRoute:
+        return PageTransition(
+          child: const NotificationsScreen(),
           type: PageTransitionType.rightToLeft,
           settings: settings,
         );

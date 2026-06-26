@@ -238,6 +238,94 @@
             font-family: inherit;
             font-size: 15px;
             margin-bottom: 16px;
+            color: var(--upwork-slate);
+            background: #ffffff;
+        }
+
+        input[type="date"].form-input,
+        input[type="time"].form-input,
+        input[type="datetime-local"].form-input,
+        input[type="month"].form-input,
+        input[type="date"],
+        input[type="time"],
+        input[type="datetime-local"],
+        input[type="month"],
+        input[type="date"].form-control,
+        input[type="time"].form-control,
+        input[type="datetime-local"].form-control,
+        input[type="month"].form-control {
+            color-scheme: light;
+            color: var(--upwork-slate);
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.01em;
+            direction: ltr;
+            text-align: center;
+            unicode-bidi: plaintext;
+            caret-color: var(--upwork-green-dark);
+            -webkit-text-fill-color: var(--upwork-slate);
+        }
+
+        input[type="date"].form-input::-webkit-datetime-edit,
+        input[type="time"].form-input::-webkit-datetime-edit,
+        input[type="datetime-local"].form-input::-webkit-datetime-edit,
+        input[type="month"].form-input::-webkit-datetime-edit,
+        input[type="date"].form-control::-webkit-datetime-edit,
+        input[type="time"].form-control::-webkit-datetime-edit,
+        input[type="datetime-local"].form-control::-webkit-datetime-edit,
+        input[type="month"].form-control::-webkit-datetime-edit,
+        input[type="date"].form-input::-webkit-datetime-edit-fields-wrapper,
+        input[type="time"].form-input::-webkit-datetime-edit-fields-wrapper,
+        input[type="datetime-local"].form-input::-webkit-datetime-edit-fields-wrapper,
+        input[type="month"].form-input::-webkit-datetime-edit-fields-wrapper,
+        input[type="date"].form-control::-webkit-datetime-edit-fields-wrapper,
+        input[type="time"].form-control::-webkit-datetime-edit-fields-wrapper,
+        input[type="datetime-local"].form-control::-webkit-datetime-edit-fields-wrapper,
+        input[type="month"].form-control::-webkit-datetime-edit-fields-wrapper {
+            color: var(--upwork-slate);
+            -webkit-text-fill-color: var(--upwork-slate);
+        }
+
+        input[type="date"].form-input::-webkit-datetime-edit-year-field,
+        input[type="date"].form-input::-webkit-datetime-edit-month-field,
+        input[type="date"].form-input::-webkit-datetime-edit-day-field,
+        input[type="time"].form-input::-webkit-datetime-edit-hour-field,
+        input[type="time"].form-input::-webkit-datetime-edit-minute-field,
+        input[type="time"].form-input::-webkit-datetime-edit-second-field,
+        input[type="time"].form-input::-webkit-datetime-edit-millisecond-field,
+        input[type="time"].form-input::-webkit-datetime-edit-ampm-field,
+        input[type="datetime-local"].form-input::-webkit-datetime-edit-year-field,
+        input[type="datetime-local"].form-input::-webkit-datetime-edit-month-field,
+        input[type="datetime-local"].form-input::-webkit-datetime-edit-day-field,
+        input[type="datetime-local"].form-input::-webkit-datetime-edit-hour-field,
+        input[type="datetime-local"].form-input::-webkit-datetime-edit-minute-field,
+        input[type="datetime-local"].form-input::-webkit-datetime-edit-second-field,
+        input[type="datetime-local"].form-input::-webkit-datetime-edit-millisecond-field,
+        input[type="datetime-local"].form-input::-webkit-datetime-edit-ampm-field,
+        input[type="month"].form-input::-webkit-datetime-edit-year-field,
+        input[type="month"].form-input::-webkit-datetime-edit-month-field {
+            color: var(--upwork-slate);
+            -webkit-text-fill-color: var(--upwork-slate);
+            font-weight: 800;
+        }
+
+        input[type="date"].form-input::-webkit-datetime-edit-text,
+        input[type="time"].form-input::-webkit-datetime-edit-text,
+        input[type="datetime-local"].form-input::-webkit-datetime-edit-text,
+        input[type="month"].form-input::-webkit-datetime-edit-text {
+            color: var(--upwork-muted);
+            -webkit-text-fill-color: var(--upwork-muted);
+            padding: 0 3px;
+            font-weight: 700;
+        }
+
+        input[type="date"].form-input::-webkit-calendar-picker-indicator,
+        input[type="time"].form-input::-webkit-calendar-picker-indicator,
+        input[type="datetime-local"].form-input::-webkit-calendar-picker-indicator,
+        input[type="month"].form-input::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            opacity: 0.9;
+            filter: invert(31%) sepia(72%) saturate(1835%) hue-rotate(98deg) brightness(84%) contrast(101%);
         }
 
         .table-responsive {

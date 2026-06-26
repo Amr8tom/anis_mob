@@ -17,23 +17,27 @@ extension NotificationsStatusX on NotificationsState {
 
 class NotificationsState extends Equatable {
   final NotificationsStatus status;
+  final bool? permissionGranted;
   final String? errorMessage;
 
   const NotificationsState({
     this.status = NotificationsStatus.initial,
+    this.permissionGranted,
     this.errorMessage,
   });
 
   NotificationsState copyWith({
     NotificationsStatus? status,
+    bool? permissionGranted,
     String? errorMessage,
   }) {
     return NotificationsState(
       status: status ?? this.status,
+      permissionGranted: permissionGranted ?? this.permissionGranted,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [status, errorMessage];
+  List<Object?> get props => [status, permissionGranted, errorMessage];
 }

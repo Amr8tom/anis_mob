@@ -24,7 +24,7 @@
     </div>
 
     <!-- Summary Stats -->
-    <div class="grid-2" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 20px;">
+    <div class="grid-2" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 20px;">
         <div class="card" style="text-align: center; padding: 15px;">
             <div style="font-size: 24px; font-weight: 900; color: var(--upwork-green);">{{ $totalVisits }}</div>
             <div style="color: var(--upwork-muted); font-size: 13px; margin-top: 4px; font-weight: bold;">{{ __('portal.clients.show.total_visits') }}</div>

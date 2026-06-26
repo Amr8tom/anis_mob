@@ -217,11 +217,19 @@ class WorkspaceVisitController extends Controller
         ]);
 
         try {
+            $workspaceOwnerId = Auth::guard('workspace_owner')->check()
+                ? (string) Auth::guard('workspace_owner')->id()
+                : null;
+            $legacyOwnerId = $workspaceOwnerId === null && Auth::guard('web')->check()
+                ? (string) Auth::guard('web')->id()
+                : null;
+
             $action->handle(
                 Auth::user()->ownedWorkspace,
                 $validated['phone_number'],
                 $validated['name'] ?? null,
-                (string) Auth::id(),
+                $legacyOwnerId,
+                $workspaceOwnerId,
                 $validated['visitor_password'] ?? null,
             );
         } catch (OwnerVisitVerificationRequired $e) {

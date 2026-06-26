@@ -3,6 +3,68 @@
 
 @section('styles')
 <style>
+    .notification-page {
+        --notif-surface: var(--upwork-card-bg);
+        --notif-surface-2: var(--upwork-bg);
+        --notif-surface-3: #ffffff;
+        --notif-border: var(--upwork-border);
+        --notif-text: var(--upwork-slate);
+        --notif-muted: var(--upwork-muted);
+        --notif-accent: var(--upwork-green);
+        --notif-accent-strong: var(--upwork-green-dark);
+        --notif-input: #ffffff;
+        --notif-row-hover: var(--upwork-green-soft);
+        --notif-shadow: var(--portal-shadow, var(--shadow-md));
+    }
+
+    html[data-theme="dark"] .notification-page {
+        --notif-surface: #111d16;
+        --notif-surface-2: #17261d;
+        --notif-surface-3: #0b1610;
+        --notif-border: #2a3d32;
+        --notif-text: #eef7f1;
+        --notif-muted: #a9b9ae;
+        --notif-accent: #2bd968;
+        --notif-accent-strong: #74f29a;
+        --notif-input: #0a1510;
+        --notif-row-hover: #20362a;
+        --notif-shadow: 0 18px 45px rgba(0, 0, 0, .34);
+    }
+
+    html[data-theme="light"] .notification-page {
+        --notif-surface: #ffffff;
+        --notif-surface-2: #f7faf6;
+        --notif-surface-3: #ffffff;
+        --notif-border: #dfe9df;
+        --notif-text: #0d2416;
+        --notif-muted: #5f705f;
+        --notif-accent: #14a800;
+        --notif-accent-strong: #0c7a00;
+        --notif-input: #ffffff;
+        --notif-row-hover: #eef9ee;
+        --notif-shadow: 0 12px 32px rgba(16, 40, 16, .08);
+    }
+
+    .notification-page .page-title {
+        color: var(--notif-text);
+    }
+
+    .notification-page .page-subtitle {
+        color: var(--notif-muted);
+    }
+
+    .notification-page .card {
+        background: var(--notif-surface) !important;
+        border-color: var(--notif-border) !important;
+        color: var(--notif-text);
+        box-shadow: var(--notif-shadow);
+    }
+
+    .notification-page .card-title {
+        color: var(--notif-text);
+        border-color: var(--notif-border);
+    }
+
     .notif-grid {
         display: grid;
         grid-template-columns: 1fr 380px;
@@ -31,19 +93,19 @@
         padding: 16px;
         cursor: pointer;
         transition: var(--transition);
-        background: var(--upwork-card-bg);
+        background: var(--notif-surface-2);
         display: flex;
         align-items: center;
         gap: 14px;
     }
     .target-opt:hover {
-        border-color: rgba(20,168,0,0.3);
-        background: var(--upwork-green-soft);
+        border-color: color-mix(in srgb, var(--notif-accent) 38%, var(--notif-border));
+        background: var(--notif-row-hover);
     }
     .target-opt.active {
-        border-color: var(--upwork-green);
-        background: var(--upwork-green-soft);
-        box-shadow: 0 4px 12px rgba(20,168,0,0.1);
+        border-color: var(--notif-accent);
+        background: var(--notif-row-hover);
+        box-shadow: 0 10px 24px rgba(20,168,0,0.14);
     }
     .target-opt input[type="radio"] {
         display: none;
@@ -52,8 +114,9 @@
         width: 44px;
         height: 44px;
         border-radius: 50%;
-        background: var(--upwork-bg);
-        color: var(--upwork-muted);
+        background: var(--notif-input);
+        color: var(--notif-muted);
+        border: 1px solid var(--notif-border);
         display: grid;
         place-items: center;
         font-size: 18px;
@@ -61,8 +124,9 @@
         flex-shrink: 0;
     }
     .target-opt.active .target-icon {
-        background: var(--upwork-green);
+        background: var(--notif-accent);
         color: #fff;
+        border-color: var(--notif-accent);
     }
     .target-info {
         flex: 1;
@@ -70,7 +134,7 @@
     .target-title {
         font-size: 15px;
         font-weight: 800;
-        color: var(--upwork-slate);
+        color: var(--notif-text);
         margin-bottom: 2px;
     }
 
@@ -80,7 +144,7 @@
         animation: fadeIn 0.3s ease;
         margin-top: 24px;
         padding-top: 24px;
-        border-top: 1px dashed var(--upwork-border);
+        border-top: 1px dashed var(--notif-border);
     }
     .dynamic-container.show {
         display: block;
@@ -118,21 +182,22 @@
         border: 1px solid var(--upwork-border);
         border-radius: var(--radius-md);
         overflow: hidden;
-        background: var(--upwork-card-bg);
+        background: var(--notif-surface);
     }
     .users-table th, .users-table td {
         padding: 14px 16px;
         vertical-align: middle;
     }
     .users-table th {
-        background: var(--upwork-bg);
-        border-bottom: 2px solid var(--upwork-border);
+        background: var(--notif-surface-2);
+        border-bottom: 2px solid var(--notif-border);
+        color: var(--notif-muted);
     }
     .users-table tbody tr {
         cursor: pointer;
     }
     .users-table tbody tr:hover {
-        background: var(--upwork-green-soft);
+        background: var(--notif-row-hover);
     }
     .device-badge {
         display: inline-flex;
@@ -183,11 +248,11 @@
         cursor: pointer;
         transition: var(--transition);
         position: relative;
-        background: var(--upwork-bg);
+        background: var(--notif-surface-2);
     }
     .image-upload-wrapper:hover {
         border-color: var(--upwork-green);
-        background: var(--upwork-green-soft);
+        background: var(--notif-row-hover);
     }
     .image-upload-wrapper.has-image {
         padding: 0;
@@ -245,12 +310,13 @@
         height: 52px !important;
         border: 1px solid var(--upwork-input-border) !important;
         border-radius: var(--radius-sm) !important;
-        background: var(--upwork-card-bg) !important;
+        background: var(--notif-input) !important;
+        color: var(--notif-text) !important;
         display: flex;
         align-items: center;
     }
     .select2-container--default .select2-selection--single .select2-selection__rendered {
-        color: var(--upwork-slate) !important;
+        color: var(--notif-text) !important;
         line-height: normal !important;
         padding-inline-start: 14px !important;
         font-weight: 600;
@@ -262,15 +328,143 @@
         border-color: var(--upwork-green) !important;
         border-radius: var(--radius-sm) !important;
         box-shadow: var(--shadow-md);
-        background: var(--upwork-card-bg) !important;
+        background: var(--notif-surface) !important;
+        color: var(--notif-text) !important;
     }
     .select2-results__option {
         padding: 12px 14px !important;
-        color: var(--upwork-slate) !important;
+        color: var(--notif-text) !important;
     }
     .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
         background: var(--upwork-green) !important;
         color: #fff !important;
+    }
+
+    .notification-history {
+        margin-top: 28px;
+    }
+    .notification-history table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .notification-history th,
+    .notification-history td {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--notif-border);
+        color: var(--notif-text);
+        vertical-align: middle;
+    }
+    .notification-history th {
+        background: var(--notif-surface-2);
+        color: var(--notif-muted);
+        font-size: 13px;
+        font-weight: 800;
+    }
+    .notification-history .message-title {
+        font-weight: 900;
+        margin-bottom: 4px;
+        color: var(--notif-text);
+    }
+    .notification-history .message-body {
+        max-width: 420px;
+        color: var(--notif-muted);
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .campaign-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        background: var(--notif-surface-2);
+        color: var(--notif-muted);
+        border: 1px solid var(--notif-border);
+        white-space: nowrap;
+    }
+    .campaign-status.status-sent {
+        background: rgba(20, 168, 0, .12);
+        color: var(--notif-accent);
+        border-color: rgba(20, 168, 0, .24);
+    }
+    .campaign-status.status-failed {
+        background: rgba(223, 32, 32, .12);
+        color: var(--upwork-error);
+        border-color: rgba(223, 32, 32, .24);
+    }
+    .campaign-status.status-sending,
+    .campaign-status.status-building {
+        background: rgba(30, 144, 255, .12);
+        color: var(--upwork-blue);
+        border-color: rgba(30, 144, 255, .24);
+    }
+
+    .audience-preview {
+        margin-top: 18px;
+        padding: 16px;
+        border: 1px solid var(--notif-border);
+        border-radius: var(--radius-md);
+        background: var(--notif-surface-2);
+    }
+    .audience-preview-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+    .audience-preview-title {
+        color: var(--notif-text);
+        font-size: 15px;
+        font-weight: 900;
+    }
+    .audience-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+    }
+    @media (max-width: 760px) {
+        .audience-preview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .audience-stat {
+        padding: 12px;
+        border: 1px solid var(--notif-border);
+        border-radius: var(--radius-sm);
+        background: var(--notif-surface);
+    }
+    .audience-stat-value {
+        color: var(--notif-accent);
+        font-size: 22px;
+        font-weight: 900;
+        line-height: 1.1;
+    }
+    .audience-stat-label {
+        color: var(--notif-muted);
+        font-size: 12px;
+        font-weight: 800;
+        margin-top: 4px;
+    }
+    .audience-preview-help {
+        color: var(--notif-muted);
+        font-size: 12px;
+        margin-top: 10px;
+        line-height: 1.6;
+    }
+    .btn-secondary-soft {
+        border: 1px solid var(--notif-border);
+        border-radius: var(--radius-sm);
+        background: var(--notif-surface);
+        color: var(--notif-text);
+        padding: 10px 14px;
+        font-weight: 900;
+        cursor: pointer;
+    }
+    .btn-secondary-soft:hover {
+        border-color: var(--notif-accent);
+        color: var(--notif-accent);
     }
 </style>
 <!-- Select2 for Session Dropdown -->
@@ -278,6 +472,7 @@
 @endsection
 
 @section('content')
+<div class="notification-page">
 <h1 class="page-title">{{ __('portal.notifications.title') }}</h1>
 <div class="page-subtitle">{{ __('portal.notifications.subtitle') }}</div>
 
@@ -361,12 +556,67 @@
                 </div>
 
             </div>
+
+            <div class="audience-preview" id="audiencePreview">
+                <div class="audience-preview-header">
+                    <div class="audience-preview-title">
+                        <i class="fa-solid fa-chart-simple" style="color:var(--notif-accent);"></i>
+                        {{ __('portal.notifications.preview_title') }}
+                    </div>
+                    <button type="button" class="btn-secondary-soft" id="previewAudienceBtn">
+                        <i class="fa-solid fa-rotate"></i> {{ __('portal.notifications.preview_button') }}
+                    </button>
+                </div>
+                <div class="audience-preview-grid">
+                    <div class="audience-stat">
+                        <div class="audience-stat-value" id="previewAudienceCount">-</div>
+                        <div class="audience-stat-label">{{ __('portal.notifications.preview_audience') }}</div>
+                    </div>
+                    <div class="audience-stat">
+                        <div class="audience-stat-value" id="previewRegisteredCount">-</div>
+                        <div class="audience-stat-label">{{ __('portal.notifications.preview_registered') }}</div>
+                    </div>
+                    <div class="audience-stat">
+                        <div class="audience-stat-value" id="previewReachableCount">-</div>
+                        <div class="audience-stat-label">{{ __('portal.notifications.preview_reachable') }}</div>
+                    </div>
+                    <div class="audience-stat">
+                        <div class="audience-stat-value" id="previewDevicesCount">-</div>
+                        <div class="audience-stat-label">{{ __('portal.notifications.preview_devices') }}</div>
+                    </div>
+                    <div class="audience-stat">
+                        <div class="audience-stat-value" id="previewSkippedCount">-</div>
+                        <div class="audience-stat-label">{{ __('portal.notifications.preview_skipped') }}</div>
+                    </div>
+                </div>
+                <div class="audience-preview-help" id="previewHelp">{{ __('portal.notifications.preview_help') }}</div>
+            </div>
         </div>
 
         <!-- Compose Column -->
         <aside class="notif-aside">
             <div class="card" style="position: sticky; top: 24px;">
                 <h2 class="card-title"><i class="fa-solid fa-pen-nib" style="color:var(--upwork-green);"></i> {{ __('portal.notifications.compose_title') }}</h2>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="templateSelect">{{ __('portal.notifications.template_label') }}</label>
+                    <select id="templateSelect" class="form-select" style="height: 48px;">
+                        <option value="">{{ __('portal.notifications.choose_template') }}</option>
+                    </select>
+                </div>
+
+                @php
+                    $selectedCategory = old('notification_category', 'workspace_updates');
+                @endphp
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="notificationCategory">{{ __('portal.notifications.category_label') }}</label>
+                    <select name="notification_category" id="notificationCategory" class="form-select" style="height: 48px;">
+                        <option value="workspace_updates" {{ $selectedCategory === 'workspace_updates' ? 'selected' : '' }}>{{ __('portal.notifications.category_workspace_updates') }}</option>
+                        <option value="session_reminders" {{ $selectedCategory === 'session_reminders' ? 'selected' : '' }}>{{ __('portal.notifications.category_session_reminders') }}</option>
+                        <option value="subscription_alerts" {{ $selectedCategory === 'subscription_alerts' ? 'selected' : '' }}>{{ __('portal.notifications.category_subscription_alerts') }}</option>
+                        <option value="offers_marketing" {{ $selectedCategory === 'offers_marketing' ? 'selected' : '' }}>{{ __('portal.notifications.category_offers_marketing') }}</option>
+                    </select>
+                </div>
                 
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label for="title">{{ __('portal.notifications.field_title') }} <span style="color:var(--upwork-error)">*</span></label>
@@ -376,6 +626,26 @@
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label for="body">{{ __('portal.notifications.field_body') }} <span style="color:var(--upwork-error)">*</span></label>
                     <textarea name="body" id="body" class="form-control" required style="height: 120px; resize: none;" placeholder="Message content..."></textarea>
+                </div>
+
+                @php
+                    $selectedLocale = old('locale', $selectedLocale ?? 'ar');
+                @endphp
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="locale">{{ __('portal.notifications.field_locale') }}</label>
+                    <select name="locale" id="locale" class="form-select" style="height: 48px;">
+                        <option value="ar" {{ $selectedLocale === 'ar' ? 'selected' : '' }}>{{ __('portal.notifications.locale_ar') }}</option>
+                        <option value="en" {{ $selectedLocale === 'en' ? 'selected' : '' }}>{{ __('portal.notifications.locale_en') }}</option>
+                        <option value="tr" {{ $selectedLocale === 'tr' ? 'selected' : '' }}>{{ __('portal.notifications.locale_tr') }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="scheduled_at">{{ __('portal.notifications.field_scheduled_at') }}</label>
+                    <input type="datetime-local" name="scheduled_at" id="scheduled_at" class="form-control" style="height: 48px;" value="{{ old('scheduled_at') }}">
+                    <div style="color: var(--notif-muted); font-size: 12px; line-height: 1.6; margin-top: 6px;">
+                        {{ __('portal.notifications.scheduled_hint') }}
+                    </div>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 24px;">
@@ -402,6 +672,83 @@
         </aside>
     </div>
 </form>
+
+<div class="card notification-history">
+    <h2 class="card-title"><i class="fa-solid fa-clock-rotate-left" style="color:var(--notif-accent);"></i> {{ __('portal.notifications.history_title') }}</h2>
+    @if($campaigns->isEmpty())
+        <div style="color: var(--notif-muted); font-weight: 700;">{{ __('portal.notifications.history_empty') }}</div>
+    @else
+        @php
+            $targetLabels = [
+                'user' => __('portal.notifications.target_user'),
+                'selected' => __('portal.notifications.target_user'),
+                'all_visitors' => __('portal.notifications.target_all_visitors'),
+                'public_session' => __('portal.notifications.target_public_session'),
+                'private_session' => __('portal.notifications.target_private_session'),
+                'workspace_subscription' => __('portal.notifications.target_workspace_subscription'),
+            ];
+        @endphp
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ __('portal.notifications.history_message') }}</th>
+                        <th>{{ __('portal.notifications.history_target') }}</th>
+                        <th>{{ __('portal.notifications.history_status') }}</th>
+                        <th>{{ __('portal.notifications.history_counts') }}</th>
+                        <th>{{ __('portal.notifications.history_engagement') }}</th>
+                        <th>{{ __('portal.notifications.history_created') }}</th>
+                        <th>{{ __('portal.notifications.history_scheduled') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($campaigns as $campaign)
+                        @php
+                            $statusLabelKey = 'portal.notifications.status_'.$campaign->status;
+                            $processed = $campaign->sent_count + $campaign->failed_count + $campaign->skipped_count;
+                        @endphp
+                        <tr>
+                            <td>
+                                <div class="message-title">{{ $campaign->title }}</div>
+                                <div class="message-body">{{ $campaign->body }}</div>
+                            </td>
+                            <td>{{ $targetLabels[$campaign->target_type] ?? $campaign->target_type }}</td>
+                            <td>
+                                <span class="campaign-status status-{{ $campaign->status }}">
+                                    {{ __($statusLabelKey) === $statusLabelKey ? $campaign->status : __($statusLabelKey) }}
+                                </span>
+                            </td>
+                            <td dir="ltr" style="text-align: start;">
+                                {{ number_format($campaign->sent_count) }} / {{ number_format($campaign->targeted_count) }}
+                                @if($campaign->failed_count > 0 || $campaign->skipped_count > 0)
+                                    <span style="color: var(--notif-muted); font-size: 12px;">
+                                        ({{ number_format($campaign->failed_count) }} {{ __('portal.notifications.history_failed') }},
+                                        {{ number_format($campaign->skipped_count) }} {{ __('portal.notifications.history_skipped') }})
+                                    </span>
+                                @endif
+                            </td>
+                            <td>
+                                <div>{{ number_format($campaign->opened_count) }} {{ __('portal.notifications.history_opened') }}</div>
+                                <div style="color: var(--notif-muted); font-size: 12px;">{{ number_format($campaign->clicked_count) }} {{ __('portal.notifications.history_clicked') }}</div>
+                            </td>
+                            <td>
+                                <div>{{ $campaign->created_at?->diffForHumans() }}</div>
+                                <div style="color: var(--notif-muted); font-size: 12px;">{{ $campaign->created_at?->format('Y-m-d H:i') }}</div>
+                            </td>
+                            <td>
+                                <div>{{ $campaign->scheduled_at?->format('Y-m-d H:i') ?? __('portal.notifications.history_immediate') }}</div>
+                                @if($campaign->recipients_pruned_at)
+                                    <div style="color: var(--notif-muted); font-size: 12px;">{{ __('portal.notifications.history_details_pruned') }}</div>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
+</div>
+</div>
 @endsection
 
 @section('scripts')
@@ -412,8 +759,13 @@
         no_device: "{{ __('portal.notifications.no_device') }}",
         students_count: "{{ __('portal.notifications.students_count') }}",
         unnamed_session: "{{ __('portal.notifications.unnamed_session') }}",
-        choose_session: "{{ __('portal.notifications.choose_session') }}"
+        choose_session: "{{ __('portal.notifications.choose_session') }}",
+        preview_loading: "{{ __('portal.notifications.preview_loading') }}",
+        preview_error: "{{ __('portal.notifications.preview_error') }}",
+        select_user_error: "{{ __('portal.notifications.select_user_error') }}",
+        select_session_error: "{{ __('portal.notifications.select_session_error') }}"
     };
+    const notificationTemplates = @json($templates);
 
     // Target Selection Logic
     const targetOpts = document.querySelectorAll('.target-opt');
@@ -421,6 +773,13 @@
     const containerSpecific = document.getElementById('container-user');
     const containerSession = document.getElementById('container-session');
     const sessionSelect = $('#sessionSelect');
+    const localeSelect = document.getElementById('locale');
+    const templateSelect = document.getElementById('templateSelect');
+    const categorySelect = document.getElementById('notificationCategory');
+    const titleInput = document.getElementById('title');
+    const bodyInput = document.getElementById('body');
+    const previewAudienceBtn = document.getElementById('previewAudienceBtn');
+    const previewHelp = document.getElementById('previewHelp');
 
     targetOpts.forEach(opt => {
         opt.addEventListener('click', function() {
@@ -445,8 +804,54 @@
                 sessionSelect.prop('disabled', false);
                 loadSessions(type === 'public_session' ? 'public' : 'private');
             }
+
+            resetPreview();
         });
     });
+
+    function populateTemplates() {
+        const locale = localeSelect.value || 'ar';
+        const templates = notificationTemplates[locale] || notificationTemplates.ar || [];
+        templateSelect.innerHTML = `<option value="">{{ __('portal.notifications.choose_template') }}</option>`;
+        templates.forEach(template => {
+            const option = document.createElement('option');
+            option.value = template.key;
+            option.textContent = template.label;
+            option.dataset.title = template.title;
+            option.dataset.body = template.body;
+            templateSelect.appendChild(option);
+        });
+    }
+
+    localeSelect.addEventListener('change', populateTemplates);
+    templateSelect.addEventListener('change', function() {
+        const option = this.options[this.selectedIndex];
+        if (!option || !option.value) {
+            return;
+        }
+
+        titleInput.value = option.dataset.title || '';
+        bodyInput.value = option.dataset.body || '';
+        categorySelect.value = categoryForTemplate(option.value);
+        resetPreview();
+    });
+    populateTemplates();
+
+    function categoryForTemplate(templateKey) {
+        if (templateKey === 'special_offer') {
+            return 'offers_marketing';
+        }
+
+        if (templateKey === 'session_reminder') {
+            return 'session_reminders';
+        }
+
+        if (templateKey === 'subscription_expiry' || templateKey === 'low_hours') {
+            return 'subscription_alerts';
+        }
+
+        return 'workspace_updates';
+    }
 
     // Initialize Select2
     sessionSelect.select2({
@@ -512,7 +917,7 @@
                                     <div class="checkbox-custom"><i class="fa-solid fa-check" style="font-size:12px;"></i></div>
                                 </label>
                             </td>
-                            <td><div style="font-weight:700; color:var(--upwork-slate);">${user.name}</div></td>
+                            <td><div style="font-weight:700; color:var(--notif-text);">${user.name}</div></td>
                             <td dir="ltr" style="text-align:end;">${user.phone_number}</td>
                             <td>${deviceBadge}</td>
                         `;
@@ -523,6 +928,7 @@
                                 const cb = this.querySelector('.user-checkbox');
                                 cb.checked = !cb.checked;
                                 updateSelectAllState();
+                                resetPreview();
                             }
                         });
 
@@ -532,6 +938,7 @@
                     // Attach listener to new checkboxes
                     document.querySelectorAll('.user-checkbox').forEach(cb => {
                         cb.addEventListener('change', updateSelectAllState);
+                        cb.addEventListener('change', resetPreview);
                     });
                     updateSelectAllState();
 
@@ -547,6 +954,7 @@
         document.querySelectorAll('.user-checkbox').forEach(cb => {
             cb.checked = isChecked;
         });
+        resetPreview();
     });
 
     function updateSelectAllState() {
@@ -567,6 +975,77 @@
             selectAllCb.indeterminate = false;
         }
     }
+
+    function collectPreviewPayload() {
+        const targetType = targetTypeInput.value;
+        const payload = {
+            target_type: targetType,
+            notification_category: categorySelect.value,
+            _token: "{{ csrf_token() }}"
+        };
+
+        if (targetType === 'user') {
+            payload.user_ids = Array.from(document.querySelectorAll('.user-checkbox:checked')).map(cb => cb.value);
+        }
+
+        if (targetType === 'public_session' || targetType === 'private_session') {
+            payload.session_id = sessionSelect.val();
+        }
+
+        return payload;
+    }
+
+    function setPreview(data) {
+        document.getElementById('previewAudienceCount').textContent = Number(data.audience_count || 0).toLocaleString();
+        document.getElementById('previewRegisteredCount').textContent = Number(data.registered_users_count || 0).toLocaleString();
+        document.getElementById('previewReachableCount').textContent = Number(data.reachable_users_count || 0).toLocaleString();
+        document.getElementById('previewDevicesCount').textContent = Number(data.device_tokens_count || 0).toLocaleString();
+        document.getElementById('previewSkippedCount').textContent = Number(data.skipped_count || 0).toLocaleString();
+    }
+
+    function resetPreview() {
+        ['previewAudienceCount', 'previewRegisteredCount', 'previewReachableCount', 'previewDevicesCount', 'previewSkippedCount'].forEach(id => {
+            document.getElementById(id).textContent = '-';
+        });
+    }
+
+    function refreshAudiencePreview() {
+        const targetType = targetTypeInput.value;
+
+        if (targetType === 'user' && document.querySelectorAll('.user-checkbox:checked').length === 0) {
+            alert(translations.select_user_error);
+            return;
+        }
+
+        if ((targetType === 'public_session' || targetType === 'private_session') && !sessionSelect.val()) {
+            alert(translations.select_session_error);
+            return;
+        }
+
+        previewAudienceBtn.disabled = true;
+        previewHelp.textContent = translations.preview_loading;
+
+        $.ajax({
+            url: "{{ route('workspace.notifications.preview') }}",
+            method: 'POST',
+            data: collectPreviewPayload(),
+            dataType: 'json',
+            success: function(data) {
+                setPreview(data);
+                previewHelp.textContent = "{{ __('portal.notifications.preview_help') }}";
+            },
+            error: function() {
+                previewHelp.textContent = translations.preview_error;
+            },
+            complete: function() {
+                previewAudienceBtn.disabled = false;
+            }
+        });
+    }
+
+    previewAudienceBtn.addEventListener('click', refreshAudiencePreview);
+    sessionSelect.on('change', resetPreview);
+    categorySelect.addEventListener('change', resetPreview);
 
     // Image Upload Logic
     const imageInput = document.getElementById('imageInput');
@@ -629,13 +1108,13 @@
             const selectedCount = document.querySelectorAll('.user-checkbox:checked').length;
             if (selectedCount === 0) {
                 e.preventDefault();
-                alert("Please select at least one user.");
+                alert(translations.select_user_error);
                 return;
             }
         } else if (targetType === 'public_session' || targetType === 'private_session') {
             if (!sessionSelect.val()) {
                 e.preventDefault();
-                alert("Please select a session.");
+                alert(translations.select_session_error);
                 return;
             }
         }

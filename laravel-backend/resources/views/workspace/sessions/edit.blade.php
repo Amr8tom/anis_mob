@@ -37,7 +37,7 @@
                 @error('instructor_name') <div class="form-error">{{ $message }}</div> @enderror
             </div>
 
-            <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="grid-2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
                 <div class="form-group">
                     <label>{{ __('portal.sessions.form.start') }}</label>
                     <input type="datetime-local" name="start_time" class="form-control" value="{{ old('start_time', \Carbon\Carbon::parse($session->start_time)->format('Y-m-d\TH:i')) }}" required>
@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="grid-2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
                 <div class="form-group">
                     <label>{{ __('portal.sessions.form.max') }}</label>
                     <input type="number" name="max_participants" class="form-control" min="1" value="{{ old('max_participants', $session->max_participants) }}">

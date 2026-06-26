@@ -340,6 +340,54 @@ class MessageLookup extends MessageLookupByLibrary {
       "لم يتم العثور على مساحات",
     ),
     "notification": MessageLookupByLibrary.simpleMessage("الإشعارات"),
+    "notificationOffersMarketing": MessageLookupByLibrary.simpleMessage(
+      "العروض والتسويق",
+    ),
+    "notificationOffersMarketingDesc": MessageLookupByLibrary.simpleMessage(
+      "العروض والخصومات والحملات غير الضرورية.",
+    ),
+    "notificationPermissionBody": MessageLookupByLibrary.simpleMessage(
+      "استقبل تذكيرات الجلسات، تنبيهات الاشتراك، وتحديثات المساحات المهمة في الوقت المناسب.",
+    ),
+    "notificationPermissionButton": MessageLookupByLibrary.simpleMessage(
+      "تفعيل الإشعارات",
+    ),
+    "notificationPermissionEnabledBody": MessageLookupByLibrary.simpleMessage(
+      "تقدر تختار بالضبط نوع الإشعارات اللي توصلك من الخيارات بالأسفل.",
+    ),
+    "notificationPermissionEnabledTitle": MessageLookupByLibrary.simpleMessage(
+      "الإشعارات مفعّلة",
+    ),
+    "notificationPermissionTitle": MessageLookupByLibrary.simpleMessage(
+      "فعّل الإشعارات",
+    ),
+    "notificationPreferencesSaved": MessageLookupByLibrary.simpleMessage(
+      "تم حفظ إعدادات الإشعارات",
+    ),
+    "notificationPreferencesSubtitle": MessageLookupByLibrary.simpleMessage(
+      "اختار الإشعارات اللي تحب توصلك. التذكيرات المهمة منفصلة عن العروض عشان ما تحتاجش تقفل كل الإشعارات.",
+    ),
+    "notificationPreferencesTitle": MessageLookupByLibrary.simpleMessage(
+      "إعدادات الإشعارات",
+    ),
+    "notificationSessionReminders": MessageLookupByLibrary.simpleMessage(
+      "تذكيرات الجلسات",
+    ),
+    "notificationSessionRemindersDesc": MessageLookupByLibrary.simpleMessage(
+      "تنبيهات قبل الجلسات الدراسية والجلسات الخاصة.",
+    ),
+    "notificationSubscriptionAlerts": MessageLookupByLibrary.simpleMessage(
+      "تنبيهات الاشتراكات",
+    ),
+    "notificationSubscriptionAlertsDesc": MessageLookupByLibrary.simpleMessage(
+      "تنبيهات قبل انتهاء الاشتراك أو عند انخفاض الساعات المتبقية.",
+    ),
+    "notificationWorkspaceUpdates": MessageLookupByLibrary.simpleMessage(
+      "تحديثات المساحات",
+    ),
+    "notificationWorkspaceUpdatesDesc": MessageLookupByLibrary.simpleMessage(
+      "تحديثات مهمة من المساحات التي تزورها.",
+    ),
     "onboarding1Desc": MessageLookupByLibrary.simpleMessage(
       "بنفس الاشتراك، ادخل أي ورك سبيس قريب منك وذاكر في بيئة تركيز مثالية — بدون تكاليف إضافية أبداً.",
     ),

@@ -3,6 +3,205 @@
        Workspace portal — shared dark theme
        One palette, scoped to .visits-dark. No ad-hoc hex values.
     ════════════════════════════════════════════════════════════ */
+    html[data-theme="dark"] {
+        --upwork-green:       #2bd968;
+        --upwork-green-dark:  #74f29a;
+        --upwork-green-soft:  rgba(43, 217, 104, .14);
+        --upwork-slate:       #f0f7f2;
+        --upwork-muted:       #a9b9ae;
+        --upwork-bg:          #07110c;
+        --upwork-card-bg:     #111d16;
+        --upwork-border:      #26382e;
+        --upwork-input-border:#34493d;
+        --upwork-error:       #ff6b68;
+        --upwork-error-bg:    rgba(239, 83, 80, .14);
+        --upwork-success:     #2bd968;
+        --upwork-success-bg:  rgba(43, 217, 104, .14);
+        --upwork-blue:        #7ab7ff;
+        --portal-surface:     #111d16;
+        --portal-surface-2:   #17261d;
+        --portal-surface-3:   #0b1610;
+        --portal-row-hover:   #20362a;
+        --portal-shadow:      0 18px 45px rgba(0, 0, 0, .34);
+    }
+
+    html[data-theme="dark"] body {
+        background:
+            radial-gradient(circle at top left, rgba(43, 217, 104, .08), transparent 34%),
+            linear-gradient(180deg, #07110c 0%, #09140f 48%, #07110c 100%);
+        color: var(--upwork-slate);
+    }
+
+    html[data-theme="dark"] .app-sidebar,
+    html[data-theme="dark"] .mobile-topbar,
+    html[data-theme="dark"] .bottom-nav,
+    html[data-theme="dark"] .more-sheet {
+        background: rgba(13, 24, 17, .96);
+        border-color: var(--upwork-border);
+        color: var(--upwork-slate);
+        box-shadow: var(--portal-shadow);
+    }
+
+    html[data-theme="dark"] .mobile-topbar,
+    html[data-theme="dark"] .bottom-nav {
+        backdrop-filter: saturate(140%) blur(16px);
+        -webkit-backdrop-filter: saturate(140%) blur(16px);
+    }
+
+    html[data-theme="dark"] .sb-brand,
+    html[data-theme="dark"] .u-name,
+    html[data-theme="dark"] .mt-ws,
+    html[data-theme="dark"] h1,
+    html[data-theme="dark"] h2,
+    html[data-theme="dark"] h3,
+    html[data-theme="dark"] h4,
+    html[data-theme="dark"] label {
+        color: var(--upwork-slate);
+    }
+
+    html[data-theme="dark"] .side-link,
+    html[data-theme="dark"] .bn-item,
+    html[data-theme="dark"] .ms-item,
+    html[data-theme="dark"] .page-subtitle {
+        color: var(--upwork-muted);
+    }
+
+    html[data-theme="dark"] .side-link:hover,
+    html[data-theme="dark"] .ms-item:active,
+    html[data-theme="dark"] .side-link.active-nav,
+    html[data-theme="dark"] .bn-item.active,
+    html[data-theme="dark"] .ms-item.active {
+        background: var(--upwork-green-soft);
+        color: var(--upwork-green-dark);
+    }
+
+    html[data-theme="dark"] .card,
+    html[data-theme="dark"] .manage-form-panel,
+    html[data-theme="dark"] .uw-page__link {
+        background: linear-gradient(180deg, var(--portal-surface) 0%, #0f1b14 100%);
+        border-color: var(--upwork-border);
+        color: var(--upwork-slate);
+        box-shadow: var(--portal-shadow);
+    }
+
+    html[data-theme="dark"] .card-title,
+    html[data-theme="dark"] thead tr,
+    html[data-theme="dark"] .manage-main .empty-state {
+        border-color: var(--upwork-border);
+        background: var(--portal-surface-2);
+    }
+
+    html[data-theme="dark"] th,
+    html[data-theme="dark"] small,
+    html[data-theme="dark"] .empty-state,
+    html[data-theme="dark"] .uw-pagination__summary {
+        color: var(--upwork-muted);
+    }
+
+    html[data-theme="dark"] td {
+        color: var(--upwork-slate);
+        border-color: var(--upwork-border);
+    }
+
+    html[data-theme="dark"] tbody tr:hover {
+        background: var(--portal-row-hover);
+    }
+
+    html[data-theme="dark"] .form-control,
+    html[data-theme="dark"] .form-input,
+    html[data-theme="dark"] .form-select,
+    html[data-theme="dark"] .lang-select,
+    html[data-theme="dark"] .theme-toggle-btn,
+    html[data-theme="dark"] .btn-icon {
+        background: var(--portal-surface-3);
+        border-color: var(--upwork-input-border);
+        color: var(--upwork-slate);
+    }
+
+    html[data-theme="dark"] .form-control::placeholder,
+    html[data-theme="dark"] .form-input::placeholder {
+        color: #728478;
+    }
+
+    html[data-theme="dark"] input[type="date"],
+    html[data-theme="dark"] input[type="time"],
+    html[data-theme="dark"] input[type="datetime-local"],
+    html[data-theme="dark"] input[type="month"] {
+        color-scheme: dark;
+        color: var(--upwork-slate);
+        background: var(--portal-surface-3);
+        -webkit-text-fill-color: var(--upwork-slate);
+    }
+
+    html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit,
+    html[data-theme="dark"] input[type="time"]::-webkit-datetime-edit,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit,
+    html[data-theme="dark"] input[type="month"]::-webkit-datetime-edit,
+    html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+    html[data-theme="dark"] input[type="time"]::-webkit-datetime-edit-fields-wrapper,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper,
+    html[data-theme="dark"] input[type="month"]::-webkit-datetime-edit-fields-wrapper {
+        color: var(--upwork-slate);
+        -webkit-text-fill-color: var(--upwork-slate);
+    }
+
+    html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-year-field,
+    html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-month-field,
+    html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-day-field,
+    html[data-theme="dark"] input[type="time"]::-webkit-datetime-edit-hour-field,
+    html[data-theme="dark"] input[type="time"]::-webkit-datetime-edit-minute-field,
+    html[data-theme="dark"] input[type="time"]::-webkit-datetime-edit-second-field,
+    html[data-theme="dark"] input[type="time"]::-webkit-datetime-edit-millisecond-field,
+    html[data-theme="dark"] input[type="time"]::-webkit-datetime-edit-ampm-field,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-second-field,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-millisecond-field,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-ampm-field,
+    html[data-theme="dark"] input[type="month"]::-webkit-datetime-edit-year-field,
+    html[data-theme="dark"] input[type="month"]::-webkit-datetime-edit-month-field {
+        color: var(--upwork-slate);
+        -webkit-text-fill-color: var(--upwork-slate);
+    }
+
+    html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-text,
+    html[data-theme="dark"] input[type="time"]::-webkit-datetime-edit-text,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-text,
+    html[data-theme="dark"] input[type="month"]::-webkit-datetime-edit-text {
+        color: var(--upwork-muted);
+        -webkit-text-fill-color: var(--upwork-muted);
+    }
+
+    html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+    html[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator,
+    html[data-theme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+    html[data-theme="dark"] input[type="month"]::-webkit-calendar-picker-indicator {
+        opacity: 1;
+        filter: invert(80%) sepia(62%) saturate(574%) hue-rotate(80deg) brightness(98%) contrast(94%);
+    }
+
+    html[data-theme="dark"] .form-control:focus,
+    html[data-theme="dark"] .form-input:focus,
+    html[data-theme="dark"] .form-select:focus {
+        border-color: var(--upwork-green);
+        box-shadow: 0 0 0 3px rgba(43, 217, 104, .16);
+    }
+
+    html[data-theme="dark"] .alert-success {
+        background: rgba(43, 217, 104, .12);
+        border-color: rgba(43, 217, 104, .28);
+        color: var(--upwork-green-dark);
+    }
+
+    html[data-theme="dark"] .alert-error {
+        background: rgba(255, 107, 104, .12);
+        border-color: rgba(255, 107, 104, .28);
+        color: var(--upwork-error);
+    }
+
     .visits-dark {
         --vd-surface:    #16211b;   /* card body                         */
         --vd-surface-2:  #1d2c24;   /* header / footer / thead / panels  */

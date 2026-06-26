@@ -105,17 +105,6 @@
         </div>
     @endif
 
-    <div class="grid-4 private-session-summary-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px;">
-        <div class="card private-session-stat"><small>{{ __('portal.private_sessions.show.stat_invited') }}</small><h2 style="margin:8px 0 0;">{{ $summary['invited'] }}</h2></div>
-        <div class="card private-session-stat"><small>{{ __('portal.private_sessions.show.stat_attended') }}</small><h2 style="margin:8px 0 0;">{{ $summary['attended'] }}</h2></div>
-        <div class="card private-session-stat"><small>{{ __('portal.private_sessions.show.stat_actual_revenue') }}</small><h2 style="margin:8px 0 0;">{{ number_format($summary['actual_revenue_cents'] / 100, 2) }} {{ __('portal.egp') }}</h2></div>
-        <div class="card private-session-stat"><small>{{ __('portal.private_sessions.show.stat_center_net') }}</small><h2 style="margin:8px 0 0;">{{ number_format($summary['center_net_cents'] / 100, 2) }} {{ __('portal.egp') }}</h2></div>
-    </div>
-    <div class="grid-2 private-session-summary-grid" style="gap:12px; margin-bottom:18px;">
-        <div class="card private-session-stat"><small>{{ __('portal.private_sessions.show.stat_instructor_payout') }}</small><h2 style="margin:8px 0 0;">{{ number_format($summary['instructor_payout_cents'] / 100, 2) }} {{ __('portal.egp') }}</h2></div>
-        <div class="card private-session-stat"><small>{{ __('portal.private_sessions.show.stat_qr_manual') }}</small><h2 style="margin:8px 0 0;">{{ $summary['qr_checkins'] }} / {{ $summary['owner_checkins'] }}</h2></div>
-    </div>
-
     <div class="manage-grid" style="margin-bottom:22px;">
         <div class="manage-main card private-session-dark-card">
             <h3 style="margin:0 0 14px;">{{ __('portal.private_sessions.show.add_manual') }}</h3>
@@ -155,20 +144,48 @@
             <p class="empty-state">{{ __('portal.private_sessions.show.attended_empty') }}</p>
         @else
             <div class="table-responsive">
-                <table style="width:100%; border-collapse:collapse; text-align:right;">
+                <table class="private-session-table mobile-card-table" style="width:100%; border-collapse:collapse; text-align:right;">
                     <thead><tr style="border-bottom:2px solid var(--upwork-border);"><th style="padding:10px;">{{ __('portal.private_sessions.show.att_th_visitor') }}</th><th style="padding:10px;">{{ __('portal.private_sessions.show.att_th_phone') }}</th><th style="padding:10px;">{{ __('portal.private_sessions.show.att_th_type') }}</th><th style="padding:10px;">{{ __('portal.private_sessions.show.att_th_check_in') }}</th><th style="padding:10px;">{{ __('portal.private_sessions.show.att_th_method') }}</th><th style="padding:10px;">{{ __('portal.private_sessions.show.att_th_amount') }}</th></tr></thead>
                     <tbody>
                         @foreach($attendedRows as $attendee)
                             <tr style="border-bottom:1px solid var(--upwork-border);">
-                                <td style="padding:10px; font-weight:700;">{{ $attendee->name_snapshot }}</td>
-                                <td style="padding:10px; direction:ltr; text-align:right;">{{ $attendee->phone_snapshot }}</td>
-                                <td style="padding:10px;">{{ $attendee->user_id ? __('portal.private_sessions.show.app_user') : __('portal.private_sessions.show.walk_in') }}</td>
-                                <td style="padding:10px;"><small>{{ $attendee->checked_in_at?->format('Y/m/d H:i') }}</small></td>
-                                <td style="padding:10px;">{{ $attendee->checked_in_method === 'qr' ? 'QR' : __('portal.private_sessions.show.method_owner') }}</td>
-                                <td style="padding:10px; color:var(--upwork-green-dark); font-weight:700;">{{ number_format($attendee->amountEgp(), 2) }} {{ __('portal.egp') }}</td>
+                                <td data-label="{{ __('portal.private_sessions.show.att_th_visitor') }}" style="padding:10px; font-weight:700;">{{ $attendee->name_snapshot }}</td>
+                                <td data-label="{{ __('portal.private_sessions.show.att_th_phone') }}" style="padding:10px; direction:ltr; text-align:right;">{{ $attendee->phone_snapshot }}</td>
+                                <td data-label="{{ __('portal.private_sessions.show.att_th_type') }}" style="padding:10px;">{{ $attendee->user_id ? __('portal.private_sessions.show.app_user') : __('portal.private_sessions.show.walk_in') }}</td>
+                                <td data-label="{{ __('portal.private_sessions.show.att_th_check_in') }}" style="padding:10px;"><small>{{ $attendee->checked_in_at?->format('Y/m/d H:i') }}</small></td>
+                                <td data-label="{{ __('portal.private_sessions.show.att_th_method') }}" style="padding:10px;">{{ $attendee->checked_in_method === 'qr' ? 'QR' : __('portal.private_sessions.show.method_owner') }}</td>
+                                <td data-label="{{ __('portal.private_sessions.show.att_th_amount') }}" class="private-session-money-cell" style="padding:10px; color:var(--upwork-green-dark); font-weight:700;">{{ number_format($attendee->amountEgp(), 2) }} {{ __('portal.egp') }}</td>
                             </tr>
                         @endforeach
                     </tbody>
+                    <tfoot>
+                        <tr class="private-session-total-row">
+                            <td data-label="{{ __('portal.private_sessions.show.stat_invited') }}">
+                                <span>{{ __('portal.private_sessions.show.stat_invited') }}</span>
+                                <strong>{{ number_format($summary['invited']) }}</strong>
+                            </td>
+                            <td data-label="{{ __('portal.private_sessions.show.stat_attended') }}">
+                                <span>{{ __('portal.private_sessions.show.stat_attended') }}</span>
+                                <strong>{{ number_format($summary['attended']) }}</strong>
+                            </td>
+                            <td data-label="{{ __('portal.private_sessions.show.stat_qr_manual') }}">
+                                <span>{{ __('portal.private_sessions.show.stat_qr_manual') }}</span>
+                                <strong>{{ __('portal.private_sessions.show.att_total_methods', ['qr' => number_format($summary['qr_checkins']), 'manual' => number_format($summary['owner_checkins'])]) }}</strong>
+                            </td>
+                            <td data-label="{{ __('portal.private_sessions.show.stat_actual_revenue') }}" class="private-session-money-cell">
+                                <span>{{ __('portal.private_sessions.show.stat_actual_revenue') }}</span>
+                                <strong>{{ number_format($summary['actual_revenue_cents'] / 100, 2) }} {{ __('portal.egp') }}</strong>
+                            </td>
+                            <td data-label="{{ __('portal.private_sessions.show.stat_instructor_payout') }}" class="private-session-money-cell">
+                                <span>{{ __('portal.private_sessions.show.stat_instructor_payout') }}</span>
+                                <strong>{{ number_format($summary['instructor_payout_cents'] / 100, 2) }} {{ __('portal.egp') }}</strong>
+                            </td>
+                            <td data-label="{{ __('portal.private_sessions.show.stat_center_net') }}" class="private-session-money-cell">
+                                <span>{{ __('portal.private_sessions.show.stat_center_net') }}</span>
+                                <strong>{{ number_format($summary['center_net_cents'] / 100, 2) }} {{ __('portal.egp') }}</strong>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
             <div style="margin-top:12px;">{{ $attendedRows->links('vendor.pagination.upwork') }}</div>
@@ -247,31 +264,36 @@
         --ps-muted: #9db0a4;
         --ps-dim: #6c7e73;
         --ps-accent: #2bd968;
+        --ps-hero-title: #eef3f0;
+        --ps-hero-muted: #9db0a4;
+        --ps-chip-bg: rgba(15, 24, 19, .72);
+        --ps-chip-text: #d7e4dc;
+        --ps-chip-border: #2c3d33;
+        --ps-link: #7ef7a4;
+        --ps-success-text: #7ef7a4;
+        --ps-success-bg: rgba(43, 217, 104, .16);
+        --ps-success-border: rgba(43, 217, 104, .38);
+        --ps-danger-text: #fecaca;
+        --ps-danger-bg: rgba(185, 28, 28, .16);
+        --ps-danger-border: rgba(248, 113, 113, .32);
     }
 
     .private-session-page .card,
-    .private-session-page .private-session-dark-card,
-    .private-session-page .private-session-stat {
+    .private-session-page .private-session-dark-card {
         background: var(--ps-surface) !important;
         color: var(--ps-text) !important;
         border: 1px solid var(--ps-border) !important;
         box-shadow: 0 12px 30px rgba(0, 0, 0, .18) !important;
     }
 
-    .private-session-page .private-session-dark-card h3,
-    .private-session-page .private-session-stat h2 {
+    .private-session-page .private-session-dark-card h3 {
         color: var(--ps-text);
     }
 
-    .private-session-page .private-session-stat small,
     .private-session-page .private-session-dark-card p,
     .private-session-page .private-session-dark-card label,
     .private-session-page .private-session-dark-card small {
         color: var(--ps-muted) !important;
-    }
-
-    .private-session-page .private-session-stat h2 {
-        color: var(--ps-accent);
     }
 
     .private-session-page .form-control {
@@ -310,6 +332,46 @@
     }
 
     .private-session-page td[style*="color:var(--upwork-green-dark)"] {
+        color: var(--ps-accent) !important;
+    }
+
+    .private-session-page tfoot tr,
+    .private-session-total-row {
+        background: var(--ps-surface-2) !important;
+        border-top: 2px solid var(--ps-accent) !important;
+    }
+
+    .private-session-page tfoot td,
+    .private-session-total-row td {
+        color: var(--ps-text) !important;
+        font-weight: 900;
+        padding: 14px 10px !important;
+    }
+
+    .private-session-total-row td span,
+    .private-session-total-row td strong {
+        display: block;
+    }
+
+    .private-session-total-row td span {
+        color: var(--ps-muted);
+        font-size: 12px;
+        font-weight: 800;
+        margin-bottom: 4px;
+    }
+
+    .private-session-total-row td strong {
+        color: var(--ps-text);
+        font-size: 15px;
+        line-height: 1.45;
+    }
+
+    .private-session-money-cell {
+        color: var(--ps-accent) !important;
+        font-weight: 900 !important;
+    }
+
+    .private-session-money-cell strong {
         color: var(--ps-accent) !important;
     }
 
@@ -362,7 +424,7 @@
 
     .private-session-title {
         margin: 0 0 8px;
-        color: #eef3f0;
+        color: var(--ps-hero-title);
         font-size: 32px;
         line-height: 1.2;
         font-weight: 900;
@@ -370,7 +432,7 @@
 
     .private-session-subtitle {
         margin: 0;
-        color: #9db0a4;
+        color: var(--ps-hero-muted);
         font-weight: 700;
     }
 
@@ -387,9 +449,9 @@
         gap: 6px;
         padding: 5px 10px;
         border-radius: 999px;
-        border: 1px solid #2c3d33;
-        color: #c9d8cf;
-        background: rgba(15, 24, 19, .7);
+        border: 1px solid var(--ps-chip-border);
+        color: var(--ps-chip-text);
+        background: var(--ps-chip-bg);
         font-size: 12px;
         font-weight: 800;
     }
@@ -463,20 +525,20 @@
     }
 
     .session-action-finish {
-        background: rgba(43, 217, 104, .16);
-        color: #7ef7a4;
-        border-color: rgba(43, 217, 104, .38);
+        background: var(--ps-success-bg);
+        color: var(--ps-success-text);
+        border-color: var(--ps-success-border);
     }
 
     .session-action-cancel {
-        background: rgba(185, 28, 28, .16);
-        color: #fecaca;
-        border-color: rgba(248, 113, 113, .32);
+        background: var(--ps-danger-bg);
+        color: var(--ps-danger-text);
+        border-color: var(--ps-danger-border);
     }
 
     .session-action-hint {
         flex-basis: 100%;
-        color: #9db0a4;
+        color: var(--ps-hero-muted);
         text-align: start;
         font-size: 12px;
         line-height: 1.6;

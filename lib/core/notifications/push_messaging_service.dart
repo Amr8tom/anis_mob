@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -10,9 +13,18 @@ abstract class PushMessagingService {
   /// Safe to call once at app start.
   Future<void> init();
 
+  /// Emits FCM data payloads when the user opens/taps a notification.
+  Stream<Map<String, dynamic>> get onNotificationOpened;
+
+  /// Returns the payload that opened the app from a terminated state once.
+  Future<Map<String, dynamic>?> takeInitialNotificationData();
+
   /// Asks the OS for notification permission (required on iOS and Android 13+).
   /// Returns whether the user authorized notifications.
   Future<bool> requestPermission();
+
+  /// Returns the current OS notification permission without showing a prompt.
+  Future<bool> hasPermission();
 
   /// The current FCM registration token for this device, or `null` if none is
   /// available yet (e.g. permission denied or no Play Services).
@@ -41,6 +53,9 @@ class FirebasePushMessagingService implements PushMessagingService {
 
   final FirebaseMessaging _messaging;
   final FlutterLocalNotificationsPlugin _localNotifications;
+  final StreamController<Map<String, dynamic>> _openedController =
+      StreamController<Map<String, dynamic>>.broadcast();
+  Map<String, dynamic>? _initialNotificationData;
 
   static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
     'anis_high_importance_channel',
@@ -62,6 +77,14 @@ class FirebasePushMessagingService implements PushMessagingService {
     );
 
     FirebaseMessaging.onMessage.listen(_showForeground);
+    FirebaseMessaging.onMessageOpenedApp.listen(_emitOpenedMessage);
+
+    final initialMessage = await _messaging.getInitialMessage();
+    if (initialMessage != null) {
+      _initialNotificationData = Map<String, dynamic>.from(
+        initialMessage.data,
+      );
+    }
   }
 
   @override
@@ -77,10 +100,29 @@ class FirebasePushMessagingService implements PushMessagingService {
   }
 
   @override
+  Future<bool> hasPermission() async {
+    final settings = await _messaging.getNotificationSettings();
+
+    return settings.authorizationStatus == AuthorizationStatus.authorized ||
+        settings.authorizationStatus == AuthorizationStatus.provisional;
+  }
+
+  @override
   Future<String?> getToken() => _messaging.getToken();
 
   @override
   Stream<String> get onTokenRefresh => _messaging.onTokenRefresh;
+
+  @override
+  Stream<Map<String, dynamic>> get onNotificationOpened =>
+      _openedController.stream;
+
+  @override
+  Future<Map<String, dynamic>?> takeInitialNotificationData() async {
+    final data = _initialNotificationData;
+    _initialNotificationData = null;
+    return data;
+  }
 
   @override
   Future<void> deleteToken() => _messaging.deleteToken();
@@ -95,7 +137,10 @@ class FirebasePushMessagingService implements PushMessagingService {
       iOS: iosSettings,
     );
 
-    await _localNotifications.initialize(settings);
+    await _localNotifications.initialize(
+      settings,
+      onDidReceiveNotificationResponse: _emitLocalNotificationResponse,
+    );
 
     await _localNotifications
         .resolvePlatformSpecificImplementation<
@@ -124,6 +169,28 @@ class FirebasePushMessagingService implements PushMessagingService {
         ),
         iOS: const DarwinNotificationDetails(),
       ),
+      payload: jsonEncode(message.data),
     );
+  }
+
+  void _emitOpenedMessage(RemoteMessage message) {
+    _openedController.add(Map<String, dynamic>.from(message.data));
+  }
+
+  void _emitLocalNotificationResponse(NotificationResponse response) {
+    final payload = response.payload;
+    if (payload == null || payload.isEmpty) return;
+
+    try {
+      final decoded = jsonDecode(payload);
+      if (decoded is Map<String, dynamic>) {
+        _openedController.add(decoded);
+      } else if (decoded is Map) {
+        _openedController.add(Map<String, dynamic>.from(decoded));
+      }
+    } catch (_) {
+      // Ignore malformed local notification payloads. The notification itself
+      // already displayed; analytics/deep-linking should fail quietly.
+    }
   }
 }

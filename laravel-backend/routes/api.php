@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\DeviceTokenController;
 use App\Http\Controllers\Api\V1\BuddySessionController;
 use App\Http\Controllers\Api\V1\HomeController;
+use App\Http\Controllers\Api\V1\NotificationEventController;
+use App\Http\Controllers\Api\V1\NotificationPreferenceController;
 use App\Http\Controllers\Api\V1\PlanController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\SubscriptionController;
@@ -41,6 +43,9 @@ Route::prefix('v1')->group(function (): void {
         // Push notification device tokens (FCM)
         Route::post('device-tokens', [DeviceTokenController::class, 'store']);
         Route::delete('device-tokens', [DeviceTokenController::class, 'destroy']);
+        Route::get('notification-preferences', [NotificationPreferenceController::class, 'show']);
+        Route::patch('notification-preferences', [NotificationPreferenceController::class, 'update']);
+        Route::post('notifications/events', [NotificationEventController::class, 'store']);
 
         // Home
         Route::get('home/profile', [HomeController::class, 'profile']);

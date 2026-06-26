@@ -237,29 +237,47 @@
 
     .education-status {
         display: inline-flex;
-        padding: 4px 10px;
+        align-items: center;
+        justify-content: center;
+        min-width: 58px;
+        padding: 5px 12px;
         border-radius: 999px;
         font-size: 12px;
         font-weight: 900;
+        border: 1px solid transparent;
+        letter-spacing: .1px;
     }
 
     .education-status.is-active {
-        color: #7ef7a4;
-        background: rgba(43, 217, 104, .12);
+        color: #065f24;
+        background: #bbf7d0;
+        border-color: #22c55e;
+        box-shadow: 0 6px 14px rgba(34, 197, 94, .18);
     }
 
     .education-status.is-paused {
-        color: #fecaca;
-        background: rgba(185, 28, 28, .16);
+        color: #7f1d1d;
+        background: #fee2e2;
+        border-color: #f87171;
     }
 
     .education-link-btn {
-        border: 0;
-        background: transparent;
-        color: #7ef7a4;
+        border: 1px solid rgba(34, 197, 94, .38);
+        background: rgba(34, 197, 94, .12);
+        color: #15803d;
+        border-radius: 999px;
+        padding: 6px 12px;
         font-family: inherit;
         font-weight: 900;
         cursor: pointer;
+        transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
+    }
+
+    .education-link-btn:hover {
+        background: #16a34a;
+        border-color: #16a34a;
+        color: #ffffff;
+        transform: translateY(-1px);
     }
 
     .education-empty {

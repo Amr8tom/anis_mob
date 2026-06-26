@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\WorkspaceSubscription\Actions;
 
+use App\Domain\Notifications\Actions\ScheduleAutomaticNotificationTaskAction;
 use App\Domain\WorkspaceSubscription\Contracts\WorkspaceSubscriptionLedgerRepositoryInterface;
 use App\Enums\WorkspaceLedgerReason;
 use App\Enums\WorkspaceSubscriptionStatus;
@@ -17,7 +18,10 @@ use App\Models\WorkspaceSubscription;
  */
 final readonly class DeductWorkspaceSubscriptionAction
 {
-    public function __construct(private WorkspaceSubscriptionLedgerRepositoryInterface $ledgers) {}
+    public function __construct(
+        private WorkspaceSubscriptionLedgerRepositoryInterface $ledgers,
+        private ScheduleAutomaticNotificationTaskAction $scheduledNotifications,
+    ) {}
 
     public function handle(WorkspaceSubscription $subscription, int $minutes, ?string $visitId): int
     {
@@ -43,6 +47,10 @@ final readonly class DeductWorkspaceSubscriptionAction
             WorkspaceLedgerReason::WORKSPACE_VISIT,
             $visitId,
         );
+
+        if ($before >= 16 * 60 && $after > 0 && $after < 16 * 60) {
+            $this->scheduledNotifications->workspaceSubscriptionLowHours($subscription);
+        }
 
         return $after;
     }

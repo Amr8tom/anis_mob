@@ -105,7 +105,8 @@
             gap: 12px;
             cursor: pointer;
             transition: var(--transition);
-            background-color: #ffffff;
+            background-color: var(--upwork-card-bg);
+            color: var(--upwork-slate);
         }
 
         .checkbox-card:hover {
@@ -113,7 +114,13 @@
             background-color: var(--upwork-green-soft);
         }
 
-        .checkbox-card input[type="checkbox"] {
+        .checkbox-card:has(input:checked) {
+            border-color: color-mix(in srgb, var(--upwork-green) 58%, var(--upwork-border));
+            background-color: var(--upwork-green-soft);
+        }
+
+        .checkbox-card input[type="checkbox"],
+        .checkbox-card input[type="radio"] {
             width: 18px;
             height: 18px;
             accent-color: var(--upwork-green);
@@ -123,6 +130,22 @@
         .checkbox-card span {
             font-weight: 600;
             font-size: 15px;
+            color: var(--upwork-slate);
+        }
+
+        .checkbox-card strong {
+            color: var(--upwork-slate);
+        }
+
+        .checkbox-card .option-description {
+            color: var(--upwork-muted);
+            font-weight: 500;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .checkbox-card i {
+            color: var(--upwork-green);
         }
 
         /* Images tab styling */
@@ -386,7 +409,7 @@
                                 <div class="form-error">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-self:start;">
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; align-self:start;">
                             <div style="background:var(--upwork-bg); border:1px solid var(--upwork-border); border-radius:var(--radius-sm); padding:16px;">
                                 <div style="font-size:12px; color:var(--upwork-muted); font-weight:700; margin-bottom:6px;">{{ __('portal.settings.details.base_rate') }}</div>
                                 <div style="font-size:22px; font-weight:900; color:var(--upwork-slate);">
@@ -718,14 +741,14 @@
                                 <input type="radio" name="checkout_mode" value="DIRECT" {{ $currentCheckoutMode === 'DIRECT' ? 'checked' : '' }} style="margin-top:3px;">
                                 <span>
                                     <strong>{{ __('portal.settings.occupancy.checkout_direct') }}</strong><br>
-                                    <span style="font-weight:500; color:var(--upwork-muted); font-size:13px;">{{ __('portal.settings.occupancy.checkout_direct_desc') }}</span>
+                                    <span class="option-description">{{ __('portal.settings.occupancy.checkout_direct_desc') }}</span>
                                 </span>
                             </label>
                             <label class="checkbox-card" style="align-items:flex-start;">
                                 <input type="radio" name="checkout_mode" value="APPROVAL" {{ $currentCheckoutMode === 'APPROVAL' ? 'checked' : '' }} style="margin-top:3px;">
                                 <span>
                                     <strong>{{ __('portal.settings.occupancy.checkout_approval') }}</strong><br>
-                                    <span style="font-weight:500; color:var(--upwork-muted); font-size:13px;">{{ __('portal.settings.occupancy.checkout_approval_desc') }}</span>
+                                    <span class="option-description">{{ __('portal.settings.occupancy.checkout_approval_desc') }}</span>
                                 </span>
                             </label>
                         </div>

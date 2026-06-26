@@ -39,6 +39,7 @@ class Workspace extends Model
             'approved_at' => 'datetime',
             'suspended_at' => 'datetime',
             'checkout_mode' => CheckoutMode::class,
+            'notification_locale' => 'string',
             'capacity' => 'integer',
             'manual_occupancy' => 'integer',
             'active_visit_count' => 'integer',

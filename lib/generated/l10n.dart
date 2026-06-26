@@ -1189,6 +1189,166 @@ class S {
     );
   }
 
+  /// `Notification Settings`
+  String get notificationPreferencesTitle {
+    return Intl.message(
+      'Notification Settings',
+      name: 'notificationPreferencesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose what you want to receive. Important reminders stay separate from offers so you do not need to disable everything.`
+  String get notificationPreferencesSubtitle {
+    return Intl.message(
+      'Choose what you want to receive. Important reminders stay separate from offers so you do not need to disable everything.',
+      name: 'notificationPreferencesSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notification settings saved`
+  String get notificationPreferencesSaved {
+    return Intl.message(
+      'Notification settings saved',
+      name: 'notificationPreferencesSaved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Turn on notifications`
+  String get notificationPermissionTitle {
+    return Intl.message(
+      'Turn on notifications',
+      name: 'notificationPermissionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get session reminders, subscription alerts, and important workspace updates at the right time.`
+  String get notificationPermissionBody {
+    return Intl.message(
+      'Get session reminders, subscription alerts, and important workspace updates at the right time.',
+      name: 'notificationPermissionBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable notifications`
+  String get notificationPermissionButton {
+    return Intl.message(
+      'Enable notifications',
+      name: 'notificationPermissionButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications are enabled`
+  String get notificationPermissionEnabledTitle {
+    return Intl.message(
+      'Notifications are enabled',
+      name: 'notificationPermissionEnabledTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can choose exactly what you receive below.`
+  String get notificationPermissionEnabledBody {
+    return Intl.message(
+      'You can choose exactly what you receive below.',
+      name: 'notificationPermissionEnabledBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session reminders`
+  String get notificationSessionReminders {
+    return Intl.message(
+      'Session reminders',
+      name: 'notificationSessionReminders',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reminders before study sessions and private sessions.`
+  String get notificationSessionRemindersDesc {
+    return Intl.message(
+      'Reminders before study sessions and private sessions.',
+      name: 'notificationSessionRemindersDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscription alerts`
+  String get notificationSubscriptionAlerts {
+    return Intl.message(
+      'Subscription alerts',
+      name: 'notificationSubscriptionAlerts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Warnings before subscriptions expire or remaining hours become low.`
+  String get notificationSubscriptionAlertsDesc {
+    return Intl.message(
+      'Warnings before subscriptions expire or remaining hours become low.',
+      name: 'notificationSubscriptionAlertsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Offers and marketing`
+  String get notificationOffersMarketing {
+    return Intl.message(
+      'Offers and marketing',
+      name: 'notificationOffersMarketing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Promotions, discounts, and non-essential campaigns.`
+  String get notificationOffersMarketingDesc {
+    return Intl.message(
+      'Promotions, discounts, and non-essential campaigns.',
+      name: 'notificationOffersMarketingDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Workspace updates`
+  String get notificationWorkspaceUpdates {
+    return Intl.message(
+      'Workspace updates',
+      name: 'notificationWorkspaceUpdates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Important updates from workspaces you visit.`
+  String get notificationWorkspaceUpdatesDesc {
+    return Intl.message(
+      'Important updates from workspaces you visit.',
+      name: 'notificationWorkspaceUpdatesDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `With a single subscription, walk into any nearby workspace and study in a focused, distraction-free environment — no extra costs, ever.`
   String get onboarding1Desc {
     return Intl.message(

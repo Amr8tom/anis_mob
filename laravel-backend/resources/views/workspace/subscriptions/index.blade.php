@@ -27,7 +27,7 @@
     @endif
 
     {{-- ── Metrics ───────────────────────────────────────────── --}}
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:22px;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:16px; margin-bottom:22px;">
         <div class="card workspace-dark-stat" style="text-align:center; padding:18px;">
             <div style="font-size:28px; font-weight:900; color:var(--upwork-green);">{{ number_format($metrics['active_count']) }}</div>
             <div style="font-size:13px; color:var(--upwork-muted);">{{ __('portal.subscriptions.metrics.active') }}</div>

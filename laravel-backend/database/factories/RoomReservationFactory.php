@@ -42,6 +42,7 @@ class RoomReservationFactory extends Factory
             'note' => null,
             'series_id' => null,
             'created_by_owner_id' => User::factory(),
+            'created_by_workspace_owner_id' => null,
         ];
     }
 }

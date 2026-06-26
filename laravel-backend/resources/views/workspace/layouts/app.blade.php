@@ -100,6 +100,13 @@
 
         .sb-nav { flex: 1; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 4px; }
         .sb-section-label { font-size: 11px; font-weight: 800; color: var(--upwork-muted); letter-spacing: 0.4px; padding: 6px 12px; text-transform: uppercase; opacity: 0.8; }
+        .sb-section-label--special {
+            margin-top: 12px;
+            padding-top: 14px;
+            border-top: 1px solid var(--upwork-border);
+            color: var(--upwork-green-dark);
+            opacity: 1;
+        }
 
         .side-link {
             display: flex; align-items: center; gap: 13px;
@@ -243,6 +250,74 @@
             min-width: 0;
         }
         textarea.form-control, textarea.form-input { max-width: 100%; }
+        input[type="date"],
+        input[type="time"],
+        input[type="datetime-local"],
+        input[type="month"] {
+            color-scheme: light;
+            color: var(--upwork-slate);
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.01em;
+            direction: ltr;
+            text-align: center;
+            unicode-bidi: plaintext;
+            caret-color: var(--upwork-green-dark);
+            -webkit-text-fill-color: var(--upwork-slate);
+        }
+        input[type="date"]::-webkit-datetime-edit,
+        input[type="time"]::-webkit-datetime-edit,
+        input[type="datetime-local"]::-webkit-datetime-edit,
+        input[type="month"]::-webkit-datetime-edit {
+            color: var(--upwork-slate);
+            -webkit-text-fill-color: var(--upwork-slate);
+        }
+        input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+        input[type="time"]::-webkit-datetime-edit-fields-wrapper,
+        input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper,
+        input[type="month"]::-webkit-datetime-edit-fields-wrapper {
+            color: var(--upwork-slate);
+            -webkit-text-fill-color: var(--upwork-slate);
+        }
+        input[type="date"]::-webkit-datetime-edit-year-field,
+        input[type="date"]::-webkit-datetime-edit-month-field,
+        input[type="date"]::-webkit-datetime-edit-day-field,
+        input[type="time"]::-webkit-datetime-edit-hour-field,
+        input[type="time"]::-webkit-datetime-edit-minute-field,
+        input[type="time"]::-webkit-datetime-edit-second-field,
+        input[type="time"]::-webkit-datetime-edit-millisecond-field,
+        input[type="time"]::-webkit-datetime-edit-ampm-field,
+        input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+        input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+        input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+        input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
+        input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
+        input[type="datetime-local"]::-webkit-datetime-edit-second-field,
+        input[type="datetime-local"]::-webkit-datetime-edit-millisecond-field,
+        input[type="datetime-local"]::-webkit-datetime-edit-ampm-field,
+        input[type="month"]::-webkit-datetime-edit-year-field,
+        input[type="month"]::-webkit-datetime-edit-month-field {
+            color: var(--upwork-slate);
+            -webkit-text-fill-color: var(--upwork-slate);
+            font-weight: 800;
+        }
+        input[type="date"]::-webkit-datetime-edit-text,
+        input[type="time"]::-webkit-datetime-edit-text,
+        input[type="datetime-local"]::-webkit-datetime-edit-text,
+        input[type="month"]::-webkit-datetime-edit-text {
+            color: var(--upwork-muted);
+            -webkit-text-fill-color: var(--upwork-muted);
+            padding: 0 3px;
+            font-weight: 700;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator,
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+        input[type="month"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            opacity: 0.9;
+            filter: invert(31%) sepia(72%) saturate(1835%) hue-rotate(98deg) brightness(84%) contrast(101%);
+        }
         .form-control:focus, .form-input:focus, .form-select:focus { outline: none; border-color: var(--upwork-green); box-shadow: 0 0 0 3px rgba(20,168,0,0.12); }
         .form-error { color: var(--upwork-error); font-size: 13px; font-weight: 600; margin-top: 6px; }
 
@@ -439,6 +514,7 @@
                 border-color: var(--vd-border, #2c3d33) !important;
             }
             .private-session-page .mobile-card-table tbody tr,
+            .private-session-page .mobile-card-table tfoot tr,
             .private-session-list-page .mobile-card-table tbody tr {
                 background: var(--ps-surface, #16211b) !important;
                 border-color: var(--ps-border, #2c3d33) !important;
@@ -640,6 +716,7 @@
             }
         }
     </style>
+    @include('workspace.partials.dark-theme')
     @include('workspace.partials.light-theme')
     @yield('styles')
 </head>
@@ -647,17 +724,20 @@
 
 @php
     $workspaceOwner = Auth::guard('workspace_owner')->user();
-    $navItems = [
+    $generalNavItems = [
+        ['route' => 'workspace.visits.index',         'match' => 'workspace.visits.*',        'icon' => 'fa-right-to-bracket', 'label' => __('portal.nav.visits')],
+        ['route' => 'workspace.clients.index',        'match' => 'workspace.clients.*',       'icon' => 'fa-users-viewfinder', 'label' => __('portal.nav.clients')],
         ['route' => 'workspace.sessions.index',      'match' => 'workspace.sessions.*',      'icon' => 'fa-chalkboard-user',  'label' => __('portal.nav.sessions')],
+    ];
+    $workspaceSpecialNavItems = [
         ['route' => 'workspace.education.index',     'match' => 'workspace.education.*',     'icon' => 'fa-graduation-cap',   'label' => __('portal.nav.education')],
         ['route' => 'workspace.private-sessions.index', 'match' => 'workspace.private-sessions.*', 'icon' => 'fa-qrcode', 'label' => __('portal.nav.private_sessions')],
-        ['route' => 'workspace.clients.index',        'match' => 'workspace.clients.*',       'icon' => 'fa-users-viewfinder', 'label' => __('portal.nav.clients')],
-        ['route' => 'workspace.visits.index',         'match' => 'workspace.visits.*',        'icon' => 'fa-right-to-bracket', 'label' => __('portal.nav.visits')],
         ['route' => 'workspace.subscriptions.index',  'match' => 'workspace.subscriptions.*', 'icon' => 'fa-ticket',           'label' => __('portal.nav.subscriptions')],
         ['route' => 'workspace.rooms.index',          'match' => 'workspace.rooms.*',         'icon' => 'fa-door-open',        'label' => __('portal.nav.rooms')],
         ['route' => 'workspace.notifications.index',  'match' => 'workspace.notifications.*', 'icon' => 'fa-bell',             'label' => __('portal.nav.notifications')],
         ['route' => 'workspace.settings.edit',        'match' => 'workspace.settings*',       'icon' => 'fa-gear',             'label' => __('portal.nav.settings')],
     ];
+    $navItems = array_merge($generalNavItems, $workspaceSpecialNavItems);
     $bottomPrimaryRoutes = [
         'workspace.visits.index',
         'workspace.clients.index',
@@ -686,7 +766,15 @@
 
     <nav class="sb-nav">
         <div class="sb-section-label">{{ __('portal.layout.menu') }}</div>
-        @foreach($navItems as $item)
+        @foreach($generalNavItems as $item)
+            <a href="{{ route($item['route']) }}" class="side-link {{ request()->routeIs($item['match']) ? 'active-nav' : '' }}">
+                <i class="fa-solid {{ $item['icon'] }}"></i>
+                <span>{{ $item['label'] }}</span>
+            </a>
+        @endforeach
+
+        <div class="sb-section-label sb-section-label--special">{{ __('portal.layout.special_for_space') }}</div>
+        @foreach($workspaceSpecialNavItems as $item)
             <a href="{{ route($item['route']) }}" class="side-link {{ request()->routeIs($item['match']) ? 'active-nav' : '' }}">
                 <i class="fa-solid {{ $item['icon'] }}"></i>
                 <span>{{ $item['label'] }}</span>

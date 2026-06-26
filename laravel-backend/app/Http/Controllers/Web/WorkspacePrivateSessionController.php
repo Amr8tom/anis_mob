@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Notifications\Actions\ScheduleAutomaticNotificationTaskAction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\WorkspaceCenterGradeLevel;
@@ -68,13 +69,14 @@ final class WorkspacePrivateSessionController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, ScheduleAutomaticNotificationTaskAction $scheduledNotifications): RedirectResponse
     {
         $workspace = Auth::user()->ownedWorkspace;
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:160'],
             'description' => ['nullable', 'string', 'max:2000'],
             'host_name' => ['nullable', 'string', 'max:160'],
+            'use_education_data' => ['nullable', 'boolean'],
             'center_teacher_id' => [
                 'nullable',
                 Rule::exists('workspace_center_teachers', 'id')->where('workspace_id', $workspace->id),
@@ -95,6 +97,14 @@ final class WorkspacePrivateSessionController extends Controller
             'instructor_payout_value' => ['nullable', 'numeric', 'min:0', 'max:1000000'],
             'notes' => ['nullable', 'string', 'max:2000'],
         ]);
+        $useEducationData = (bool) ($validated['use_education_data'] ?? false);
+
+        if (! $useEducationData) {
+            $validated['center_teacher_id'] = null;
+            $validated['center_subject_id'] = null;
+            $validated['center_grade_level_id'] = null;
+        }
+
         $payoutValue = $this->normalizePayoutValue(
             $validated['instructor_payout_type'],
             isset($validated['instructor_payout_value']) ? (float) $validated['instructor_payout_value'] : 0.0,
@@ -120,6 +130,8 @@ final class WorkspacePrivateSessionController extends Controller
             'qr_token' => Str::random(48),
             'notes' => $validated['notes'] ?? null,
         ]);
+
+        $scheduledNotifications->privateSessionReminder($session);
 
         return redirect()
             ->route('workspace.private-sessions.show', $session)

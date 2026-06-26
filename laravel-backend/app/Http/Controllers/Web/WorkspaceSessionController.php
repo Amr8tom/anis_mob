@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Notifications\Actions\ScheduleAutomaticNotificationTaskAction;
 use App\Http\Controllers\Controller;
 use App\Models\StudySession;
 use Carbon\Carbon;
@@ -25,7 +26,7 @@ class WorkspaceSessionController extends Controller
         return view('workspace.sessions.create', compact('workspace'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, ScheduleAutomaticNotificationTaskAction $scheduledNotifications)
     {
         $workspace = Auth::user()->ownedWorkspace;
 
@@ -39,7 +40,7 @@ class WorkspaceSessionController extends Controller
             'price_cents' => 'required|integer|min:0',
         ]);
 
-        $workspace->sessions()->create([
+        $session = $workspace->sessions()->create([
             'host_id' => Auth::id(),
             'title' => $validated['title'],
             'description' => $validated['description'],
@@ -50,6 +51,8 @@ class WorkspaceSessionController extends Controller
             'price_cents' => $validated['price_cents'],
             'time_label' => Carbon::parse($validated['start_time'])->format('g:i A'),
         ]);
+
+        $scheduledNotifications->publicSessionReminder($session);
 
         return redirect()->route('workspace.sessions.index')->with('success', 'تم إضافة الجلسة بنجاح.');
     }
@@ -65,7 +68,7 @@ class WorkspaceSessionController extends Controller
         return view('workspace.sessions.edit', compact('workspace', 'session'));
     }
 
-    public function update(Request $request, StudySession $session)
+    public function update(Request $request, StudySession $session, ScheduleAutomaticNotificationTaskAction $scheduledNotifications)
     {
         $workspace = Auth::user()->ownedWorkspace;
 
@@ -93,6 +96,8 @@ class WorkspaceSessionController extends Controller
             'price_cents' => $validated['price_cents'],
             'time_label' => Carbon::parse($validated['start_time'])->format('g:i A'),
         ]);
+
+        $scheduledNotifications->publicSessionReminder($session->refresh());
 
         return redirect()->route('workspace.sessions.index')->with('success', 'تم تحديث الجلسة بنجاح.');
     }
