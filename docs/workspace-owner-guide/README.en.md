@@ -184,13 +184,15 @@ This guide is intentionally simple. Each section explains what the page is for, 
 
 ![Settings](screenshots/settings.png)
 
-**Purpose:** Update workspace profile, appearance, and operating settings.
+**Purpose:** Control the workspace details shown in the app and the way the workspace operates internally.
 
 **Use this page to:**
 - Edit name, description, and contact details.
 - Update location.
 - Upload photos.
 - Select amenities.
+- Add drinks and prices.
+- Control live occupancy and status.
 - Set visitor checkout mode.
 - Change language or theme.
 
@@ -199,6 +201,51 @@ This guide is intentionally simple. Each section explains what the page is for, 
 2. Edit the data.
 3. Review your changes.
 4. Select **Save all changes**.
+
+### Settings Tabs Explained
+
+#### A. Basic Details
+
+Controls the workspace name, admin phone, description, capacity, day calculation hours, hour multiplier, effective hourly rate, and opening hours.
+
+Use it when the workspace contact details, pricing model, capacity, or working hours change. Keep the description short and clear so users quickly understand what the place offers.
+
+#### B. Location
+
+Controls the written address and the map location. Move the marker to the exact place, then save. This is important because users rely on it to find the workspace.
+
+#### C. Gallery
+
+Controls the cover image and extra gallery images. The cover image should show the best part of the workspace. Gallery images can show rooms, seats, study areas, and facilities.
+
+#### D. Amenities
+
+Controls visible features such as Wi-Fi, AC, coffee, printing, and quiet rooms. Only enable services that are truly available.
+
+#### E. Drinks Menu
+
+Controls drink name, icon, and price. Update it when adding new drinks or changing prices.
+
+#### F. Live Status
+
+Controls manual occupancy, workspace status, and visitor checkout mode.
+
+Checkout modes:
+- **Direct checkout:** visitors can check themselves out immediately.
+- **Requires approval:** visitors send a checkout request, and the owner approves it from **Daily Attendance**.
+
+Use approval mode when accurate paid-visit tracking matters. Use direct checkout when you want the fastest visitor experience.
+
+#### G. QR
+
+Shows the workspace QR code. Print it and place it near reception or the entrance so visitors can scan it from the mobile app.
+
+### Important Notes
+
+- After editing any tab, select **Save all changes**.
+- Large images are compressed, but clear lightweight images are still better.
+- Setting the workspace to **Closed** affects the user experience.
+- Location, photos, and description are the strongest factors for helping users decide to visit.
 
 ## Quick Tips
 

@@ -184,13 +184,15 @@ Bu rehber basit tutulmuştur. Her bölüm sayfanın amacını, ne zaman kullanı
 
 ![Ayarlar](screenshots/settings.png)
 
-**Amaç:** Çalışma alanı profilini, görünümünü ve çalışma ayarlarını güncellemek.
+**Amaç:** Uygulamada görünen çalışma alanı bilgilerini ve içerideki çalışma ayarlarını yönetmek.
 
 **Bu sayfayı şunlar için kullanın:**
 - İsim, açıklama ve iletişim bilgilerini düzenlemek.
 - Konumu güncellemek.
 - Fotoğraf yüklemek.
 - Hizmetleri seçmek.
+- İçecekleri ve fiyatları eklemek.
+- Anlık yoğunluk ve durumu kontrol etmek.
 - Ziyaretçi çıkış yöntemini belirlemek.
 - Dil veya tema değiştirmek.
 
@@ -199,6 +201,51 @@ Bu rehber basit tutulmuştur. Her bölüm sayfanın amacını, ne zaman kullanı
 2. Bilgileri düzenleyin.
 3. Değişiklikleri kontrol edin.
 4. **Tüm değişiklikleri kaydet** seçeneğini kullanın.
+
+### Ayar Sekmeleri
+
+#### A. Temel Bilgiler
+
+Çalışma alanı adı, yetkili telefon numarası, açıklama, kapasite, gün hesaplama saatleri, saat çarpanı, etkili saat ücreti ve çalışma saatlerini yönetir.
+
+İletişim bilgileri, fiyatlandırma, kapasite veya çalışma saatleri değiştiğinde bu bölümü güncelleyin. Açıklamayı kısa ve net tutun.
+
+#### B. Konum
+
+Yazılı adresi ve haritadaki konumu yönetir. İşaretçiyi doğru konuma taşıyın ve kaydedin. Bu bölüm kullanıcıların mekanı bulması için önemlidir.
+
+#### C. Galeri
+
+Kapak görselini ve ek galeri görsellerini yönetir. Kapak görseli mekanın en iyi kısmını göstermelidir. Galeri görselleri odaları, çalışma alanlarını ve imkanları gösterebilir.
+
+#### D. Hizmetler
+
+Wi-Fi, klima, kahve, yazdırma ve sessiz oda gibi görünen özellikleri yönetir. Sadece gerçekten mevcut olan hizmetleri seçin.
+
+#### E. İçecek Menüsü
+
+İçecek adı, ikon ve fiyatı yönetir. Yeni içecek eklendiğinde veya fiyat değiştiğinde güncelleyin.
+
+#### F. Anlık Durum
+
+Manuel yoğunluk, çalışma alanı durumu ve ziyaretçi çıkış yöntemini yönetir.
+
+Çıkış yöntemleri:
+- **Doğrudan çıkış:** ziyaretçi uygulamadan hemen çıkış yapabilir.
+- **Onay gerektirir:** ziyaretçi çıkış talebi gönderir, sahip bunu **Günlük Yoklama** sayfasından onaylar.
+
+Ücretli ziyaretlerde doğru takip önemliyse onay modunu kullanın. En hızlı deneyim için doğrudan çıkışı kullanın.
+
+#### G. QR
+
+Çalışma alanı QR kodunu gösterir. Ziyaretçilerin mobil uygulamadan okutabilmesi için resepsiyona veya girişe yerleştirin.
+
+### Önemli Notlar
+
+- Herhangi bir sekmeyi düzenledikten sonra **Tüm değişiklikleri kaydet** seçeneğini kullanın.
+- Büyük görseller sıkıştırılır, ancak net ve hafif görseller daha iyidir.
+- Çalışma alanını **Kapalı** yapmak kullanıcı deneyimini etkiler.
+- Konum, fotoğraflar ve açıklama kullanıcıların ziyaret kararı için en önemli alanlardır.
 
 ## Hızlı İpuçları
 
