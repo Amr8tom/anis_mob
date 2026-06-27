@@ -9,6 +9,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem('workspaceSidebarCollapsed') === '1') {
+                    document.documentElement.classList.add('sidebar-collapsed-preload');
+                }
+            } catch (e) {}
+        })();
+    </script>
 
     <style>
         :root {
@@ -82,6 +91,51 @@
             flex-direction: column;
             z-index: 100;
             box-shadow: -1px 0 3px rgba(16,40,16,0.03);
+            transition: transform 0.24s ease;
+        }
+
+        .sidebar-toggle {
+            align-items: center;
+            background: var(--upwork-card-bg);
+            border: 1px solid var(--upwork-border);
+            border-radius: 999px;
+            box-shadow: var(--shadow-md);
+            color: var(--upwork-slate);
+            cursor: pointer;
+            display: inline-flex;
+            gap: 8px;
+            height: 42px;
+            justify-content: center;
+            min-width: 42px;
+            padding: 0 14px;
+            position: fixed;
+            right: calc(var(--sidebar-w) + 14px);
+            top: 18px;
+            transition: right 0.24s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+            z-index: 120;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 900;
+        }
+        .sidebar-toggle:hover {
+            background: var(--upwork-green-soft);
+            border-color: rgba(20,168,0,0.25);
+            color: var(--upwork-green-dark);
+        }
+        .sidebar-toggle i {
+            font-size: 15px;
+        }
+        html.sidebar-collapsed-preload .app-sidebar,
+        body.sidebar-collapsed .app-sidebar {
+            transform: translateX(100%);
+        }
+        html.sidebar-collapsed-preload .app-main,
+        body.sidebar-collapsed .app-main {
+            margin-right: 0;
+        }
+        html.sidebar-collapsed-preload .sidebar-toggle,
+        body.sidebar-collapsed .sidebar-toggle {
+            right: 18px;
         }
 
         .sb-brand {
@@ -187,7 +241,13 @@
             min-height: 100vh;
             padding: 36px 40px;
         }
-        .content-wrap { width: 100%; max-width: 1480px; min-width: 0; }
+        .content-wrap {
+            width: 100%;
+            max-width: 1480px;
+            min-width: 0;
+            container-name: owner-content;
+            container-type: inline-size;
+        }
 
         h1, h2, h3, h4 { font-weight: 800; color: var(--upwork-slate); letter-spacing: -0.2px; }
         .page-title    { font-size: 28px; margin-bottom: 8px; }
@@ -365,6 +425,7 @@
         ═══════════════════════════════════════════ */
         @media (max-width: 960px) {
             .app-sidebar { display: none; }
+            .sidebar-toggle { display: none; }
             .app-main { margin-right: 0; padding: 18px 14px calc(var(--bottom-nav-h) + env(safe-area-inset-bottom) + 30px); }
             .content-wrap { max-width: none; }
 
@@ -673,6 +734,144 @@
             max-width: 100%;
         }
 
+        @container owner-content (max-width: 1120px) {
+            .content-wrap [style*="position: sticky"],
+            .content-wrap [style*="position:sticky"],
+            .manage-aside {
+                position: static !important;
+                top: auto !important;
+            }
+
+            .notif-grid,
+            .manage-grid,
+            .private-session-filter-grid,
+            .education-grid,
+            .education-inline-form,
+            .analytics-hero,
+            .analytics-two-col,
+            .analytics-filter-row,
+            .private-session-form-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .manage-aside {
+                order: -1;
+            }
+
+            [style*="grid-template-columns: repeat(4, 1fr)"],
+            [style*="grid-template-columns:repeat(4,1fr)"],
+            [style*="grid-template-columns: repeat(3, 1fr)"],
+            [style*="grid-template-columns:repeat(3,1fr)"],
+            [style*="grid-template-columns: repeat(2, 1fr)"],
+            [style*="grid-template-columns:repeat(2,1fr)"] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @container owner-content (max-width: 980px) {
+            .table-responsive {
+                overflow-x: visible;
+            }
+
+            .table-responsive table.mobile-card-table {
+                min-width: 0 !important;
+                width: 100% !important;
+                border-collapse: separate;
+                border-spacing: 0 12px;
+            }
+
+            .mobile-card-table thead {
+                display: none;
+            }
+
+            .mobile-card-table tbody,
+            .mobile-card-table tfoot,
+            .mobile-card-table tr,
+            .mobile-card-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .mobile-card-table tbody tr,
+            .mobile-card-table tfoot tr {
+                border: 1px solid var(--upwork-border) !important;
+                border-radius: var(--radius-md);
+                padding: 10px 12px;
+                margin-bottom: 12px;
+                background: var(--upwork-card-bg);
+                box-shadow: var(--shadow-xs);
+            }
+
+            .workspace-dark-page .mobile-card-table tbody tr,
+            .workspace-dark-page .mobile-card-table tfoot tr {
+                background: var(--wd-surface, #16211b) !important;
+                border-color: var(--wd-border, #2c3d33) !important;
+            }
+            .visits-dark .mobile-card-table tbody tr,
+            .visits-dark .mobile-card-table tfoot tr {
+                background: var(--vd-surface, #16211b) !important;
+                border-color: var(--vd-border, #2c3d33) !important;
+            }
+            .private-session-page .mobile-card-table tbody tr,
+            .private-session-page .mobile-card-table tfoot tr,
+            .private-session-list-page .mobile-card-table tbody tr {
+                background: var(--ps-surface, #16211b) !important;
+                border-color: var(--ps-border, #2c3d33) !important;
+            }
+            .education-page .mobile-card-table tbody tr {
+                background: var(--edu-surface, #16211b) !important;
+                border-color: var(--edu-border, #2c3d33) !important;
+            }
+
+            .mobile-card-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 14px;
+                padding: 8px 0 !important;
+                border-bottom: 1px solid rgba(126, 150, 130, .18) !important;
+                text-align: start !important;
+                white-space: normal !important;
+            }
+
+            .mobile-card-table td:last-child {
+                border-bottom: 0 !important;
+            }
+
+            .mobile-card-table td::before {
+                content: attr(data-label);
+                min-width: 94px;
+                max-width: 42%;
+                color: var(--upwork-muted);
+                font-size: 12px;
+                font-weight: 900;
+                line-height: 1.45;
+            }
+
+            .mobile-card-table td[colspan] {
+                display: block;
+                text-align: center !important;
+            }
+
+            .mobile-card-table td[colspan]::before,
+            .mobile-card-table td[data-label=""]::before {
+                display: none;
+            }
+
+            .mobile-card-table td form,
+            .mobile-card-table td .btn-primary,
+            .mobile-card-table td button,
+            .mobile-card-table td a {
+                max-width: 100%;
+            }
+
+            .mobile-card-table td .btn-primary,
+            .mobile-card-table td button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
         @media (max-width: 1100px) {
             .content-wrap [style*="position: sticky"],
             .content-wrap [style*="position:sticky"],
@@ -726,10 +925,11 @@
     $workspaceOwner = Auth::guard('workspace_owner')->user();
     $generalNavItems = [
         ['route' => 'workspace.visits.index',         'match' => 'workspace.visits.*',        'icon' => 'fa-right-to-bracket', 'label' => __('portal.nav.visits')],
-        ['route' => 'workspace.clients.index',        'match' => 'workspace.clients.*',       'icon' => 'fa-users-viewfinder', 'label' => __('portal.nav.clients')],
         ['route' => 'workspace.sessions.index',      'match' => 'workspace.sessions.*',      'icon' => 'fa-chalkboard-user',  'label' => __('portal.nav.sessions')],
     ];
     $workspaceSpecialNavItems = [
+        ['route' => 'workspace.clients.index',        'match' => 'workspace.clients.*',       'icon' => 'fa-users-viewfinder', 'label' => __('portal.nav.clients')],
+        ['route' => 'workspace.analytics.index',      'match' => 'workspace.analytics.*',      'icon' => 'fa-chart-line',       'label' => __('portal.nav.analytics')],
         ['route' => 'workspace.education.index',     'match' => 'workspace.education.*',     'icon' => 'fa-graduation-cap',   'label' => __('portal.nav.education')],
         ['route' => 'workspace.private-sessions.index', 'match' => 'workspace.private-sessions.*', 'icon' => 'fa-qrcode', 'label' => __('portal.nav.private_sessions')],
         ['route' => 'workspace.subscriptions.index',  'match' => 'workspace.subscriptions.*', 'icon' => 'fa-ticket',           'label' => __('portal.nav.subscriptions')],
@@ -741,7 +941,7 @@
     $bottomPrimaryRoutes = [
         'workspace.visits.index',
         'workspace.clients.index',
-        'workspace.private-sessions.index',
+        'workspace.analytics.index',
         'workspace.subscriptions.index',
     ];
     $bottomPrimary = collect($bottomPrimaryRoutes)
@@ -758,6 +958,22 @@
 
 {{-- ═══ DESKTOP SIDEBAR ═══ --}}
 @if($hasWorkspace)
+<button
+    type="button"
+    class="sidebar-toggle"
+    id="sidebarToggle"
+    aria-pressed="false"
+    aria-label="{{ __('portal.layout.hide_sidebar') }}"
+    title="{{ __('portal.layout.hide_sidebar') }}"
+    data-hide-label="{{ __('portal.layout.hide_sidebar') }}"
+    data-show-label="{{ __('portal.layout.show_sidebar') }}"
+    data-hide-short="{{ __('portal.layout.hide_sidebar_short') }}"
+    data-show-short="{{ __('portal.layout.show_sidebar_short') }}"
+>
+    <i class="fa-solid fa-angles-right" aria-hidden="true"></i>
+    <span class="sidebar-toggle-text">{{ __('portal.layout.hide_sidebar_short') }}</span>
+</button>
+
 <aside class="app-sidebar">
     <a href="{{ route('landing') }}" class="sb-brand">
         <span class="logo-mark">{{ __('portal.layout.brand_mark') }}</span>
@@ -936,6 +1152,49 @@
         document.body.style.overflow = open ? 'hidden' : '';
     }
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') toggleMoreSheet(false); });
+
+    (function () {
+        const toggle = document.getElementById('sidebarToggle');
+        if (!toggle) return;
+
+        const icon = toggle.querySelector('i');
+        const text = toggle.querySelector('.sidebar-toggle-text');
+        const storageKey = 'workspaceSidebarCollapsed';
+
+        function applySidebarState(collapsed) {
+            document.body.classList.toggle('sidebar-collapsed', collapsed);
+            document.documentElement.classList.toggle('sidebar-collapsed-preload', collapsed);
+            toggle.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
+
+            const label = collapsed ? toggle.dataset.showLabel : toggle.dataset.hideLabel;
+            toggle.setAttribute('aria-label', label);
+            toggle.setAttribute('title', label);
+
+            if (text) {
+                text.textContent = collapsed ? toggle.dataset.showShort : toggle.dataset.hideShort;
+            }
+
+            if (icon) {
+                icon.classList.toggle('fa-angles-left', collapsed);
+                icon.classList.toggle('fa-angles-right', !collapsed);
+            }
+        }
+
+        let collapsed = false;
+        try {
+            collapsed = localStorage.getItem(storageKey) === '1';
+        } catch (e) {}
+
+        applySidebarState(collapsed);
+
+        toggle.addEventListener('click', function () {
+            collapsed = !document.body.classList.contains('sidebar-collapsed');
+            applySidebarState(collapsed);
+            try {
+                localStorage.setItem(storageKey, collapsed ? '1' : '0');
+            } catch (e) {}
+        });
+    })();
 </script>
 @endif
 

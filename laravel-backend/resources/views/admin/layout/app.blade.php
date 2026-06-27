@@ -25,6 +25,8 @@
             --upwork-error-bg: #fff5f5;
             --upwork-success: #14a800;
             --upwork-success-bg: #f4fdf4;
+            --admin-surface: #ffffff;
+            --admin-surface-soft: #f5faf5;
             
             --font-family: 'Tajawal', sans-serif;
             --radius-sm: 8px;
@@ -57,17 +59,18 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            height: 70px;
+            min-height: 70px;
         }
 
         .nav-container {
-            max-width: 1200px;
+            max-width: 1440px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 12px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 100%;
+            gap: 18px;
+            min-height: 70px;
         }
 
         .brand-logo {
@@ -78,6 +81,7 @@
             font-size: 22px;
             color: var(--upwork-slate);
             text-decoration: none;
+            white-space: nowrap;
         }
 
         .brand-logo .logo-mark {
@@ -95,7 +99,35 @@
         .nav-user {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 18px;
+            min-width: 0;
+        }
+
+        .admin-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .admin-nav-link {
+            color: var(--upwork-muted);
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 12px;
+            border-radius: 999px;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .admin-nav-link:hover {
+            color: var(--upwork-green-dark);
+            background: var(--upwork-green-soft);
         }
 
         .user-dropdown {
@@ -139,10 +171,10 @@
         /* Main Content Grid */
         main.app-main {
             flex: 1;
-            max-width: 1200px;
+            max-width: 1440px;
             width: 100%;
             margin: 0 auto;
-            padding: 40px 24px;
+            padding: clamp(18px, 3vw, 36px) 24px 48px;
         }
 
         /* Base Typography & Elements */
@@ -152,8 +184,9 @@
         }
 
         .page-title {
-            font-size: 28px;
+            font-size: clamp(24px, 3vw, 34px);
             margin-bottom: 8px;
+            font-weight: 900;
         }
 
         .page-subtitle {
@@ -167,8 +200,8 @@
             background-color: var(--upwork-card-bg);
             border: 1px solid var(--upwork-border);
             border-radius: var(--radius-md);
-            padding: 30px;
-            box-shadow: var(--shadow);
+            padding: clamp(18px, 2.3vw, 28px);
+            box-shadow: 0 16px 42px rgba(0, 30, 0, 0.06);
             margin-bottom: 24px;
         }
 
@@ -208,22 +241,26 @@
 
         .active-nav {
             color: var(--upwork-green) !important;
-            border-bottom: 2px solid var(--upwork-green);
-            padding-bottom: 4px;
+            background: var(--upwork-green-soft);
+            box-shadow: inset 0 -2px 0 var(--upwork-green);
         }
         
         .btn-primary {
             background-color: var(--upwork-green);
             color: #fff;
             border: none;
-            padding: 10px 20px;
+            padding: 11px 20px;
             border-radius: 99px;
-            font-weight: 600;
+            font-weight: 800;
             font-family: inherit;
             cursor: pointer;
             transition: var(--transition);
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
         }
         
         .btn-primary:hover {
@@ -232,14 +269,28 @@
 
         .form-input, .form-select {
             width: 100%;
+            min-height: 46px;
             padding: 12px 16px;
-            border: 1px solid var(--upwork-input-border);
-            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--upwork-input-border);
+            border-radius: 14px;
             font-family: inherit;
             font-size: 15px;
             margin-bottom: 16px;
             color: var(--upwork-slate);
             background: #ffffff;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--upwork-green);
+            box-shadow: 0 0 0 4px rgba(20, 168, 0, 0.11);
+        }
+
+        label {
+            color: var(--upwork-slate);
+            font-weight: 800;
+            margin-bottom: 8px;
         }
 
         input[type="date"].form-input,
@@ -330,6 +381,8 @@
 
         .table-responsive {
             overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
         }
         
         table {
@@ -338,15 +391,22 @@
         }
         
         th, td {
-            padding: 16px;
+            padding: 15px 16px;
             text-align: right;
             border-bottom: 1px solid var(--upwork-border);
+            vertical-align: middle;
         }
         
         th {
-            font-weight: 600;
+            font-weight: 900;
             color: var(--upwork-muted);
             font-size: 14px;
+            background: var(--admin-surface-soft);
+            white-space: nowrap;
+        }
+
+        td {
+            font-size: 15px;
         }
         
         /* Grid utilities */
@@ -361,9 +421,125 @@
             gap: 24px;
         }
 
+        .admin-stat-card {
+            padding: 22px;
+            min-height: 150px;
+        }
+
+        .admin-stat-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .admin-stat-label {
+            color: var(--upwork-muted);
+            font-size: 14px;
+            font-weight: 900;
+            line-height: 1.5;
+        }
+
+        .admin-stat-value {
+            font-size: clamp(28px, 3.5vw, 38px);
+            line-height: 1.05;
+            font-weight: 900;
+            color: var(--upwork-slate);
+            direction: ltr;
+            text-align: right;
+        }
+
+        .admin-stat-icon {
+            color: var(--upwork-green-dark);
+            background-color: var(--upwork-green-soft);
+            width: 42px;
+            height: 42px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex: 0 0 auto;
+        }
+
+        .empty-state {
+            padding: 34px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--upwork-muted);
+            background: var(--admin-surface-soft);
+            border: 1px dashed var(--upwork-input-border);
+            border-radius: var(--radius-lg);
+        }
+
+        .empty-state i {
+            width: 52px;
+            height: 52px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            color: var(--upwork-green-dark);
+            background: #e6f8e6;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
         @media (max-width: 768px) {
             .grid-2, .grid-4 {
                 grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .nav-user {
+                width: 100%;
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .admin-nav-links {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            .admin-nav-link {
+                justify-content: center;
+                font-size: 14px;
+            }
+
+            .user-dropdown {
+                justify-content: space-between;
+            }
+
+            main.app-main {
+                padding-inline: 14px;
+            }
+
+            .card {
+                border-radius: 18px;
+            }
+
+            th, td {
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .admin-nav-links {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-logo {
+                font-size: 20px;
             }
         }
     </style>
@@ -380,20 +556,20 @@
 
             @auth('admin')
                 <div class="nav-user">
-                    <div style="display: flex; gap: 15px; margin-left: 20px;">
-                        <a href="{{ route('admin.dashboard') }}" style="color: var(--upwork-slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px;" class="{{ request()->routeIs('admin.dashboard') ? 'active-nav' : '' }}">
+                    <nav class="admin-nav-links" aria-label="Admin navigation">
+                        <a href="{{ route('admin.dashboard') }}" class="admin-nav-link {{ request()->routeIs('admin.dashboard') ? 'active-nav' : '' }}">
                             <i class="fa-solid fa-chart-pie"></i> لوحة القيادة
                         </a>
-                        <a href="{{ route('admin.workspaces.index') }}" style="color: var(--upwork-slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px;" class="{{ request()->routeIs('admin.workspaces.*') ? 'active-nav' : '' }}">
+                        <a href="{{ route('admin.workspaces.index') }}" class="admin-nav-link {{ request()->routeIs('admin.workspaces.*') ? 'active-nav' : '' }}">
                             <i class="fa-solid fa-building"></i> مساحات العمل
                         </a>
-                        <a href="{{ route('admin.plancodes.index') }}" style="color: var(--upwork-slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px;" class="{{ request()->routeIs('admin.plancodes.*') ? 'active-nav' : '' }}">
+                        <a href="{{ route('admin.plancodes.index') }}" class="admin-nav-link {{ request()->routeIs('admin.plancodes.*') ? 'active-nav' : '' }}">
                             <i class="fa-solid fa-ticket"></i> أكواد الباقات
                         </a>
-                        <a href="{{ route('admin.notifications.index') }}" style="color: var(--upwork-slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px;" class="{{ request()->routeIs('admin.notifications.*') ? 'active-nav' : '' }}">
+                        <a href="{{ route('admin.notifications.index') }}" class="admin-nav-link {{ request()->routeIs('admin.notifications.*') ? 'active-nav' : '' }}">
                             <i class="fa-solid fa-bell"></i> الإشعارات
                         </a>
-                    </div>
+                    </nav>
 
                     <div class="user-dropdown">
                         <div class="user-avatar">

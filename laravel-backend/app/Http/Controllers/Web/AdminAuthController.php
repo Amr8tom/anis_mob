@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Support\TotpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use RuntimeException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
@@ -35,7 +36,7 @@ final class AdminAuthController extends Controller
             return back()->withErrors(['phone_number' => 'Account temporarily locked. Try again later.']);
         }
 
-        if ($user === null || $user->role !== UserRole::ADMIN || ! Hash::check($credentials['password'], $user->password)) {
+        if ($user === null || $user->role !== UserRole::ADMIN || ! $this->passwordMatches($user, $credentials['password'])) {
             if ($user?->role === UserRole::ADMIN) {
                 $attempts = $user->admin_failed_login_attempts + 1;
                 $user->forceFill([
@@ -92,5 +93,32 @@ final class AdminAuthController extends Controller
         $request->session()->regenerate();
 
         return redirect()->intended('/admin/dashboard');
+    }
+
+    private function passwordMatches(User $user, string $plainPassword): bool
+    {
+        $storedPassword = (string) $user->password;
+
+        if (Hash::isHashed($storedPassword)) {
+            try {
+                $matches = Hash::check($plainPassword, $storedPassword);
+            } catch (RuntimeException) {
+                return false;
+            }
+
+            if ($matches && Hash::needsRehash($storedPassword)) {
+                $user->forceFill(['password' => Hash::make($plainPassword)])->save();
+            }
+
+            return $matches;
+        }
+
+        if (! hash_equals($storedPassword, $plainPassword)) {
+            return false;
+        }
+
+        $user->forceFill(['password' => Hash::make($plainPassword)])->save();
+
+        return true;
     }
 }

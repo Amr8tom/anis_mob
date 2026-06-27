@@ -16,6 +16,7 @@ use App\Models\WorkspaceOwner;
 use App\Models\WorkspaceOwnershipInvitation;
 use App\Models\WorkspaceVisit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use LogicException;
@@ -84,6 +85,26 @@ final class ProductionHardeningTest extends TestCase
         }
 
         $this->assertTrue($admin->fresh()->admin_locked_until->isFuture());
+    }
+
+    public function test_admin_login_upgrades_legacy_plain_text_password_without_crashing(): void
+    {
+        $admin = User::factory()->create([
+            'role' => UserRole::ADMIN,
+            'password' => Hash::make('temporary-password'),
+        ]);
+
+        DB::table('users')
+            ->where('id', $admin->id)
+            ->update(['password' => 'legacy-password']);
+
+        $this->post(route('admin.login'), [
+            'phone_number' => $admin->phone_number,
+            'password' => 'legacy-password',
+        ])->assertRedirect('/admin/dashboard');
+
+        $this->assertAuthenticatedAs($admin, 'admin');
+        $this->assertTrue(Hash::check('legacy-password', $admin->fresh()->password));
     }
 
     public function test_historical_records_are_append_only_and_visits_cannot_be_deleted(): void

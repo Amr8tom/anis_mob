@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../common/custom_ui.dart';
+import '../../../../../common/widgets/animations/animated_entrance.dart';
 import '../../../../../common/widgets/sizeboxs/sizer.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/colors.dart';
@@ -100,40 +101,46 @@ class _LoginFormSectionState extends State<LoginFormSection> {
             children: [
               const Sizer(height: 28),
 
-              LoginDarkField(
-                controller: _phoneController,
-                label: S.current.phoneNumber,
-                hint: S.current.phoneHint,
-                prefixIcon: Icons.phone_outlined,
-                keyboardType: TextInputType.text,
-                textDirection: TextDirection.ltr,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
-                ],
-                validator: Validators.phone,
+              AnimatedEntrance(
+                delay: const Duration(milliseconds: 430),
+                child: LoginDarkField(
+                  controller: _phoneController,
+                  label: S.current.phoneNumber,
+                  hint: S.current.phoneHint,
+                  prefixIcon: Icons.phone_outlined,
+                  keyboardType: TextInputType.text,
+                  textDirection: TextDirection.ltr,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
+                  ],
+                  validator: Validators.phone,
+                ),
               ),
 
               const Sizer(height: 16),
 
               // ── Password ──────────────────────────────────────
-              BlocBuilder<LoginCubit, LoginState>(
-                buildWhen: (prev, curr) =>
-                    prev.isPasswordHidden != curr.isPasswordHidden,
-                builder: (_, state) => LoginDarkField(
-                  controller: _passwordController,
-                  label: S.current.password,
-                  hint: S.current.passwordHint,
-                  prefixIcon: Icons.lock_outline_rounded,
-                  obscure: state.isPasswordHidden,
-                  validator: Validators.password,
-                  suffixIcon: GestureDetector(
-                    onTap: cubit.togglePasswordVisibility,
-                    child: Icon(
-                      state.isPasswordHidden
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      color: ColorRes.anisTextSecondary,
-                      size: 20,
+              AnimatedEntrance(
+                delay: const Duration(milliseconds: 520),
+                child: BlocBuilder<LoginCubit, LoginState>(
+                  buildWhen: (prev, curr) =>
+                      prev.isPasswordHidden != curr.isPasswordHidden,
+                  builder: (_, state) => LoginDarkField(
+                    controller: _passwordController,
+                    label: S.current.password,
+                    hint: S.current.passwordHint,
+                    prefixIcon: Icons.lock_outline_rounded,
+                    obscure: state.isPasswordHidden,
+                    validator: Validators.password,
+                    suffixIcon: GestureDetector(
+                      onTap: cubit.togglePasswordVisibility,
+                      child: Icon(
+                        state.isPasswordHidden
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        color: ColorRes.anisTextSecondary,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),

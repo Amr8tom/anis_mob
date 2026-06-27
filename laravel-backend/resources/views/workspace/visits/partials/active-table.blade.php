@@ -13,7 +13,7 @@
     @if($activeVisits->isEmpty())
         <p style="text-align:center; color:var(--vd-text-muted); padding:24px;">{{ __('portal.visits.active.empty') }}</p>
     @else
-        <div class="table-responsive">
+        <div class="table-responsive visits-active-table-wrap">
         <table>
             <thead>
                 <tr>
@@ -28,7 +28,7 @@
                 @foreach($activeVisits as $visit)
                     @php $isPending = $visit->checkout_requested_at !== null; @endphp
                     <tr @style(['border-right:4px solid #f59e0b; background:rgba(245,158,11,0.08)' => $isPending])>
-                        <td style="font-weight:700;">
+                        <td data-label="{{ __('portal.visits.active.th_visitor') }}" style="font-weight:700;">
                             {{ $visit->visitor_name }}
                             @if($isPending)
                                 <span class="checkout-req-badge" style="display:inline-flex; align-items:center; gap:5px; background:#f59e0b; color:#451a03; padding:3px 9px; border-radius:99px; font-size:11px; font-weight:800; margin-inline-start:6px;">
@@ -37,8 +37,8 @@
                                 </span>
                             @endif
                         </td>
-                        <td style="direction:ltr; text-align:right;" class="time">{{ $visit->user->phone_number ?? $visit->walkIn->phone_number ?? '—' }}</td>
-                        <td>
+                        <td data-label="{{ __('portal.visits.active.th_phone') }}" style="direction:ltr; text-align:right;" class="time">{{ $visit->user->phone_number ?? $visit->walkIn->phone_number ?? '—' }}</td>
+                        <td data-label="{{ __('portal.visits.active.th_plan') }}">
                             @php $bs = $visit->billing_source?->value ?? 'FREE'; @endphp
                             @if($bs === 'FREE')
                                 <span class="badge badge-free">{{ __('portal.billing.FREE') }}</span>
@@ -48,11 +48,11 @@
                                 <span class="badge badge-space">{{ __('portal.billing.WORKSPACE_SUBSCRIPTION') }}</span>
                             @endif
                         </td>
-                        <td>
+                        <td data-label="{{ __('portal.visits.active.th_check_in_time') }}">
                             <span style="color:var(--vd-accent); font-weight:700;">{{ $visit->check_in_at->diffForHumans() }}</span><br>
                             <small class="time">{{ $visit->check_in_at->format('h:i A') }}</small>
                         </td>
-                        <td>
+                        <td data-label="{{ __('portal.visits.active.th_action') }}">
                             <form action="{{ route('workspace.visits.checkout', $visit) }}" method="POST"
                                   onsubmit="return confirm('{{ $isPending ? __('portal.visits.active.approve_confirm') : __('portal.visits.active.checkout_confirm') }}');">
                                 @csrf

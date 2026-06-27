@@ -1,0 +1,9 @@
+file 'daily-attendance.png'
+duration 22.216
+file 'rooms.png'
+duration 22.792
+file 'settings.png'
+duration 28.792
+file 'settings.png'
+duration 12.352
+file 'settings.png'

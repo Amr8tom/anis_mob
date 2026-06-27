@@ -1,0 +1,7 @@
+file 'daily-attendance.png'
+duration 15
+file 'rooms.png'
+duration 15
+file 'settings.png'
+duration 15
+file 'settings.png'

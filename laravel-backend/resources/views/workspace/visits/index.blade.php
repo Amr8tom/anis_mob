@@ -120,10 +120,10 @@
     @endif
 
     {{-- ── Active visitors + check-in form (manage-grid) ────────── --}}
-    <div class="vd-card" style="padding:22px;">
-        <div class="manage-grid">
+    <div class="vd-card visits-attendance-card" style="padding:22px;">
+        <div class="manage-grid visits-attendance-grid">
             {{-- Active visitors (primary) --}}
-            <div class="manage-main" id="active-visitors-container"
+            <div class="manage-main visits-active-panel" id="active-visitors-container"
                  data-poll-url="{{ route('workspace.visits.index') }}?partial=active">
                 @include('workspace.visits.partials.active-table')
             </div>
@@ -165,7 +165,7 @@
         </div>
 
         <div style="padding: 20px 26px;">
-            <div class="manage-grid">
+            <div class="manage-grid visits-history-grid">
 
                 {{-- Table (primary) --}}
                 <div class="manage-main">
@@ -175,7 +175,7 @@
                             {{ __('portal.visits.recent.empty') }}
                         </div>
                     @else
-                        <div class="table-responsive">
+                        <div class="table-responsive visits-history-table-wrap">
                         <table>
                             <thead>
                                 <tr>
@@ -196,19 +196,19 @@
                                         $rLabel = $rh > 0 ? "{$rh}".__('portal.visits.unit_hour')." {$rm}".__('portal.visits.unit_minute') : "{$rm}".__('portal.visits.unit_minute');
                                     @endphp
                                     <tr class="vd-row-alt">
-                                        <td style="font-weight:700;">
+                                        <td data-label="{{ __('portal.visits.recent.th_visitor') }}" style="font-weight:700;">
                                             {{ $res->client_name }}
                                             <br><small class="sub">{{ $res->room->name ?? __('portal.visits.recent.room_fallback') }}</small>
                                             @if($res->note)
                                                 <br><small class="sub">{{ __('portal.visits.recent.note_prefix') }} {{ $res->note }}</small>
                                             @endif
                                         </td>
-                                        <td><span class="badge badge-room">{{ __('portal.visits.recent.badge_room') }}</span></td>
-                                        <td><small class="time">{{ $res->starts_at->format('m/d H:i') }}</small></td>
-                                        <td><small class="time">{{ $res->ends_at->format('m/d H:i') }}</small></td>
-                                        <td style="font-weight:700;">{{ $rLabel }}</td>
-                                        <td class="dim">—</td>
-                                        <td class="money">{{ number_format($res->totalCostEgp(), 2) }} <small style="font-size:11px;">{{ __('portal.egp') }}</small></td>
+                                        <td data-label="{{ __('portal.visits.recent.th_plan') }}"><span class="badge badge-room">{{ __('portal.visits.recent.badge_room') }}</span></td>
+                                        <td data-label="{{ __('portal.visits.recent.th_check_in') }}"><small class="time">{{ $res->starts_at->format('m/d H:i') }}</small></td>
+                                        <td data-label="{{ __('portal.visits.recent.th_check_out') }}"><small class="time">{{ $res->ends_at->format('m/d H:i') }}</small></td>
+                                        <td data-label="{{ __('portal.visits.recent.th_duration') }}" style="font-weight:700;">{{ $rLabel }}</td>
+                                        <td data-label="{{ __('portal.visits.recent.th_deducted') }}" class="dim">—</td>
+                                        <td data-label="{{ __('portal.visits.recent.th_revenue') }}" class="money">{{ number_format($res->totalCostEgp(), 2) }} <small style="font-size:11px;">{{ __('portal.egp') }}</small></td>
                                     </tr>
                                 @endforeach
                                 @foreach($recentVisits as $visit)
@@ -219,8 +219,8 @@
                                         $dLabel  = $h > 0 ? "{$h}".__('portal.visits.unit_hour')." {$m}".__('portal.visits.unit_minute') : "{$m}".__('portal.visits.unit_minute');
                                     @endphp
                                     <tr>
-                                        <td style="font-weight:700;">{{ $visit->visitor_name }}</td>
-                                        <td>
+                                        <td data-label="{{ __('portal.visits.recent.th_visitor') }}" style="font-weight:700;">{{ $visit->visitor_name }}</td>
+                                        <td data-label="{{ __('portal.visits.recent.th_plan') }}">
                                             @php $bs = $visit->billing_source?->value ?? 'FREE'; @endphp
                                             @if($bs === 'FREE')
                                                 <span class="badge badge-free">{{ __('portal.billing.FREE') }}</span>
@@ -230,16 +230,16 @@
                                                 <span class="badge badge-space">{{ __('portal.billing.WORKSPACE_SUBSCRIPTION') }}</span>
                                             @endif
                                         </td>
-                                        <td><small class="time">{{ $visit->check_in_at->format('m/d H:i') }}</small></td>
-                                        <td><small class="time">{{ $visit->check_out_at?->format('m/d H:i') }}</small></td>
-                                        <td style="font-weight:700;">{{ $dLabel }}</td>
-                                        <td class="time">
+                                        <td data-label="{{ __('portal.visits.recent.th_check_in') }}"><small class="time">{{ $visit->check_in_at->format('m/d H:i') }}</small></td>
+                                        <td data-label="{{ __('portal.visits.recent.th_check_out') }}"><small class="time">{{ $visit->check_out_at?->format('m/d H:i') }}</small></td>
+                                        <td data-label="{{ __('portal.visits.recent.th_duration') }}" style="font-weight:700;">{{ $dLabel }}</td>
+                                        <td data-label="{{ __('portal.visits.recent.th_deducted') }}" class="time">
                                             {{ $visit->deducted_minutes ?? '—' }}
                                             @if($visit->hour_multiplier_applied && $visit->hour_multiplier_applied != 1.0)
                                                 <small class="dim">(×{{ $visit->hour_multiplier_applied }})</small>
                                             @endif
                                         </td>
-                                        <td class="money">
+                                        <td data-label="{{ __('portal.visits.recent.th_revenue') }}" class="money">
                                             {{ number_format($workspace->estimatedRevenueEgp((int) $mins), 2) }} <small style="font-size:11px;">{{ __('portal.egp') }}</small>
                                         </td>
                                     </tr>
@@ -247,10 +247,10 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="2">{{ __('portal.visits.recent.total_visitors', ['count' => number_format($recentSummary['total_visitors'])]) }}</td>
-                                    <td>{{ __('portal.visits.recent.total_visits', ['count' => number_format($recentSummary['total_visits'])]) }}</td>
-                                    <td colspan="2">{{ __('portal.visits.recent.total_hours', ['count' => number_format($recentSummary['total_minutes'] / 60, 2)]) }}</td>
-                                    <td colspan="2" class="money">
+                                    <td data-label="" colspan="2">{{ __('portal.visits.recent.total_visitors', ['count' => number_format($recentSummary['total_visitors'])]) }}</td>
+                                    <td data-label="">{{ __('portal.visits.recent.total_visits', ['count' => number_format($recentSummary['total_visits'])]) }}</td>
+                                    <td data-label="" colspan="2">{{ __('portal.visits.recent.total_hours', ['count' => number_format($recentSummary['total_minutes'] / 60, 2)]) }}</td>
+                                    <td data-label="" colspan="2" class="money">
                                         <i class="fa-solid fa-coins" style="margin-left:4px; opacity:0.85;"></i>
                                         {{ number_format($recentSummary['total_revenue'], 2) }} {{ __('portal.egp') }}
                                     </td>
@@ -309,6 +309,135 @@
     @keyframes coFadeIn  { from { opacity:0 } to { opacity:1 } }
     @keyframes coSlideUp { from { opacity:0; transform:translateY(24px) scale(0.97) } to { opacity:1; transform:none } }
     @keyframes coFadeOut { to { opacity:0; transform:scale(0.96) } }
+
+    .visits-dark .visits-attendance-card {
+        overflow: hidden;
+    }
+
+    .visits-dark .visits-attendance-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+    }
+
+    .visits-dark .visits-active-panel,
+    .visits-dark .visits-history-grid .manage-main {
+        min-width: 0;
+    }
+
+    @media (max-width: 1440px) {
+        .visits-dark .visits-attendance-grid,
+        .visits-dark .visits-history-grid {
+            grid-template-columns: 1fr !important;
+            gap: 18px;
+        }
+
+        .visits-dark .visits-attendance-grid .manage-aside,
+        .visits-dark .visits-history-grid .manage-aside {
+            position: static !important;
+            top: auto !important;
+            order: -1;
+        }
+
+        .visits-dark .manage-form-panel {
+            max-width: none;
+        }
+
+        .visits-dark .table-responsive {
+            overflow-x: visible;
+        }
+
+        .visits-dark table.mobile-card-table {
+            min-width: 0 !important;
+            width: 100% !important;
+            border-collapse: separate;
+            border-spacing: 0 12px;
+        }
+
+        .visits-dark table.mobile-card-table thead {
+            display: none;
+        }
+
+        .visits-dark table.mobile-card-table tbody,
+        .visits-dark table.mobile-card-table tfoot,
+        .visits-dark table.mobile-card-table tr,
+        .visits-dark table.mobile-card-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .visits-dark table.mobile-card-table tbody tr,
+        .visits-dark table.mobile-card-table tfoot tr {
+            background: var(--vd-surface-2) !important;
+            border: 1px solid var(--vd-border) !important;
+            border-radius: 18px;
+            box-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
+            margin-bottom: 12px;
+            padding: 12px 14px;
+        }
+
+        .visits-dark table.mobile-card-table td {
+            align-items: flex-start;
+            border-bottom: 1px solid rgba(157, 176, 164, .18) !important;
+            color: var(--vd-text);
+            display: flex;
+            gap: 14px;
+            justify-content: space-between;
+            padding: 9px 0 !important;
+            text-align: start !important;
+            white-space: normal !important;
+        }
+
+        .visits-dark table.mobile-card-table td:last-child {
+            border-bottom: 0 !important;
+        }
+
+        .visits-dark table.mobile-card-table td::before {
+            color: var(--vd-text-muted);
+            content: attr(data-label);
+            flex: 0 0 120px;
+            font-size: 12px;
+            font-weight: 900;
+            line-height: 1.45;
+            max-width: 42%;
+        }
+
+        .visits-dark table.mobile-card-table td[colspan] {
+            display: block;
+            text-align: center !important;
+        }
+
+        .visits-dark table.mobile-card-table td[colspan]::before,
+        .visits-dark table.mobile-card-table td[data-label=""]::before {
+            display: none;
+        }
+
+        .visits-dark table.mobile-card-table td form,
+        .visits-dark table.mobile-card-table td button,
+        .visits-dark table.mobile-card-table td a {
+            max-width: 100%;
+        }
+
+        .visits-dark table.mobile-card-table td button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .visits-dark .visits-attendance-card {
+            padding: 16px !important;
+        }
+
+        .visits-dark table.mobile-card-table td {
+            display: block;
+            text-align: right !important;
+        }
+
+        .visits-dark table.mobile-card-table td::before {
+            display: block;
+            margin-bottom: 5px;
+            max-width: none;
+        }
+    }
 </style>
 @endsection
 

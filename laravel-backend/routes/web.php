@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\AdminPlanCodeController;
 use App\Http\Controllers\Web\AdminWorkspaceController;
 use App\Http\Controllers\Web\AdminWorkspaceSettlementController;
 use App\Http\Controllers\Web\WorkspaceAuthController;
+use App\Http\Controllers\Web\WorkspaceAnalyticsController;
 use App\Http\Controllers\Web\WorkspaceClientController;
 use App\Http\Controllers\Web\WorkspaceEducationController;
 use App\Http\Controllers\Web\WorkspaceFinancialController;
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
-    return redirect()->route('workspace.login');
+    return redirect()->route('landing');
 });
 
 // Language switcher (works logged-in or not).
@@ -70,6 +71,9 @@ Route::prefix('workspace')->name('workspace.')->group(function () {
     // Protected routes for owner
     Route::middleware('workspace.owner')->group(function () {
         Route::post('logout', [WorkspaceAuthController::class, 'logout'])->name('logout');
+
+        // Workspace-wide analytics and reporting.
+        Route::get('analytics', [WorkspaceAnalyticsController::class, 'index'])->name('analytics.index');
 
         // Settings
         Route::get('settings', [WorkspaceSettingsController::class, 'edit'])->name('settings.edit');
@@ -206,4 +210,4 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 // Web fallback: unknown browser routes should land on the workspace owner login
 // instead of showing a blank/404 page. API routes are defined separately.
-Route::fallback(fn () => redirect()->route('workspace.login'))->name('web.fallback');
+Route::fallback(fn () => redirect()->route('landing'))->name('web.fallback');

@@ -1,0 +1,8 @@
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/01-qr.aiff'
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/01-qr-silence.aiff'
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/02-manage.aiff'
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/02-manage-silence.aiff'
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/03-growth.aiff'
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/03-growth-silence.aiff'
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/04-outro.aiff'
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/04-outro-silence.aiff'

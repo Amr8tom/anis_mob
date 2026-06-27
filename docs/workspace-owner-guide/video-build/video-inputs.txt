@@ -1,0 +1,9 @@
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/01-qr.png'
+duration 15.394
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/02-manage.png'
+duration 15.394
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/03-growth.png'
+duration 15.394
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/04-outro.png'
+duration 15.394
+file '/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/video-build/04-outro.png'

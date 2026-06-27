@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    font-family: "SF Arabic", "Geeza Pro", "Arial", sans-serif;
+    color: #f8fff9;
+    background:
+      radial-gradient(circle at 12% 14%, rgba(46, 204, 113, .34), transparent 28%),
+      radial-gradient(circle at 84% 18%, rgba(20, 184, 166, .22), transparent 32%),
+      linear-gradient(135deg, #06150d 0%, #0b2415 48%, #021009 100%);
+  }
+  .stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 74px 82px;
+    display: grid;
+    grid-template-columns: 0.92fr 1.08fr;
+    gap: 54px;
+    align-items: center;
+  }
+  .stage::before {
+    content: "";
+    position: absolute;
+    inset: 28px;
+    border: 1px solid rgba(106, 255, 164, .16);
+    border-radius: 42px;
+    box-shadow: inset 0 0 90px rgba(67, 255, 142, .08);
+  }
+  .copy, .visual { position: relative; z-index: 1; }
+  .copy {
+    padding: 62px 58px;
+    border-radius: 38px;
+    background: rgba(5, 24, 13, .78);
+    border: 1px solid rgba(122, 255, 173, .22);
+    box-shadow: 0 32px 100px rgba(0, 0, 0, .35);
+  }
+  .scene-number {
+    display: inline-flex;
+    min-width: 58px;
+    height: 58px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #17c964;
+    color: #03130a;
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 30px;
+    box-shadow: 0 18px 42px rgba(23, 201, 100, .35);
+  }
+  .eyebrow {
+    color: #8af7b5;
+    font-weight: 900;
+    font-size: 34px;
+    margin-bottom: 18px;
+  }
+  h1 {
+    margin: 0 0 34px;
+    font-size: 68px;
+    line-height: 1.16;
+    letter-spacing: -1.5px;
+  }
+  .body {
+    color: #dceee3;
+    font-size: 34px;
+    line-height: 1.78;
+    margin-bottom: 36px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 18px;
+  }
+  li {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-size: 31px;
+    font-weight: 800;
+    color: #f6fff8;
+    padding: 18px 22px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, .075);
+    border: 1px solid rgba(154, 255, 189, .13);
+  }
+  li::before {
+    content: "✓";
+    flex: 0 0 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: #28e074;
+    color: #052011;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 1000;
+  }
+  .visual {
+    height: 860px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .shot-wrap {
+    width: 100%;
+    height: 100%;
+    padding: 24px;
+    border-radius: 42px;
+    background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(236,255,244,.86));
+    border: 1px solid rgba(151, 255, 185, .28);
+    box-shadow: 0 48px 110px rgba(0,0,0,.42);
+  }
+  .shot-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top right;
+    border-radius: 30px;
+    display: block;
+  }
+  .brand-card {
+    width: 100%;
+    height: 100%;
+    border-radius: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(circle at 50% 32%, rgba(46, 204, 113, .42), transparent 28%),
+      linear-gradient(145deg, rgba(18, 87, 46, .78), rgba(3, 23, 12, .96));
+    border: 1px solid rgba(132, 255, 176, .22);
+    box-shadow: 0 48px 110px rgba(0,0,0,.42);
+  }
+  .brand {
+    font-size: 150px;
+    font-weight: 1000;
+    letter-spacing: -4px;
+  }
+  .brand-sub {
+    margin-top: 22px;
+    font-size: 44px;
+    color: #9cf8bd;
+    font-weight: 900;
+  }
+</style>
+</head>
+<body>
+  <main class="stage">
+    <section class="copy">
+      <div class="scene-number">2</div>
+      <div class="eyebrow">كل شيء من لوحة واحدة</div>
+      <h1>إدارة الحضور والغرف والدخل</h1>
+      <div class="body">تابع الحضور والدخل من أي مكان، أضف كل غرفة بإمكانياتها وسعرها، وعدّل الحجوزات بسهولة. وأرسل إشعارات لكل الزوار أو لمجموعة محددة.</div>
+      <ul><li>غرف بإمكانيات وأسعار واضحة</li><li>حجوزات وإعادة جدولة</li><li>إشعارات وتنبيهات قبل انتهاء الاشتراكات</li></ul>
+    </section>
+    <section class="visual"><div class="shot-wrap"><img src="/Users/eng.amralaa/StudioProjects/anis/docs/workspace-owner-guide/screenshots/rooms.png" alt=""></div></section>
+  </main>
+</body>
+</html>
